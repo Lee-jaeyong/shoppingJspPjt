@@ -14,6 +14,12 @@ public class TestClass {
 
 	@Test
 	public void test() {
-		System.out.println(board.selectNow());
+		try {
+			board.insert();
+			sqlSession.commit();
+		}catch (Exception e) {
+			sqlSession.rollback();
+			e.printStackTrace();
+		}
 	}
 }

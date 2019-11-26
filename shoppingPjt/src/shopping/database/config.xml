@@ -6,7 +6,7 @@
 			<dataSource type="POOLED">
 				<property name="driver" value="com.mysql.jdbc.Driver" />
 				<property name="url"
-					value="jdbc:mysql://localhost:3306/shoppingBase" />
+					value="jdbc:mysql://localhost:3306/shoppingBase?allowMultiQueries=true" />
 				<property name="username" value="root" />
 				<property name="password" value="apmsetup" />
 			</dataSource>

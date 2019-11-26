@@ -7,4 +7,9 @@
 	<select id="selectNow" resultType="string">
 		select now()
 	</select>
+
+	<insert id="insert">
+		insert into categorycheck values ('fdsfds',NULL);
+		insert into smallcategory values (33,rew);
+	</insert>
 </mapper>

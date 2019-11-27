@@ -123,6 +123,8 @@ public class CategoryDAO extends Database {
 			pstmt.setString(1, categoryName);
 			pstmt.setInt(2, categoryNumber);
 			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
 		} catch (Exception e) {
 			return false;
 		}
@@ -136,6 +138,8 @@ public class CategoryDAO extends Database {
 			pstmt.setInt(1, status);
 			pstmt.setInt(2, categoryNumber);
 			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
 		} catch (Exception e) {
 			return false;
 		}

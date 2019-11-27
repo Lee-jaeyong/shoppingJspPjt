@@ -14,7 +14,20 @@ public class ItemDTO {
 	private String itemContent;
 	private String[] itemSize;
 	private String[] itemColor;
-
+	private String size;
+	private String color;
+	
+	public ItemDTO(int itemIdx, String itemCode, String itemMainImg, String itemName, int itemStatus, long itemPrice,
+			long itemSalePrice) {
+		this.itemIdx = itemIdx;
+		this.itemCode = itemCode;
+		this.itemMainImg = itemMainImg;
+		this.itemName = itemName;
+		this.itemStatus = itemStatus;
+		this.itemPrice = itemPrice;
+		this.itemSalePrice = itemSalePrice;
+	}
+	
 	public ItemDTO(String itemName, int itemStatus, String itemDetailImg, long itemPrice,
 			long itemSalePrice, String itemMainImg, String itemManufacuter, String itemOrigin, String itemContent,String[] itemSize,String[] itemColor) {
 		this.itemName = itemName;
@@ -30,7 +43,13 @@ public class ItemDTO {
 		this.itemColor = itemColor;
 	}
 
+	public String getColor() {
+		return color;
+	}
 	
+	public String getSize() {
+		return size;
+	}
 	
 	public String[] getItemSize() {
 		return itemSize;

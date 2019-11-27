@@ -21,7 +21,7 @@ public class AddItem implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(true);
-		forward.setPath("./adminAddItem.do");
+		forward.setPath("./adminItemList.do");
 		String fileName = "";
 		String fileLength = "";
 		File file = null;

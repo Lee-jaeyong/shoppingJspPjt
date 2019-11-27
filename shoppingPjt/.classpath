@@ -15,5 +15,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/LJY/Desktop/cos.jar"/>
+	<classpathentry kind="lib" path="C:/Users/LJY/Desktop/poi-4.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/LJY/Desktop/poi-ooxml-4.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/LJY/Desktop/poi-ooxml-schemas-4.1.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

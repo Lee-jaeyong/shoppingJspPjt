@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.oreilly.servlet.MultipartRequest;
-
 import shopping.backend.model.AddItem;
 
 @WebServlet("/ShoppingAdminController")
@@ -65,6 +63,8 @@ public class ShoppingController extends HttpServlet {
 		} else if (command.equals("adminAnswer.do")) {
 			forward.setPath("WEB-INF/backend/answer.jsp");
 			forward.setRedirect(false);
+		} else if (command.equals("admin.do")) {
+			
 		}
 
 		if (forward.isRedirect()) {

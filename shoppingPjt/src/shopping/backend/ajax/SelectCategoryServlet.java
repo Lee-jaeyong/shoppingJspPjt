@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import shopping.database.dao.CategoryDAO;
 import shopping.database.dto.CategoryDTO;
+import shopping.filter.SecureString;
 
 @WebServlet("/SelectCategoryServlet")
 public class SelectCategoryServlet extends HttpServlet {
@@ -38,19 +39,22 @@ public class SelectCategoryServlet extends HttpServlet {
 	}
 
 	private String getJson(ArrayList<CategoryDTO> list, ArrayList<CategoryDTO> smallList) {
+		SecureString sqString = new SecureString();
 		StringBuilder str = new StringBuilder();
 		str.append("{\"category\":[");
 		for (int i = 0; i < list.size(); i++) {
-			str.append("{\"categoryName\" : \"" + list.get(i).getCategoryName() + "\",\"categoryChkIdx\" : \""
-					+ list.get(i).getCategoryChkIdx() + "\"}");
+			str.append("{\"categoryName\" : \"" + sqString.returnString(list.get(i).getCategoryName())
+					+ "\",\"categoryChkIdx\" : \"" + list.get(i).getCategoryChkIdx() + "\",\"categoryStatus\" : \""
+					+ list.get(i).getCategoryStatus() + "\"}");
 			if (i != list.size() - 1)
 				str.append(",");
 		}
 		str.append("], \"smallCategory\" : [");
 		for (int i = 0; i < smallList.size(); i++) {
-			str.append("{\"categoryName\" : \"" + smallList.get(i).getCategoryName() + "\",\"categoryChkIdx\" : \""
-					+ smallList.get(i).getCategoryChkIdx() + "\", \"categoryHighIdx\" : \""
-					+ smallList.get(i).getCategoryHighIdx() + "\"}");
+			str.append("{\"categoryName\" : \"" + sqString.returnString(smallList.get(i).getCategoryName())
+					+ "\",\"categoryChkIdx\" : \"" + smallList.get(i).getCategoryChkIdx()
+					+ "\", \"categoryHighIdx\" : \"" + smallList.get(i).getCategoryHighIdx()
+					+ "\"}");
 			if (i != smallList.size() - 1)
 				str.append(",");
 		}

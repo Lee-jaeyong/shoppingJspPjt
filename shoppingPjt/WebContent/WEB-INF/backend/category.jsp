@@ -3,25 +3,44 @@
 <%@include file="./include/head.html"%>
 <script type="text/javascript">
 	$(function() {
-		$("button[name=updateCategory]").click(function(){
-			$(this).parents().prev().attr("disabled",false);
+		$("button[name=updateStatusCategory]").click(function() {
+			var status = 0;
+			if ($(this).prev().val() === '0/')
+				status = 1;
+			$.ajax({
+				url : "./updateCategoryStatusServlet",
+				data : {
+					categoryNumber : $(this).parents().prev().prev().val(),
+					status : status
+				},
+				success : function(data) {
+					if (data === 'true')
+						location.href = './adminCategoryManage.do';
+					else
+						alert("카테고리 판매 상태 수정 실패");
+				}
+			});
+		});
+
+		$("button[name=updateCategory]").click(function() {
+			$(this).parents().prev().attr("disabled", false);
 			$(this).next().show();
 			$(this).hide();
 			$(this).prev().hide();
 			$(this).prev().prev().hide();
+			$(this).next().next().hide();
 		});
-		
-		$("button[name=smallCategoryUpdate]").click(function(){
+
+		$("button[name=smallCategoryUpdate]").click(function() {
 			$(this).next().show();
-			$(this).parents().next().next().attr("disabled",false);
+			$(this).parents().next().next().attr("disabled", false);
 			$(this).hide();
 		});
-		
+
 		$("button[name=smallCategoryUpdateExecute]").click(function() {
-			if($(this).parents().next().next().val() === '')
-			{
-					alert("카테고리 명을 입력해주세요");
-					return;
+			if ($(this).parents().next().next().val().trim() === '') {
+				alert("카테고리 명을 입력해주세요");
+				return;
 			}
 			$.ajax({
 				url : "./updateCategoryServlet",
@@ -33,14 +52,13 @@
 				success : function(data) {
 					location.href = './adminCategoryManage.do';
 				}
-			}); 
+			});
 		});
 
 		$("button[name=updateCategoryExecute]").click(function() {
-			if($(this).parents().prev().val() === '')
-			{
-					alert("카테고리 명을 입력해주세요");
-					return;
+			if ($(this).parents().prev().val().trim() === '') {
+				alert("카테고리 명을 입력해주세요");
+				return;
 			}
 			$.ajax({
 				url : "./updateCategoryServlet",
@@ -86,10 +104,9 @@
 		});
 
 		$("#addCategoryBtn").click(function() {
-			if($("#inputCategoryName").val() === '')
-			{
-					alert("카테고리 명을 입력해주세요");
-					return;
+			if ($("#inputCategoryName").val().trim() === '') {
+				alert("카테고리 명을 입력해주세요");
+				return;
 			}
 			$.ajax({
 				url : "./AddCategoryServlet",
@@ -130,14 +147,21 @@
 					success : function(data) {
 						var html = '';
 						for (var i = 0; i < data.category.length; i++) {
+							var status = "판매 중지";
+							if (data.category[i].categoryStatus == 0)
+								status = "판매 중";
 							html += '<li class="mb-2">';
-							html += '<div class="input-group mb-3 col-lg-8">';
+							html += '<div class="input-group mb-3 col-lg-12">';
 							html += '<input type="hidden" value="'+data.category[i].categoryChkIdx+'" /> <input type="text" class="form-control" value="'+data.category[i].categoryName+'" disabled="disabled">';
 							html += '<div class="input-group-append">';
 							html += '<button name="smallCategoryAddBtn" class="input-group-text">+</button>';
 							html += '<button name="dropCategory" class="input-group-text">삭 제</button>';
 							html += '<button name="updateCategory" class="input-group-text">수 정</button>';
 							html += '<button name="updateCategoryExecute" class="input-group-text" style="display:none">수정 완료</button>';
+							html += '<label class="input-group-text">' + status
+									+ '</label>';
+							html += '<input type="hidden" value='+data.category[i].categoryStatus+'/>';
+							html += '<button name="updateStatusCategory" class="input-group-text">판매 상태 수정</button>';
 							html += '</div></div><ul>';
 							for (var j = 0; j < data.smallCategory.length; j++) {
 								if (data.category[i].categoryChkIdx == data.smallCategory[j].categoryHighIdx) {
@@ -179,10 +203,8 @@ ul {
 						<div class="jumbotron">
 							<button id="btnCategoryAdd" type="button"
 								class="btn btn-info mb-3">대 카테고리 추가</button>
-							<button id="btnCategoryAdd" type="button"
-								class="btn btn-info mb-3">판매 상태 변경</button>
 							<button type="button" id="deleteCategoryBtn"
-								class="btn btn-info mb-3">삭 제</button>
+								class="btn btn-info mb-3">소 분류 삭 제</button>
 							<div id="categoryArea" class="jumbotron bg-light">
 								<ul id="mainCategoryArea">
 								</ul>

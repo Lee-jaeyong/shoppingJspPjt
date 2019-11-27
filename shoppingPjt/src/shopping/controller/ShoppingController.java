@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.oreilly.servlet.MultipartRequest;
+
+import shopping.backend.model.AddItem;
+
 @WebServlet("/ShoppingAdminController")
 public class ShoppingController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -46,6 +50,9 @@ public class ShoppingController extends HttpServlet {
 		} else if (command.equals("adminAddItem.do")) {
 			forward.setPath("WEB-INF/backend/addItem.jsp");
 			forward.setRedirect(false);
+		} else if (command.equals("adminAddItemExecute.do")) {
+			action = new AddItem();
+			forward = action.execute(request, response);
 		} else if (command.equals("adminCategoryManage.do")) {
 			forward.setPath("WEB-INF/backend/category.jsp");
 			forward.setRedirect(false);

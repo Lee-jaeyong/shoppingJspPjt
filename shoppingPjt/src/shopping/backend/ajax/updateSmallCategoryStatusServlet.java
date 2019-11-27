@@ -16,28 +16,16 @@ import shopping.database.dao.CategoryDAO;
 import shopping.database.dto.CategoryDTO;
 import shopping.filter.SecureString;
 
-@WebServlet("/updateCategoryServlet")
-public class updateCategoryServlet extends HttpServlet {
+@WebServlet("/updateSmallCategoryStatusServlet")
+public class updateSmallCategoryStatusServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public updateCategoryServlet() {
+	public updateSmallCategoryStatusServlet() {
 		super();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		int categoryNumber = Integer.parseInt(request.getParameter("categoryNumber"));
-		String categoryName = new SecureString().cleanXSS(request.getParameter("categoryUpdateName"));
-		boolean categoryType = request.getParameter("categoryType").equals("true") ? true : false;
-		try {
-			CategoryDAO categoryDAO = new CategoryDAO();
-			if (categoryDAO.updateCategory(categoryType,categoryNumber, categoryName))
-				response.getWriter().write("true");
-			else
-				response.getWriter().write("false");
-		} catch (SQLException | NamingException e) {
-			e.printStackTrace();
-		}
 	}
 }

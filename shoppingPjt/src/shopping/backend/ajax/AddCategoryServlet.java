@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import shopping.backend.model.AddCategory;
+import shopping.filter.SecureString;
 
 @WebServlet("/AddCategoryServlet")
 public class AddCategoryServlet extends HttpServlet {
@@ -22,7 +23,8 @@ public class AddCategoryServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String categoryName = request.getParameter("categoryName");
+		SecureString sqString = new SecureString();
+		String categoryName = sqString.cleanXSS(request.getParameter("categoryName"));
 		String categoryType = request.getParameter("categoryType");
 		try {
 			AddCategory addCategory = new AddCategory(categoryType,categoryName);

@@ -195,7 +195,8 @@ ul {
 		<div id="content-wrapper">
 			<div class="container-fluid">
 				<!-- Breadcrumbs-->
-				<h5>분류 관리</h5>
+				<hr>
+				<strong>분류 관리</strong>
 				<hr>
 				<div class="row">
 					<div class="col-lg-6">

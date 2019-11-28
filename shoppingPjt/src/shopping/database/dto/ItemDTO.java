@@ -20,10 +20,24 @@ public class ItemDTO {
 	private String smallCategoryName;
 	private String itemDate;
 	private int itemStock;
-	
+
 	// 상품 정보 수정시 필요한 생성자
-	public ItemDTO(String itemName, String itemDetailImg, long itemPrice, long itemSalePrice, String itemMainImg,
+	public ItemDTO(int itemIdx, String itemName, String itemDetailImg, long itemPrice, long itemSalePrice,
 			String itemManufacuter, String itemOrigin, String itemContent) {
+		this.itemIdx = itemIdx;
+		this.itemName = itemName;
+		this.itemDetailImg = itemDetailImg;
+		this.itemPrice = itemPrice;
+		this.itemSalePrice = itemSalePrice;
+		this.itemManufacuter = itemManufacuter;
+		this.itemOrigin = itemOrigin;
+		this.itemContent = itemContent;
+	}
+
+	// 상품 정보 확인시 필요한 생성자
+	public ItemDTO(int itemIdx,String itemName, String itemDetailImg, long itemPrice, long itemSalePrice, String itemMainImg,
+			String itemManufacuter, String itemOrigin, String itemContent) {
+		this.itemIdx = itemIdx;
 		this.itemName = itemName;
 		this.itemDetailImg = itemDetailImg;
 		this.itemPrice = itemPrice;
@@ -35,9 +49,9 @@ public class ItemDTO {
 	}
 
 	// 상품을 엑셀로 보여줄때 필요한 생성자
-	public ItemDTO(int itemIdx, String itemCode, String itemName, String size, String color,int itemStock, int itemStatus,
-			long itemPrice, long itemSalePrice, String categoryName, String smallCategoryName, String itemManufacuter,
-			String itemOrigin,String itemDate) {
+	public ItemDTO(int itemIdx, String itemCode, String itemName, String size, String color, int itemStock,
+			int itemStatus, long itemPrice, long itemSalePrice, String categoryName, String smallCategoryName,
+			String itemManufacuter, String itemOrigin, String itemDate) {
 		this.itemStock = itemStock;
 		this.itemDate = itemDate;
 		this.itemIdx = itemIdx;
@@ -67,8 +81,9 @@ public class ItemDTO {
 	}
 
 	// 상품을 추가할 때 필요한 생성자
-	public ItemDTO(String itemName, int itemStatus, String itemDetailImg, long itemPrice,
-			long itemSalePrice, String itemMainImg, String itemManufacuter, String itemOrigin, String itemContent,String[] itemSize,String[] itemColor) {
+	public ItemDTO(String itemName, int itemStatus, String itemDetailImg, long itemPrice, long itemSalePrice,
+			String itemMainImg, String itemManufacuter, String itemOrigin, String itemContent, String[] itemSize,
+			String[] itemColor) {
 		this.itemName = itemName;
 		this.itemStatus = itemStatus;
 		this.itemDetailImg = itemDetailImg;
@@ -125,34 +140,26 @@ public class ItemDTO {
 	public String getColor() {
 		return color;
 	}
-	
+
 	public String getSize() {
 		return size;
 	}
-	
+
 	public String[] getItemSize() {
 		return itemSize;
 	}
-
-
 
 	public void setItemSize(String[] itemSize) {
 		this.itemSize = itemSize;
 	}
 
-
-
 	public String[] getItemColor() {
 		return itemColor;
 	}
 
-
-
 	public void setItemColor(String[] itemColor) {
 		this.itemColor = itemColor;
 	}
-
-
 
 	public int getItemIdx() {
 		return itemIdx;

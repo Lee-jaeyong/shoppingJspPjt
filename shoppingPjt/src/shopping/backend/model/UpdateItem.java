@@ -15,7 +15,7 @@ import shopping.database.dao.ItemDAO;
 import shopping.database.dto.ItemDTO;
 import shopping.filter.SecureString;
 
-public class AddItem implements Action {
+public class UpdateItem implements Action {
 
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
@@ -29,32 +29,33 @@ public class AddItem implements Action {
 			SecureString sqString = new SecureString();
 			MultipartRequest multi = new MultipartRequest(request, savePath, maxSize, "utf-8",
 					new DefaultFileRenamePolicy());
-			int smCategoryNumber = Integer.parseInt(multi.getParameter("smallCategory"));
+			String changeStatus = multi.getParameter("changeStatus");
+			String itemDetailImg = multi.getParameter("originItemDetailImg");
+
+			if (changeStatus.equals("true")) {
+				File fileEx = new File(savePath + "\\" + itemDetailImg);
+				fileEx.delete();
+			}
+			int itemIdx = Integer.parseInt(multi.getParameter("itemIdx"));
 			String itemName = sqString.cleanXSS(multi.getParameter("itemName"));
 			String itemManufacuter = sqString.cleanXSS(multi.getParameter("itemManufacturer"));
 			String itemOrigin = sqString.cleanXSS(multi.getParameter("itemOrigin"));
 			String itemContent = sqString.cleanXSS(multi.getParameter("itemContent"));
-			int itemStatus = Integer.parseInt(multi.getParameter("itemStatus"));
 			int itemPrice = Integer.parseInt(multi.getParameter("itemPrice"));
 			int itemSalePrice = Integer.parseInt(multi.getParameter("itemSaleprice"));
-			String[] color = multi.getParameterValues("opColorArea");
-			String[] size = multi.getParameterValues("opSizeArea");
-			String[] img = new String[2];
-			for(int i =0;i<color.length;i++)
-				color[i] = sqString.cleanXSS(color[i]);
-			for(int i =0;i<size.length;i++)
-				size[i] = sqString.cleanXSS(size[i]);
-			Enumeration efiles = multi.getFileNames();
-			int i = 0;
-			while (efiles.hasMoreElements()) {
-				String name = (String) efiles.nextElement();
-				file = multi.getFile(name);
-				String str = file.getName();
-				img[i++] = str;
+
+			if (changeStatus.equals("true")) {
+				Enumeration efiles = multi.getFileNames();
+				while (efiles.hasMoreElements()) {
+					String name = (String) efiles.nextElement();
+					file = multi.getFile(name);
+					String str = file.getName();
+					itemDetailImg = str;
+				}
 			}
 			ItemDAO itemDAO = new ItemDAO();
-			itemDAO.insertItem(new ItemDTO(itemName, itemStatus, img[0], itemPrice, itemSalePrice, img[1], itemManufacuter, itemOrigin,
-					itemContent, size, color), smCategoryNumber);
+			itemDAO.updateItem(new ItemDTO(itemIdx, itemName, itemDetailImg, itemPrice, itemSalePrice, itemManufacuter,
+					itemOrigin, itemContent));
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.print("예외 발생 : " + e);

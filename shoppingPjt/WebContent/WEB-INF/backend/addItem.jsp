@@ -25,13 +25,14 @@
 
 						$("#inputDetailImage").change(function() {
 							readURL(this, 'detailImage');
+							$("#changeStatus").val("true");
 						});
 
 						$("#inputMainImage").change(function() {
 							readURL(this, 'mainImage');
 						});
 
-						$("#submitBtn")
+						$("#btnAddItem")
 								.click(
 										function() {
 											var chk = false;
@@ -99,9 +100,50 @@
 															.val() === '0')
 												alert("상품 판매가 혹은 할인가를 다시 입력해주세요.");
 											else
-												$("#addItemForm")
+												$("#itemForm")
 														.attr("action",
 																"./adminAddItemExecute.do")
+														.attr("enctype",
+																"multipart/form-data")
+														.attr("method", "post")
+														.submit();
+										});
+
+						$("#btnUpdateItem")
+								.click(
+										function() {
+											if ($("#itemName").val().trim() === '')
+												alert("수정할 상품명을 입력해주세요.");
+											else if (isNaN($("#itemPrice")
+													.val()))
+												alert("수정할 상품 가격을 입력해주세요.");
+											else if (isNaN($("#itemSaleprice")
+													.val()))
+												alert("수정할 할인가/판매가를 입력해주세요.");
+											else if ($("#itemManufacturer")
+													.val().trim() === '')
+												alert("수정할 제조사를 입력해주세요.");
+											else if ($("#itemOrigin").val()
+													.trim() === '')
+												alert("수정할 원산지를 입력해주세요.");
+											else if ($("#itemContent").val()
+													.trim() === '')
+												alert("수정할 상품 설명을 입력해주세요.");
+											else if (parseInt($("#itemPrice")
+													.val()) < parseInt($(
+													"#itemSaleprice").val()))
+												alert("수정된 할인가가 판매가보다 높습니다.");
+											else if ($("#itemPrice").val() === '0'
+													|| $("#itemSaleprice")
+															.val() === '0')
+												alert("수정할 상품 판매가 혹은 할인가를 다시 입력해주세요.");
+											else
+												$("#itemForm")
+														.attr("action",
+																"./adminUpdateItemExecute.do")
+														.attr("enctype",
+																"multipart/form-data")
+														.attr("method", "post")
 														.submit();
 										});
 					});
@@ -115,7 +157,7 @@
 
 		for (var i = 0; i < smallCategory.length; i++) {
 			if (smallCategory[i].categoryHighIdx === select.value)
-				smallCategorySelect += '<option value='+smallCategory[i].categoryChkIdx+'>'
+				smallCategorySelect += '<option value=' + smallCategory[i].categoryChkIdx + '>'
 						+ smallCategory[i].categoryName + '</option>';
 		}
 		smallCategorySelect += '</select>';
@@ -132,7 +174,7 @@
 				addSizeCount++;
 			var addHtml = '<div class="input-group mb-3 input-group-sm"><div class="input-group-prepend"><button class="input-group-text" onClick=removeColor(this,"'
 					+ addArea
-					+ '");>제 거</button></div><input type="text" name="'+addArea+'" class="form-control"></div>';
+					+ '");>제 거</button></div><input type="text" name="' + addArea + '" class="form-control"></div>';
 			$("#" + addArea).append(addHtml);
 		} else
 			alert("더이상 추가할 수 없습니다.");
@@ -159,6 +201,7 @@
 			reader.readAsDataURL(input.files[0]);
 		}
 	}
+
 	function categoryLoad() {
 		$
 				.ajax({
@@ -169,7 +212,7 @@
 						var categoryArea = '<select class="form-control" id="category" name="category" onchange="categoryUpdate(this)">';
 						categoryArea += '<option selected="" value="">대분류</option>';
 						for (var i = 0; i < data.category.length; i++) {
-							categoryArea += '<option value='+data.category[i].categoryChkIdx+'>'
+							categoryArea += '<option value=' + data.category[i].categoryChkIdx + '>'
 									+ data.category[i].categoryName
 									+ '</option>';
 						}
@@ -178,7 +221,6 @@
 					}
 				});
 	}
-
 	window.onload = function() {
 		categoryLoad();
 	}
@@ -202,12 +244,21 @@
 		<div id="content-wrapper">
 
 			<div class="container-fluid">
-
+				<div class="jumbotron">
+					<h1>상품 등록 시 유의 사항</h1>
+					<br />
+					<p>- 모든 항목은 필수로 기재해야한다.</p>
+					<p>- 색상과 사이즈는 반드시 하나 이상 입력해야한다.</p>
+					<p>
+						- 상품 등록 후 <strong>[상품 재고]</strong>는 상품 목록 페이지에서 입력해야한다.
+					</p>
+				</div>
+				<hr />
 				<!-- Breadcrumbs-->
 				<%
 					if (request.getAttribute("item") == null) {
 				%>
-				<h5>상품 등록</h5>
+				<strong>상품 등록</strong>
 				<%
 					} else {
 						item = (ItemDTO) request.getAttribute("item");
@@ -218,16 +269,16 @@
 						itemOrigin = item.getItemOrigin();
 						itemContent = item.getItemContent();
 				%>
-				<h5>상품 수정</h5>
+				<strong>상품 수정</strong>
 				<%
 					}
 				%>
 				<hr />
 				<p>
 				<h6>쇼핑몰에 상품을 진열하는데 필요한 기본정보를 입력합니다.</h6>
-				* 모든 항목을 입력해주시기 바랍니다.
+				<span class="text-danger">* 모든 항목을 입력해주시기 바랍니다.</span>
 				</p>
-				<form id="addItemForm" enctype="multipart/form-data" method="post">
+				<form id="itemForm">
 					<div class="row">
 						<table class="table table-bordered">
 							<tbody>
@@ -293,24 +344,24 @@
 											</div>
 										</div>
 										<div class="row">
-											<div class="col-sm-3" style="margin-left: 15px;">
+											<div class="col-lg-4" style="margin-left: 15px;">
 												<%
 													if (item == null) {
 												%>
 												<img id="detailImage"
 													src="${pageContext.request.contextPath}/uploadImage/img.png"
-													style="width: 250px; height: 250px;">
+													style="width: 600px; height: 800px;">
 												<%
 													} else {
 												%>
 												<img id="detailImage"
 													src="${pageContext.request.contextPath}/uploadImage/<%=item.getItemDetailImg() %>"
-													style="width: 250px; height: 250px;">
+													style="width: 600px; height: 800px;">
 												<%
 													}
 												%>
 											</div>
-											<div class="col-sm-6">
+											<div class="col-sm-6 ml-5 mt-5 text-danger">
 												- 쇼핑몰의 상품 내의 상세페이지를 등록합니다.<br /> - 권장 이미지 : 1500x * 1000x /
 												5M 이하 / jpg(jpeg)
 											</div>
@@ -363,8 +414,14 @@
 									<td><div class="row">
 											<div class="input-group mb-3 col-sm-8"
 												style="margin-left: 15px;">
+												<%
+													if (item == null) {
+												%>
 												<input type="file" id="inputMainImage" class="form-control"
 													name="inputMainImage">
+												<%
+													}
+												%>
 											</div>
 										</div>
 										<div class="row">
@@ -374,18 +431,18 @@
 												%>
 												<img id="mainImage"
 													src="${pageContext.request.contextPath}/uploadImage/img.png"
-													style="width: 250px; height: 250px;">
+													style="width: 400px; height: 400px;">
 												<%
 													} else {
 												%>
 												<img id="mainImage"
 													src="${pageContext.request.contextPath}/uploadImage/<%=item.getItemMainImg() %>"
-													style="width: 250px; height: 250px;">
+													style="width: 400px; height: 400px;">
 												<%
 													}
 												%>
 											</div>
-											<div class="col-sm-6">
+											<div class="col-sm-6 mt-5 text-danger">
 												- 쇼핑몰에 기본으로 보여지는 상품이미지를 등록합니다.<br /> - 대표이미지 등록 시 자동 리사이징
 												되어 들어갑니다.<br /> - 권장 이미지 : 500x * 500x / 5M 이하 / jpg(jpeg)
 											</div>
@@ -416,11 +473,31 @@
 							</tbody>
 						</table>
 					</div>
+					<%
+						if (item != null) {
+					%>
+					<input type="hidden" name="itemIdx" value="<%=item.getItemIdx()%>" />
+					<input type="hidden" id="changeStatus" name="changeStatus"
+						value="false" /> <input type="hidden" name="originItemDetailImg"
+						value="<%=item.getItemDetailImg()%>" />
+					<%
+						}
+					%>
 				</form>
 				<div class="row" style="margin-bottom: 200px;">
 					<div class="col-sm-7"></div>
 					<div class="col-sm-4">
-						<button id="submitBtn" class="btn btn-success">상품 등록</button>
+						<%
+							if (item == null) {
+						%>
+						<button id="btnAddItem" class="btn btn-success">상품 등록</button>
+						<%
+							} else {
+						%>
+						<button id="btnUpdateItem" class="btn btn-success">상품 수정</button>
+						<%
+							}
+						%>
 					</div>
 				</div>
 			</div>

@@ -2,13 +2,39 @@
 	pageEncoding="UTF-8"%>
 <%@include file="./include/head.html"%>
 <script type="text/javascript">
+	const ctx = window.location.pathname.substring(0, window.location.pathname
+			.indexOf("/", 2));
 	var smallCategory;
 	$(function() {
+		$("#showStatus").change(function(){
+			getItemList(0);
+			alert("fds");
+		});
+		
+		$("#selectShowImg").change(function() {
+			if ($(this).val() === 'false')
+				$(".showImg").attr("class", "hideImg");
+			else
+				$(".hideImg").attr("class", "showImg");
+		});
+
+		$("#btnAllChkTrue").click(function() {
+			$("input[name=excelData]").prop("checked", true);
+		});
+
+		$("#btnAllChkFalse").click(function() {
+			$("input[name=excelData]").prop("checked", false);
+		});
+
 		$("#btnUpdateStatus").click(function() {
 			var chkIdx = "";
 			$("input[name=itemIdx]:checked").each(function() {
 				chkIdx += $(this).val() + ",";
 			});
+			if (chkIdx === '') {
+				alert("판매 상태를 변경할 항목을 체크해주세요.");
+				return;
+			}
 			$.ajax({
 				url : "./UpdateItemStatusServlet",
 				data : {
@@ -25,9 +51,20 @@
 			});
 		});
 
-		$("#btnExcelUpload").click(function() {
-			location.href = "./adminExcelUpload.do";
-		});
+		$("#btnExcelUpload").click(
+				function() {
+					var chk = "";
+					var chkText = "";
+					$("input[name=excelData]:checked").each(function() {
+						chk += $(this).val() + ",";
+						chkText += $(this).next().text().trim() + ",";
+					})
+					if (chk == '')
+						alert("문서화할 항목을 선택해주세요.");
+					else
+						location.href = "./adminExcelUpload.do?query=" + chk
+								+ "&header=" + chkText;
+				});
 
 		$("#btnAllItem").click(
 				function() {
@@ -207,16 +244,18 @@
 							itemSection += '<td><input type="checkBox" name="itemIdx" value="'+items[i].itemIdx+'" style="width:25px;height:25px;"/></td>';
 							itemSection += '<td>' + items[i].itemIdx + '</td>';
 							itemSection += '<td>' + items[i].itemCode + '</td>';
-							itemSection += '<td>' + items[i].itemMainImg
-									+ '</td>';
+							itemSection += '<td class="hideImg"><img src="'+ctx+'/uploadImage/'+items[i].itemMainImg+'" style="width: 100px; height: 100px;"></td>';
 							itemSection += '<td>' + items[i].itemName + '</td>';
-							itemSection += '<td><button onclick="showItemOption(this)" class="btn btn-primary" data-toggle="modal" data-target="#myModal">옵션/재고 보기</button></td>';
+							itemSection += '<td><button onclick="showItemOption(this)" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">옵션/재고 보기</button></td>';
 							itemSection += '<td>' + status + '</td>';
-							itemSection += '<td>' + numberWithCommas(items[i].itemPrice)
+							itemSection += '<td>'
+									+ numberWithCommas(items[i].itemPrice)
 									+ '₩</td>';
-							itemSection += '<td>' + numberWithCommas(items[i].itemSalePrice)
+							itemSection += '<td>'
+									+ numberWithCommas(items[i].itemSalePrice)
 									+ '₩</td>';
-							itemSection += '<td><button type="button" name="showItem" class="btn btn-light" onclick="showItemInfo('+items[i].itemIdx+')">보 기</button></td>';
+							itemSection += '<td><button type="button" name="showItem" class="btn btn-secondary" onclick="showItemInfo('
+									+ items[i].itemIdx + ')">보 기</button></td>';
 							itemSection += "<tr>";
 						}
 						$("#itemSection").html(itemSection);
@@ -252,16 +291,25 @@
 		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 
-	function showItemInfo(idx){
+	function showItemInfo(idx) {
 		$("#showItemInfoIdx").val(idx);
-		$("#showItemInfo").attr("action","./adminAddItem.do").attr("method","post").submit();
+		$("#showItemInfo").attr("action", "./adminAddItem.do").attr("method",
+				"post").submit();
 	}
-	
 	window.onload = function() {
 		getItemList(0);
 		categoryLoad();
 	}
 </script>
+<style>
+.showImg {
+	
+}
+
+.hideImg {
+	display: none;
+}
+</style>
 <body id="page-top">
 	<%@include file="./include/mainLogo.html"%>
 	<div id="wrapper">
@@ -270,7 +318,8 @@
 		<div id="content-wrapper">
 			<div class="container-fluid">
 				<!-- Breadcrumbs-->
-				<h5>상품 검색</h5>
+				<hr>
+				<strong>상품 검색</strong>
 				<hr>
 				<table class="table table-bordered">
 					<tbody>
@@ -328,14 +377,73 @@
 							색</button>
 						<button id="btnAllItem" type="button" class="btn btn-secondary">전체
 							보기</button>
-						<button id="btnExcelUpload" type="button"
-							class="btn btn-secondary">엑 셀 다운로드</button>
 					</div>
 				</div>
+				<hr>
+				<button id="btnExcelUpload" type="button"
+					class="btn btn-secondary ml-4 mr-5">엑 셀 다운로드</button>
+				<div class="btn-group-vertical mr-5">
+					<button id="btnAllChkTrue" type="button"
+						class="btn btn-outline-dark">전체 선택</button>
+					<button id="btnAllChkFalse" type="button"
+						class="btn btn-outline-dark">전체 해제</button>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label"> <input type="checkbox"
+						class="form-check-input" value="itemIdx" name="excelData"><span>고유번호</span>
+					</label>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label"> <input type="checkbox"
+						class="form-check-input" value="itemCode" name="excelData"><span>상품코드</span>
+					</label>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label"> <input type="checkbox"
+						class="form-check-input" value="itemName" name="excelData"><span>상품명</span>
+					</label>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label"> <input type="checkbox"
+						class="form-check-input" value="itemOption" name="excelData"><span>옵션
+							및 재고</span>
+					</label>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label"> <input type="checkbox"
+						class="form-check-input" value="itemStatus" name="excelData"><span>상태</span>
+					</label>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label"> <input type="checkbox"
+						class="form-check-input" value="itemPrice" name="excelData"><span>판매가</span>
+					</label>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label"> <input type="checkbox"
+						class="form-check-input" value="itemSalePrice" name="excelData"><span>할인가</span>
+					</label>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label"> <input type="checkbox"
+						class="form-check-input" value="itemManufacturer" name="excelData"><span>제조사</span>
+					</label>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label"> <input type="checkbox"
+						class="form-check-input" value="itemOrigin" name="excelData"><span>원산지</span>
+					</label>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label"> <input type="checkbox"
+						class="form-check-input" value="itemDate" name="excelData"><span>등록일</span>
+					</label>
+				</div>
+				<hr>
 				<h5 style="margin-top: 100px;">상품 목록 리스트</h5>
 				<hr>
 				<div class="row">
-					<div class="col-sm-3 col-lg-3 mb-4">
+					<div class="col-lg-2 mb-4">
 						<select class="form-control" id="sortType">
 							<option selected="" value="itemDate">정 렬</option>
 							<option value="itemDate">등록일 순</option>
@@ -344,14 +452,26 @@
 							<option value="itemSalePrice">할인가 가격순</option>
 						</select>
 					</div>
-					<div class="col-sm-3">
+					<div class="col-lg-2 mb-4">
 						<select class="form-control" id="showType">
 							<option selected="" value="10">10개씩 보기</option>
 							<option value="20">20개씩 보기</option>
 							<option value="30">30개씩 보기</option>
 						</select>
 					</div>
-					<div class="col-sm-4">
+					<div class="col-lg-2 mb-4">
+						<select class="form-control" id="showStatus">
+							<option selected="" value="1">판매 중 보기</option>
+							<option value="0">판매 중지 보기</option>
+						</select>
+					</div>
+					<div class="col-lg-2 mb-4">
+						<select class="form-control" id="selectShowImg">
+							<option selected="" value="false">이미지 숨기기</option>
+							<option value="true">이미지 보기</option>
+						</select>
+					</div>
+					<div class="col-lg-4 mb-4">
 						<div class="form-check-inline">
 							<label class="form-check-label"> <input type="radio"
 								class="form-check-input" name="itemStatus" value="1"
@@ -370,7 +490,6 @@
 				</div>
 			</div>
 			<br>
-			<!-- 주문 현황 차트 -->
 			<div class="row">
 				<table class="table table-striped">
 					<thead>
@@ -378,7 +497,7 @@
 							<th style="width: 50px;"></th>
 							<th style="width: 50px;">번호</th>
 							<th style="width: 100px;">상품 코드</th>
-							<th style="width: 50px;">이미지</th>
+							<th style="width: 50px;" class="hideImg">이미지</th>
 							<th style="width: 100px;">상품명</th>
 							<th style="width: 50px;">옵션/재고</th>
 							<th style="width: 50px;">상 태</th>
@@ -391,10 +510,12 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="col-sm-3">
-				<div class="btn-group" id="pageArea"></div>
+			<div class="row mt-2">
+				<div class="col-lg-5"></div>
+				<div class="col-lg-3 mb-5">
+					<div class="btn-group" id="pageArea"></div>
+				</div>
 			</div>
-
 			<%@include file="./include/footer.jsp"%>
 
 		</div>
@@ -439,7 +560,8 @@
 	<input type="hidden" id="searchItemBefore" value="" />
 	<input type="hidden" id="searchItemAfter" value="" />
 	<form id="showItemInfo">
-		<input type="hidden" id="showItemInfoIdx" name="showItemInfoIdx" value=""/>
+		<input type="hidden" id="showItemInfoIdx" name="showItemInfoIdx"
+			value="" />
 	</form>
 </body>
 </html>

@@ -57,15 +57,12 @@
 <body>
 
 	<%
-		String[] headText = { "상품 번호", "상품 코드", "상품명", "사이즈", "색 상", "수 량", "판매상태", "원 가", "판매가/할인가", "대분류", "소분류",
-				"제조사", "원산지", "등록일" };
+		ArrayList<String[]> list = (ArrayList<String[]>) request.getAttribute("list");
 
-		ItemDAO itemDAO = new ItemDAO();
-		ArrayList<ItemDTO> list = itemDAO.selectItemFromExcel();
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("상품목록");
 		//Sheet명 설정
-		sheet.addMergedRegion(new CellRangeAddress(0, (short) 0, 0, (short) headText.length - 1));
+		sheet.addMergedRegion(new CellRangeAddress(0, (short) 0, 0, (short) list.get(0).length - 1));
 		CellStyle topStyle = workbook.createCellStyle();
 		topStyle.setBorderTop(BorderStyle.MEDIUM);
 		topStyle.setBorderBottom(BorderStyle.MEDIUM);
@@ -74,11 +71,11 @@
 		topStyle.setFillForegroundColor(HSSFColorPredefined.PINK.getIndex());
 		topStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		topStyle.setAlignment(HorizontalAlignment.CENTER);
-		
+
 		Font topFont = workbook.createFont();
 		topFont.setFontHeightInPoints((short) 20);
 		topStyle.setFont(topFont);
-		
+
 		CellStyle headStyle = workbook.createCellStyle();
 		// 가는 경계선을 가집니다.
 		headStyle.setBorderTop(BorderStyle.THIN);
@@ -106,32 +103,18 @@
 		cell.setCellValue("상품 리스트");
 		row.setHeight((short) 600);
 		row = sheet.createRow(1);
-		for (int i = 0; i < headText.length; i++) {
+		for (int i = 0; i < list.get(0).length; i++) {
 			sheet.setColumnWidth(i, 6000);
 			cell = row.createCell(i);
 			cell.setCellStyle(headStyle);
-			cell.setCellValue(headText[i]);
+			cell.setCellValue(list.get(0)[i]);
 		}
 		row.setHeight((short) 500);
-		for (int i = 0; i < list.size(); i++) {
+		for (int i = 0; i < list.size() - 1; i++) {
 			row = sheet.createRow(i + 2);
-			row.createCell(0).setCellValue(list.get(i).getItemIdx());
-			row.createCell(1).setCellValue(list.get(i).getItemCode());
-			row.createCell(2).setCellValue(list.get(i).getItemName());
-			row.createCell(3).setCellValue(list.get(i).getSize());
-			row.createCell(4).setCellValue(list.get(i).getColor());
-			row.createCell(5).setCellValue(list.get(i).getItemStock());
-			String status = "판매 중지";
-			if (list.get(i).getItemStatus() == 1)
-				status = "판매 중";
-			row.createCell(6).setCellValue(status);
-			row.createCell(7).setCellValue(list.get(i).getItemPrice());
-			row.createCell(8).setCellValue(list.get(i).getItemSalePrice());
-			row.createCell(9).setCellValue(list.get(i).getCategoryName());
-			row.createCell(10).setCellValue(list.get(i).getSmallCategoryName());
-			row.createCell(11).setCellValue(list.get(i).getItemManufacuter());
-			row.createCell(12).setCellValue(list.get(i).getItemOrigin());
-			row.createCell(13).setCellValue(list.get(i).getItemDate());
+			for (int j = 0; j < list.get(0).length; j++) {
+				row.createCell(j).setCellValue(list.get(i)[j]);
+			}
 		}
 		out.clear();
 		out = pageContext.pushBody();

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import javax.naming.NamingException;
 
+import com.sun.xml.internal.messaging.saaj.packaging.mime.util.QEncoderStream;
+
 import shopping.database.dto.ItemDTO;
 import shopping.database.dto.ItemOptionDTO;
 import shopping.filter.SecureString;
@@ -17,13 +19,13 @@ public class ItemDAO extends Database {
 	public ItemDTO selectItemInfo(int itemIdx) {
 		ItemDTO item = null;
 		try {
-			String sql = "SELECT itemName,itemDetailImg,itemPrice,itemSalePrice,itemMainImg,itemManufacturer,itemOrigin,itemContent FROM items WHERE itemidx = ?";
+			String sql = "SELECT itemIdx,itemName,itemDetailImg,itemPrice,itemSalePrice,itemMainImg,itemManufacturer,itemOrigin,itemContent FROM items WHERE itemidx = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, itemIdx);
 			rs = pstmt.executeQuery();
 			rs.next();
-			item = new ItemDTO(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getString(5),
-					rs.getString(6), rs.getString(7), rs.getString(8));
+			item = new ItemDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5),
+					rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9));
 			rs.close();
 			conn.close();
 			pstmt.close();
@@ -107,18 +109,36 @@ public class ItemDAO extends Database {
 		return list;
 	}
 
-	public ArrayList<ItemDTO> selectItemFromExcel() {
-		ArrayList<ItemDTO> list = new ArrayList<ItemDTO>();
+	public ArrayList<String[]> selectItemFromExcel(String[] query, String[] header) {
+		ArrayList<String[]> list = new ArrayList<String[]>();
 		try {
-			String sql = "SELECT itemIdx,itemCode,itemName,opSize,opColor,opStock,itemStatus,itemPrice,itemSalePrice,categoryName,smallCategoryName,itemManufacturer,itemOrigin,itemDate\r\n"
-					+ "FROM items,itemoptions,category,categoryCheck,smallcategory\r\n"
-					+ "WHERE items.itemIdx = itemoptions.op_i_idx AND category.ca_itemidx = items.itemIdx AND categorycheck.categoryChkIdx = smallcategory.categoryHighIdx";
-			pstmt = conn.prepareStatement(sql);
+			list.add(header);
+			StringBuilder sql = new StringBuilder("SELECT ");
+			boolean chkOption = false;
+			int count = query.length;
+			for (int i = 0; i < count; i++) {
+				if (!query[i].equals("itemOption"))
+					sql.append(query[i]);
+				else {
+					chkOption = true;
+					continue;
+				}
+				if (i != query.length - 1 || chkOption)
+					sql.append(",");
+			}
+			if (chkOption) {
+				sql.append("opSize,opColor,opStock FROM items,itemoptions WHERE items.itemidx = itemoptions.op_i_idx");
+				count += 2;
+			} else
+				sql.append(" FROM items");
+			pstmt = conn.prepareStatement(sql.toString());
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				list.add(new ItemDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
-						rs.getInt(6), rs.getInt(7), rs.getInt(8), rs.getInt(9), rs.getString(10), rs.getString(11),
-						rs.getString(12), rs.getString(13), rs.getString(14)));
+				String[] str = new String[count];
+				for (int i = 1; i <= count; i++) {
+					str[i - 1] = rs.getObject(i).toString();
+				}
+				list.add(str);
 			}
 			pstmt.close();
 			rs.close();
@@ -176,6 +196,29 @@ public class ItemDAO extends Database {
 		} finally {
 			conn.close();
 			pstmt.close();
+		}
+		return true;
+	}
+
+	public boolean updateItem(ItemDTO item) {
+		try {
+			String sql = "UPDATE items SET itemName = ?, " + "itemManufacturer = ?, itemOrigin = ?, "
+					+ "itemContent = ?, itemPrice = ?, itemSalePrice = ?, " + "itemDetailImg = ? WHERE itemIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, item.getItemName());
+			pstmt.setString(2, item.getItemManufacuter());
+			pstmt.setString(3, item.getItemOrigin());
+			pstmt.setString(4, item.getItemContent());
+			pstmt.setLong(5, item.getItemPrice());
+			pstmt.setLong(6, item.getItemSalePrice());
+			pstmt.setString(7, item.getItemDetailImg());
+			pstmt.setInt(8, item.getItemIdx());
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
 		return true;
 	}

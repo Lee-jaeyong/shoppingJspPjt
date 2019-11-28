@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import shopping.backend.model.AddItem;
+import shopping.backend.model.ExcelFileUpload;
 import shopping.backend.model.SelectItemInfo;
+import shopping.backend.model.UpdateItem;
 import shopping.database.dao.ItemDAO;
 
 @WebServlet("/ShoppingAdminController")
@@ -70,8 +72,11 @@ public class ShoppingController extends HttpServlet {
 			forward.setPath("WEB-INF/backend/answer.jsp");
 			forward.setRedirect(false);
 		} else if (command.equals("adminExcelUpload.do")) {
-			forward.setPath("WEB-INF/backend/excel/excelUpload.jsp");
-			forward.setRedirect(false);
+			action = new ExcelFileUpload();
+			forward = action.execute(request, response);
+		} else if (command.equals("adminUpdateItemExecute.do")) {
+			action = new UpdateItem();
+			forward = action.execute(request, response);
 		}
 		if (forward.isRedirect()) {
 			response.sendRedirect(forward.getPath());

@@ -21,6 +21,19 @@ public class ItemDTO {
 	private String itemDate;
 	private int itemStock;
 	
+	// 상품 정보 수정시 필요한 생성자
+	public ItemDTO(String itemName, String itemDetailImg, long itemPrice, long itemSalePrice, String itemMainImg,
+			String itemManufacuter, String itemOrigin, String itemContent) {
+		this.itemName = itemName;
+		this.itemDetailImg = itemDetailImg;
+		this.itemPrice = itemPrice;
+		this.itemSalePrice = itemSalePrice;
+		this.itemMainImg = itemMainImg;
+		this.itemManufacuter = itemManufacuter;
+		this.itemOrigin = itemOrigin;
+		this.itemContent = itemContent;
+	}
+
 	// 상품을 엑셀로 보여줄때 필요한 생성자
 	public ItemDTO(int itemIdx, String itemCode, String itemName, String size, String color,int itemStock, int itemStatus,
 			long itemPrice, long itemSalePrice, String categoryName, String smallCategoryName, String itemManufacuter,

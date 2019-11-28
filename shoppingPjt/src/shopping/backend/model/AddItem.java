@@ -58,6 +58,7 @@ public class AddItem implements Action {
 			itemDAO.insertItem(new ItemDTO(itemName, itemStatus, img[0], itemPrice, itemSalePrice, img[1], itemManufacuter, itemOrigin,
 					itemContent, size, color), smCategoryNumber);
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.print("예외 발생 : " + e);
 		}
 		return forward;

@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import shopping.backend.model.AddItem;
+import shopping.backend.model.SelectItemInfo;
+import shopping.database.dao.ItemDAO;
 
 @WebServlet("/ShoppingAdminController")
 public class ShoppingController extends HttpServlet {
@@ -36,7 +38,6 @@ public class ShoppingController extends HttpServlet {
 
 		ActionForward forward = new ActionForward();
 		Action action = null;
-
 		if (command.equals("")) {
 
 		} else if (command.equals("adminIndex.do")) {
@@ -46,8 +47,13 @@ public class ShoppingController extends HttpServlet {
 			forward.setPath("WEB-INF/backend/itemlist.jsp");
 			forward.setRedirect(false);
 		} else if (command.equals("adminAddItem.do")) {
-			forward.setPath("WEB-INF/backend/addItem.jsp");
-			forward.setRedirect(false);
+			if (request.getParameter("showItemInfoIdx") != null) {
+				action = new SelectItemInfo();
+				forward = action.execute(request, response);
+			} else {
+				forward.setPath("WEB-INF/backend/addItem.jsp");
+				forward.setRedirect(false);
+			}
 		} else if (command.equals("adminAddItemExecute.do")) {
 			action = new AddItem();
 			forward = action.execute(request, response);
@@ -67,7 +73,6 @@ public class ShoppingController extends HttpServlet {
 			forward.setPath("WEB-INF/backend/excel/excelUpload.jsp");
 			forward.setRedirect(false);
 		}
-
 		if (forward.isRedirect()) {
 			response.sendRedirect(forward.getPath());
 		} else {

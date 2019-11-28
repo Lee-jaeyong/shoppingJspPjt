@@ -1,3 +1,5 @@
+<%@page import="shopping.database.dto.ItemDTO"%>
+<%@page import="shopping.database.dao.ItemDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="./include/head.html"%>
@@ -10,52 +12,99 @@
 	var smallCategory;
 	var addColorCount = 0;
 	var addSizeCount = 0;
-	$(document).ready(function() {
-		$("#colorAdd").click(function() {
-			addColorOrSize('opColorArea');
-		});
+	$(document)
+			.ready(
+					function() {
+						$("#colorAdd").click(function() {
+							addColorOrSize('opColorArea');
+						});
 
-		$("#sizeAdd").click(function() {
-			addColorOrSize('opSizeArea');
-		});
+						$("#sizeAdd").click(function() {
+							addColorOrSize('opSizeArea');
+						});
 
-		$("#inputDetailImage").change(function() {
-			readURL(this, 'detailImage');
-		});
+						$("#inputDetailImage").change(function() {
+							readURL(this, 'detailImage');
+						});
 
-		$("#inputMainImage").change(function() {
-			readURL(this, 'mainImage');
-		});
+						$("#inputMainImage").change(function() {
+							readURL(this, 'mainImage');
+						});
 
-		$("#submitBtn").click(function() {
-			if ($("#category").val() === '')
-				alert("대분류를 선택해주세요.");
-			else if ($("#smallCategory").val() === '')
-				alert("소분류를 선택해주세요.");
-			else if ($("#itemName").val().trim() === '')
-				alert("상품명을 입력해주세요.");
-			else if ($("#inputDetailImage").val() === '')
-				alert("상세 이미지를 선택해주세요.");
-			else if (isNaN($("#itemPrice").val()))
-				alert("상품 가격을 입력해주세요.");
-			else if (isNaN($("#itemSaleprice").val()))
-				alert("할인가/판매가를 입력해주세요.");
-			else if(addColorCount == 0)
-				alert("색상은 최소 하나 이상 입력해주세요.");
-			else if(addSizeCount == 0)
-				alert("사이즈는 최소 하나 이상 입력해주세요.");
-			else if ($("#inputMainImage").val() === '')
-				alert("메인 이미지를 선택해주세요.");
-			else if ($("#itemManufacturer").val().trim() === '')
-				alert("제조사를 입력해주세요.");
-			else if ($("#itemOrigin").val().trim() === '')
-				alert("원산지를 입력해주세요.");
-			else if ($("#itemContent").val().trim() === '')
-				alert("상품 설명을 입력해주세요.");
-			else
-				$("#addItemForm").attr("action","./adminAddItemExecute.do").submit();			
-		});
-	});
+						$("#submitBtn")
+								.click(
+										function() {
+											var chk = false;
+											$("input[name=opColorArea]")
+													.each(
+															function() {
+																if ($(this)
+																		.val() === '') {
+																	chk = true;
+																	return;
+																}
+															})
+
+											$("input[name=opSizeArea]")
+													.each(
+															function() {
+																if ($(this)
+																		.val() === '') {
+																	chk = true;
+																	return;
+																}
+															})
+											if (chk) {
+												alert("비어있는 색상 또는 사이즈가 존재합니다.");
+												return;
+											}
+
+											if ($("#category").val() === '')
+												alert("대분류를 선택해주세요.");
+											else if ($("#smallCategory").val() === '')
+												alert("소분류를 선택해주세요.");
+											else if ($("#itemName").val()
+													.trim() === '')
+												alert("상품명을 입력해주세요.");
+											else if ($("#inputDetailImage")
+													.val() === '')
+												alert("상세 이미지를 선택해주세요.");
+											else if (isNaN($("#itemPrice")
+													.val()))
+												alert("상품 가격을 입력해주세요.");
+											else if (isNaN($("#itemSaleprice")
+													.val()))
+												alert("할인가/판매가를 입력해주세요.");
+											else if (addColorCount == 0)
+												alert("색상은 최소 하나 이상 입력해주세요.");
+											else if (addSizeCount == 0)
+												alert("사이즈는 최소 하나 이상 입력해주세요.");
+											else if ($("#inputMainImage").val() === '')
+												alert("메인 이미지를 선택해주세요.");
+											else if ($("#itemManufacturer")
+													.val().trim() === '')
+												alert("제조사를 입력해주세요.");
+											else if ($("#itemOrigin").val()
+													.trim() === '')
+												alert("원산지를 입력해주세요.");
+											else if ($("#itemContent").val()
+													.trim() === '')
+												alert("상품 설명을 입력해주세요.");
+											else if (parseInt($("#itemPrice")
+													.val()) < parseInt($(
+													"#itemSaleprice").val()))
+												alert("할인가가 판매가보다 높습니다.");
+											else if ($("#itemPrice").val() === '0'
+													|| $("#itemSaleprice")
+															.val() === '0')
+												alert("상품 판매가 혹은 할인가를 다시 입력해주세요.");
+											else
+												$("#addItemForm")
+														.attr("action",
+																"./adminAddItemExecute.do")
+														.submit();
+										});
+					});
 
 	function categoryUpdate(select) {
 		if (isNaN(select.value))
@@ -135,7 +184,15 @@
 	}
 </script>
 <body id="page-top">
-
+	<%
+		ItemDTO item = null;
+		String itemName = "";
+		Long itemPrice = 0L;
+		Long itemSalePrice = 0L;
+		String itemManufacturer = "";
+		String itemOrigin = "";
+		String itemContent = "";
+	%>
 	<%@include file="./include/mainLogo.html"%>
 	<div id="wrapper">
 
@@ -147,7 +204,24 @@
 			<div class="container-fluid">
 
 				<!-- Breadcrumbs-->
+				<%
+					if (request.getAttribute("item") == null) {
+				%>
 				<h5>상품 등록</h5>
+				<%
+					} else {
+						item = (ItemDTO) request.getAttribute("item");
+						itemName = item.getItemName();
+						itemPrice = item.getItemPrice();
+						itemSalePrice = item.getItemSalePrice();
+						itemManufacturer = item.getItemManufacuter();
+						itemOrigin = item.getItemOrigin();
+						itemContent = item.getItemContent();
+				%>
+				<h5>상품 수정</h5>
+				<%
+					}
+				%>
 				<hr />
 				<p>
 				<h6>쇼핑몰에 상품을 진열하는데 필요한 기본정보를 입력합니다.</h6>
@@ -157,6 +231,9 @@
 					<div class="row">
 						<table class="table table-bordered">
 							<tbody>
+								<%
+									if (item == null) {
+								%>
 								<tr>
 									<td>상품 카테고리</td>
 									<td>
@@ -172,13 +249,19 @@
 										</div>
 									</td>
 								</tr>
+								<%
+									}
+								%>
 								<tr>
 									<td>상품명</td>
 									<td><div class="col-sm-8">
 											<input type="text" id="itemName" name="itemName"
-												class="form-control" id="usr">
+												class="form-control" value="<%=itemName%>">
 										</div></td>
 								</tr>
+								<%
+									if (request.getAttribute("item") == null) {
+								%>
 								<tr>
 									<td>상품 판매 상태</td>
 									<td>
@@ -196,6 +279,9 @@
 										</div>
 									</td>
 								</tr>
+								<%
+									}
+								%>
 								<tr style="height: 500px;">
 									<td>상품 상세이미지</td>
 									<td>
@@ -208,9 +294,21 @@
 										</div>
 										<div class="row">
 											<div class="col-sm-3" style="margin-left: 15px;">
+												<%
+													if (item == null) {
+												%>
 												<img id="detailImage"
 													src="${pageContext.request.contextPath}/uploadImage/img.png"
 													style="width: 250px; height: 250px;">
+												<%
+													} else {
+												%>
+												<img id="detailImage"
+													src="${pageContext.request.contextPath}/uploadImage/<%=item.getItemDetailImg() %>"
+													style="width: 250px; height: 250px;">
+												<%
+													}
+												%>
 											</div>
 											<div class="col-sm-6">
 												- 쇼핑몰의 상품 내의 상세페이지를 등록합니다.<br /> - 권장 이미지 : 1500x * 1000x /
@@ -223,16 +321,19 @@
 									<td>원 가</td>
 									<td><div class="col-sm-8">
 											<input type="text" id="itemPrice" name="itemPrice"
-												class="form-control" id="usr">
+												class="form-control" value="<%=itemPrice%>">
 										</div></td>
 								</tr>
 								<tr>
 									<td>할인가/판매가</td>
 									<td><div class="col-sm-8">
-											<input type="text" id="itemSaleprice" name="itemSaleprice" class="form-control"
-												id="usr">
+											<input type="text" id="itemSaleprice" name="itemSaleprice"
+												class="form-control" value="<%=itemSalePrice%>">
 										</div></td>
 								</tr>
+								<%
+									if (item == null) {
+								%>
 								<tr>
 									<td>옵션 및 재고</td>
 									<td>
@@ -254,6 +355,9 @@
 										</div>
 									</td>
 								</tr>
+								<%
+									}
+								%>
 								<tr>
 									<td style="height: 500px;">메인 이미지</td>
 									<td><div class="row">
@@ -265,9 +369,21 @@
 										</div>
 										<div class="row">
 											<div class="col-sm-3" style="margin-left: 15px;">
+												<%
+													if (item == null) {
+												%>
 												<img id="mainImage"
 													src="${pageContext.request.contextPath}/uploadImage/img.png"
 													style="width: 250px; height: 250px;">
+												<%
+													} else {
+												%>
+												<img id="mainImage"
+													src="${pageContext.request.contextPath}/uploadImage/<%=item.getItemMainImg() %>"
+													style="width: 250px; height: 250px;">
+												<%
+													}
+												%>
 											</div>
 											<div class="col-sm-6">
 												- 쇼핑몰에 기본으로 보여지는 상품이미지를 등록합니다.<br /> - 대표이미지 등록 시 자동 리사이징
@@ -279,21 +395,22 @@
 									<td>제조사</td>
 									<td><div class="col-sm-8">
 											<input type="text" class="form-control"
-												name="itemManufacturer" id="itemManufacturer">
+												name="itemManufacturer" id="itemManufacturer"
+												value="<%=itemManufacturer%>">
 										</div></td>
 								</tr>
 								<tr>
 									<td>원산지</td>
 									<td><div class="col-sm-8">
 											<input type="text" class="form-control" name="itemOrigin"
-												id="itemOrigin">
+												id="itemOrigin" value="<%=itemOrigin%>">
 										</div></td>
 								</tr>
 								<tr>
 									<td>판매자 상품 설명</td>
 									<td><div class="col-sm-8">
 											<textarea class="form-control" rows="5" name="itemContent"
-												id="itemContent"></textarea>
+												id="itemContent"><%=itemContent%></textarea>
 										</div></td>
 								</tr>
 							</tbody>
@@ -304,7 +421,7 @@
 					<div class="col-sm-7"></div>
 					<div class="col-sm-4">
 						<button id="submitBtn" class="btn btn-success">상품 등록</button>
-					</div>				
+					</div>
 				</div>
 			</div>
 			<hr />

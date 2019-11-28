@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import shopping.database.dao.ItemDAO;
 import shopping.database.dto.ItemDTO;
 import shopping.database.dto.ItemOptionDTO;
+import shopping.filter.SecureString;
 
 /**
  * Servlet implementation class SelectItemServlet
@@ -33,7 +34,7 @@ public class SelectItemServlet extends HttpServlet {
 
 		String searchItemType = request.getParameter("searchItemType");
 		String searchItemTitle = request.getParameter("searchItemTitle");
-		String searchItemSmallCategory = request.getParameter("searchItemSmallCategory");
+		String searchItemSmallCategory = new SecureString().cleanXSS(request.getParameter("searchItemSmallCategory"));
 		String searchItemBefore = request.getParameter("searchItemBefore");
 		String searchItemAfter = request.getParameter("searchItemAfter");
 

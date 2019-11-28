@@ -14,6 +14,24 @@ public class ItemDAO extends Database {
 		dbConnect();
 	}
 
+	public ItemDTO selectItemInfo(int itemIdx) {
+		ItemDTO item = null;
+		try {
+			String sql = "SELECT itemName,itemDetailImg,itemPrice,itemSalePrice,itemMainImg,itemManufacturer,itemOrigin,itemContent FROM items WHERE itemidx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, itemIdx);
+			rs = pstmt.executeQuery();
+			rs.next();
+			item = new ItemDTO(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getString(5),
+					rs.getString(6), rs.getString(7), rs.getString(8));
+			rs.close();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+		}
+		return item;
+	}
+
 	public int selectCountItem() {
 		int count = 0;
 		try {
@@ -115,7 +133,7 @@ public class ItemDAO extends Database {
 	public boolean insertItem(ItemDTO item, int smallCategoryNumber) throws SQLException {
 		try {
 			conn.setAutoCommit(false);
-			String sql = "INSERT INTO items VALUES (NULL,'',?,?,?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO items VALUES (NULL,'',?,?,?,?,?,?,?,?,?,LEFT(NOW(),10))";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, item.getItemName());
 			pstmt.setInt(2, item.getItemStatus());
@@ -158,7 +176,25 @@ public class ItemDAO extends Database {
 		} finally {
 			conn.close();
 			pstmt.close();
-			rs.close();
+		}
+		return true;
+	}
+
+	public boolean updateStatus(String[] itemIdx, int status) {
+		try {
+			StringBuilder sql = new StringBuilder("UPDATE items SET itemStatus = " + status + " WHERE ");
+			for (int i = 0; i < itemIdx.length; i++) {
+				sql.append("itemIdx = " + Integer.parseInt(itemIdx[i]));
+				if (i != itemIdx.length - 1)
+					sql.append(" or ");
+			}
+			pstmt = conn.prepareStatement(sql.toString());
+			pstmt.executeUpdate();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
 		return true;
 	}

@@ -63,8 +63,9 @@ public class ShoppingController extends HttpServlet {
 		} else if (command.equals("adminAnswer.do")) {
 			forward.setPath("WEB-INF/backend/answer.jsp");
 			forward.setRedirect(false);
-		} else if (command.equals("admin.do")) {
-			
+		} else if (command.equals("adminExcelUpload.do")) {
+			forward.setPath("WEB-INF/backend/excel/excelUpload.jsp");
+			forward.setRedirect(false);
 		}
 
 		if (forward.isRedirect()) {

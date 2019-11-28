@@ -16,7 +16,32 @@ public class ItemDTO {
 	private String[] itemColor;
 	private String size;
 	private String color;
+	private String categoryName;
+	private String smallCategoryName;
+	private String itemDate;
+	private int itemStock;
 	
+	// 상품을 엑셀로 보여줄때 필요한 생성자
+	public ItemDTO(int itemIdx, String itemCode, String itemName, String size, String color,int itemStock, int itemStatus,
+			long itemPrice, long itemSalePrice, String categoryName, String smallCategoryName, String itemManufacuter,
+			String itemOrigin,String itemDate) {
+		this.itemStock = itemStock;
+		this.itemDate = itemDate;
+		this.itemIdx = itemIdx;
+		this.itemCode = itemCode;
+		this.itemName = itemName;
+		this.size = size;
+		this.color = color;
+		this.itemStatus = itemStatus;
+		this.itemPrice = itemPrice;
+		this.itemSalePrice = itemSalePrice;
+		this.categoryName = categoryName;
+		this.smallCategoryName = smallCategoryName;
+		this.itemManufacuter = itemManufacuter;
+		this.itemOrigin = itemOrigin;
+	}
+
+	// 상품 리스트를 가져오는 생성자
 	public ItemDTO(int itemIdx, String itemCode, String itemMainImg, String itemName, int itemStatus, long itemPrice,
 			long itemSalePrice) {
 		this.itemIdx = itemIdx;
@@ -27,7 +52,8 @@ public class ItemDTO {
 		this.itemPrice = itemPrice;
 		this.itemSalePrice = itemSalePrice;
 	}
-	
+
+	// 상품을 추가할 때 필요한 생성자
 	public ItemDTO(String itemName, int itemStatus, String itemDetailImg, long itemPrice,
 			long itemSalePrice, String itemMainImg, String itemManufacuter, String itemOrigin, String itemContent,String[] itemSize,String[] itemColor) {
 		this.itemName = itemName;
@@ -41,6 +67,46 @@ public class ItemDTO {
 		this.itemContent = itemContent;
 		this.itemSize = itemSize;
 		this.itemColor = itemColor;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public String getSmallCategoryName() {
+		return smallCategoryName;
+	}
+
+	public void setSmallCategoryName(String smallCategoryName) {
+		this.smallCategoryName = smallCategoryName;
+	}
+
+	public String getItemDate() {
+		return itemDate;
+	}
+
+	public void setItemDate(String itemDate) {
+		this.itemDate = itemDate;
+	}
+
+	public int getItemStock() {
+		return itemStock;
+	}
+
+	public void setItemStock(int itemStock) {
+		this.itemStock = itemStock;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 	public String getColor() {

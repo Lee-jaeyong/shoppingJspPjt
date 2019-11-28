@@ -55,16 +55,14 @@ public class ItemDAO extends Database {
 			StringBuilder sqlWhere = new StringBuilder();
 			if (!searchItemTitle.equals("") || !searchItemSmallCategory.equals("") || !searchItemBefore.equals("")) {
 				sqlWhere.append("AND");
-				if (!searchItemTitle.equals(""))
-				{
+				if (!searchItemTitle.equals("")) {
 					sqlWhere.append(" " + searchItemType + " like ?");
-					if(!searchItemSmallCategory.equals("") || !searchItemBefore.equals(""))
+					if (!searchItemSmallCategory.equals("") || !searchItemBefore.equals(""))
 						sqlWhere.append(" AND");
 				}
-				if (!searchItemSmallCategory.equals(""))
-				{
+				if (!searchItemSmallCategory.equals("")) {
 					sqlWhere.append(" ca_smallidx = " + Integer.parseInt(searchItemSmallCategory) + "");
-					if(!searchItemBefore.equals(""))
+					if (!searchItemBefore.equals(""))
 						sqlWhere.append(" AND");
 				}
 				if (!searchItemBefore.equals(""))
@@ -87,6 +85,29 @@ public class ItemDAO extends Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		}
+		return list;
+	}
+
+	public ArrayList<ItemDTO> selectItemFromExcel() {
+		ArrayList<ItemDTO> list = new ArrayList<ItemDTO>();
+		try {
+			String sql = "SELECT itemIdx,itemCode,itemName,opSize,opColor,opStock,itemStatus,itemPrice,itemSalePrice,categoryName,smallCategoryName,itemManufacturer,itemOrigin,itemDate\r\n"
+					+ "FROM items,itemoptions,category,categoryCheck,smallcategory\r\n"
+					+ "WHERE items.itemIdx = itemoptions.op_i_idx AND category.ca_itemidx = items.itemIdx AND categorycheck.categoryChkIdx = smallcategory.categoryHighIdx";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(new ItemDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getInt(6), rs.getInt(7), rs.getInt(8), rs.getInt(9), rs.getString(10), rs.getString(11),
+						rs.getString(12), rs.getString(13), rs.getString(14)));
+			}
+			pstmt.close();
+			rs.close();
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return list;
 		}
 		return list;
 	}

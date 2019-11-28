@@ -2,30 +2,48 @@
 	pageEncoding="UTF-8"%>
 <%@include file="./include/head.html"%>
 <script type="text/javascript">
+	var pattern = /[0-9]{4}-[0-9]{2}-[0-9]{2}/;
+	if(pattern.test(str)) {
+	    alert(“true”);
+	} else {
+	    alert(“false”);
+	}
+
 	var smallCategory;
 	$(function() {
-		$("#btnAllItem").click(function(){
+		$("#btnExcelUpload").click(function() {
+			location.href = "./adminExcelUpload.do";
+		});
+
+		$("#btnAllItem").click(function() {
 			$("#searchItemType").val("");
 			$("#searchItemTitle").val("");
 			$("#searchItemSmallCategory").val("");
 			$("#searchItemBefore").val("");
 			$("#searchItemAfter").val("");
+			$("#smallCategory > option[value='']").attr("selected", "true");
+			$("#category > option[value='']").attr("selected", "true");
+			$("#inputSearchItemType > option[value='itemName']").attr("selected","true");
 			getItemList(0);
 		});
-		
-		$("#btnSearchItem").click(function(){
+
+		$("#btnSearchItem").click(function() {
+			if($("#datepicker1").val() != '' || $("#datepicker2").val() != '')
+			{		
+				
+			}
 			$("#searchItemType").val($("#inputSearchItemType").val());
 			$("#searchItemTitle").val($("#inputSearchItemTitle").val());
-			$("#searchItemSmallCategory").val($("#smallCategory").val());
+			$("#searchItemSmallCategory").val($("#smallCategory").val());			
 			$("#searchItemBefore").val($("#datepicker1").val());
 			$("#searchItemAfter").val($("#datepicker2").val());
 			getItemList(0);
 		});
-		
-		$("#sortType,#showType").change(function(){
+
+		$("#sortType,#showType").change(function() {
 			getItemList($("#nowPageNum").val());
 		});
-		
+
 		$("#datepicker1, #datepicker2").datepicker({
 			dateFormat : 'yy-mm-dd'
 		});
@@ -38,8 +56,7 @@
 			for (var i = 0; i < _updateStockIdx.length; i++) {
 				updateStockIdx += _updateStockIdx[i].value + ",";
 				updateStock += _updateStock[i].value + ",";
-				if(isNaN(_updateStock[i].value))
-				{
+				if (isNaN(_updateStock[i].value)) {
 					alert("재고를 다시 입력해주세요.");
 					return;
 				}
@@ -50,7 +67,7 @@
 					updateStockIdx : updateStockIdx,
 					updateStock : updateStock
 				},
-				success : function(data){
+				success : function(data) {
 					alert("재고 수정 완료");
 				}
 			});
@@ -58,7 +75,8 @@
 	});
 
 	function showItemOption(button) {
-		$.ajax({
+		$
+				.ajax({
 					url : "./SelectItemOptionServlet",
 					data : {
 						itemIdx : $(button).parents("td").prev().prev().prev()
@@ -97,29 +115,31 @@
 		smallCategorySelect += '</select>';
 		$("#smallCategoryArea").html(smallCategorySelect);
 	}
-	
+
 	function categoryLoad() {
-		$.ajax({
-				url : "./SelectCategoryServlet",
-				dataType : "json",
-				success : function(data) {
-					smallCategory = data.smallCategory;
-					var categoryArea = '<select class="form-control" id="category" name="category" onchange="categoryUpdate(this)">';
-					categoryArea += '<option selected="" value="">대분류</option>';
-					for (var i = 0; i < data.category.length; i++) {
-						categoryArea += '<option value='+data.category[i].categoryChkIdx+'>'
-								+ data.category[i].categoryName
-								+ '</option>';
+		$
+				.ajax({
+					url : "./SelectCategoryServlet",
+					dataType : "json",
+					success : function(data) {
+						smallCategory = data.smallCategory;
+						var categoryArea = '<select class="form-control" id="category" name="category" onchange="categoryUpdate(this)">';
+						categoryArea += '<option selected="" value="">대분류</option>';
+						for (var i = 0; i < data.category.length; i++) {
+							categoryArea += '<option value='+data.category[i].categoryChkIdx+'>'
+									+ data.category[i].categoryName
+									+ '</option>';
+						}
+						categoryArea += "</select>";
+						$("#categoryArea").html(categoryArea);
 					}
-					categoryArea += "</select>";
-					$("#categoryArea").html(categoryArea);
-			}
-		});
+				});
 	}
-	
+
 	function getItemList(pageNum) {
 		$("#nowPageNum").val(pageNum);
-		$.ajax({
+		$
+				.ajax({
 					url : "./SelectItemServlet",
 					data : {
 						pageNum : pageNum,
@@ -127,7 +147,8 @@
 						sortType : $("#sortType").val(),
 						searchItemType : $("#searchItemType").val(),
 						searchItemTitle : $("#searchItemTitle").val(),
-						searchItemSmallCategory : $("#searchItemSmallCategory").val(),
+						searchItemSmallCategory : $("#searchItemSmallCategory")
+								.val(),
 						searchItemBefore : $("#searchItemBefore").val(),
 						searchItemAfter : $("#searchItemAfter").val()
 					},
@@ -140,9 +161,10 @@
 						var nowPageNum = parseInt($("#nowPageNum").val());
 						var itemSection = "";
 						var pageArea = "";
-						
+
 						for (var i = 0; i < items.length; i++) {
-							var status = items[i].itemStatus == 1 ? "판매중" : "판매 중지";
+							var status = items[i].itemStatus == 1 ? "판매중"
+									: "판매 중지";
 							itemSection += "<tr>";
 							itemSection += '<td><input type="checkBox" name="itemIdx" /></td>';
 							itemSection += '<td>' + items[i].itemIdx + '</td>';
@@ -151,8 +173,7 @@
 									+ '</td>';
 							itemSection += '<td>' + items[i].itemName + '</td>';
 							itemSection += '<td><button onclick="showItemOption(this)" class="btn btn-primary" data-toggle="modal" data-target="#myModal">옵션/재고 보기</button></td>';
-							itemSection += '<td>' + status
-									+ '</td>';
+							itemSection += '<td>' + status + '</td>';
 							itemSection += '<td>' + items[i].itemPrice
 									+ '</td>';
 							itemSection += '<td>' + items[i].itemSalePrice
@@ -161,27 +182,29 @@
 							itemSection += "<tr>";
 						}
 						$("#itemSection").html(itemSection);
-						
-						if(startBlock == 0)
+
+						if (startBlock == 0)
 							pageArea += '<button type="button" class="btn btn-info" disabled="disabled"><</button>';
 						else
 							pageArea += '<button type="button" class="btn btn-info"><</button>';
-						
-						for(var i = startBlock;i < endBlock;i++)
-						{
-							if(i == nowPageNum){
-								pageArea += '<button type="button" disabled="disabled" class="btn btn-success">'+ (i+1) +'</button>';
-							}else
-							{
-								pageArea += '<button type="button" onclick="getItemList('+i+')" class="btn btn-info">'+ (i+1) +'</button>';
+
+						for (var i = startBlock; i < endBlock; i++) {
+							if (i == nowPageNum) {
+								pageArea += '<button type="button" disabled="disabled" class="btn btn-success">'
+										+ (i + 1) + '</button>';
+							} else {
+								pageArea += '<button type="button" onclick="getItemList('
+										+ i
+										+ ')" class="btn btn-info">'
+										+ (i + 1) + '</button>';
 							}
 						}
-						
-						if(endBlock == totalBlock)
+
+						if (endBlock == totalBlock)
 							pageArea += '<button type="button" class="btn btn-info" disabled="disabled">></button>';
 						else
 							pageArea += '<button type="button" class="btn btn-info">></button>';
-						
+
 						$("#pageArea").html(pageArea);
 					}
 				});
@@ -215,7 +238,8 @@
 										</select>
 									</div>
 									<div class="col-sm-12 col-lg-4">
-										<input type="text" id="inputSearchItemTitle" class="form-control" id="usr">
+										<input type="text" id="inputSearchItemTitle"
+											class="form-control" id="usr">
 									</div>
 								</div>
 							</td>
@@ -224,9 +248,7 @@
 							<td class="tdHead">상품 분류</td>
 							<td class="tdBody">
 								<div class="row">
-									<div class="col-sm-6 col-lg-3" id="categoryArea">
-										
-									</div>
+									<div class="col-sm-6 col-lg-3" id="categoryArea"></div>
 									<div class="col-sm-6 col-lg-3" id="smallCategoryArea">
 										<select class="form-control" id="smallCategory">
 											<option selected="" value="">소분류</option>
@@ -255,9 +277,12 @@
 					<div class="col-sm-3 col-lg-1 mb-4"></div>
 					<div class="col-sm-3 col-lg-2 mb-4"></div>
 					<div class="col-sm-3 col-lg-3 mb-4">
-						<button id="btnSearchItem" type="button" class="btn btn-secondary">검 색</button>
-						<button id="btnAllItem" type="button" class="btn btn-secondary">전체 보기</button>
-						<button type="button" class="btn btn-secondary">엑 셀 다운로드</button>
+						<button id="btnSearchItem" type="button" class="btn btn-secondary">검
+							색</button>
+						<button id="btnAllItem" type="button" class="btn btn-secondary">전체
+							보기</button>
+						<button id="btnExcelUpload" type="button"
+							class="btn btn-secondary">엑 셀 다운로드</button>
 					</div>
 				</div>
 				<h5 style="margin-top: 100px;">상품 목록 리스트</h5>
@@ -317,8 +342,7 @@
 				</table>
 			</div>
 			<div class="col-sm-3">
-				<div class="btn-group" id="pageArea">
-				</div>
+				<div class="btn-group" id="pageArea"></div>
 			</div>
 
 			<%@include file="./include/footer.jsp"%>
@@ -358,11 +382,11 @@
 			</div>
 		</div>
 	</div>
-	<input type="hidden" id="nowPageNum" value="0"/>
-	<input type="hidden" id="searchItemType" value=""/>
-	<input type="hidden" id="searchItemTitle" value=""/>
-	<input type="hidden" id="searchItemSmallCategory" value=""/>
-	<input type="hidden" id="searchItemBefore" value=""/>
-	<input type="hidden" id="searchItemAfter" value=""/>
+	<input type="hidden" id="nowPageNum" value="0" />
+	<input type="hidden" id="searchItemType" value="" />
+	<input type="hidden" id="searchItemTitle" value="" />
+	<input type="hidden" id="searchItemSmallCategory" value="" />
+	<input type="hidden" id="searchItemBefore" value="" />
+	<input type="hidden" id="searchItemAfter" value="" />
 </body>
 </html>

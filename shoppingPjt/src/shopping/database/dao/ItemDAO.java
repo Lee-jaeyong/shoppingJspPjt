@@ -157,17 +157,16 @@ public class ItemDAO extends Database {
 		return list;
 	}
 
-	public ArrayList<ItemDTO> selectDeleteItemList(int pageNum) {
+	public ArrayList<ItemDTO> selectDeleteItemList() {
 		ArrayList<ItemDTO> list = new ArrayList<ItemDTO>();
 		try {
-			String sql = "SELECT itemCode, itemMainImg,itemName,itemPrice,itemSalePrice,removeDate,removeExecuteDate\r\n"
-					+ "FROM items,deleteItem\r\n" + "WHERE items.itemIdx = deleteItem.d_i_idx \r\n" + "LIMIT "
-					+ (pageNum * 10) + ", 10";
+			String sql = "SELECT itemIdx,itemCode, itemMainImg,itemName,itemPrice,itemSalePrice,removeDate,removeExecuteDate\r\n"
+					+ "FROM items,deleteItem\r\n" + "WHERE items.itemIdx = deleteItem.d_i_idx";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while (rs.next())
-				list.add(new ItemDTO(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5),
-						rs.getString(6), rs.getString(7)));
+				list.add(new ItemDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
+						rs.getInt(6), rs.getString(7), rs.getString(8)));
 			conn.close();
 			pstmt.close();
 			rs.close();
@@ -305,17 +304,63 @@ public class ItemDAO extends Database {
 		return true;
 	}
 
-	public boolean deleteItem(int itemIdx) {
+	public boolean deleteItem(int itemIdx) throws SQLException {
 		try {
+			conn.setAutoCommit(false);
 			String sql = "UPDATE items SET itemStatus = -1 WHERE itemIdx = " + itemIdx;
 			pstmt = conn.prepareStatement(sql);
 			pstmt.executeUpdate();
+			sql = "INSERT INTO deleteItem VALUES (" + itemIdx
+					+ ",LEFT(NOW(),10),DATE_ADD(LEFT(NOW(),10), INTERVAL 10 DAY))";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+			conn.commit();
 			conn.close();
 			pstmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+			conn.rollback();
 			return false;
 		}
 		return true;
+	}
+
+	public boolean deleteItemCencel(int itemIdx) throws SQLException {
+		try {
+			conn.setAutoCommit(false);
+			String sql = "UPDATE items SET itemStatus = 0 WHERE itemIdx = " + itemIdx;
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+			sql = "DELETE FROM deleteitem WHERE d_i_idx = " + itemIdx;
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+			conn.commit();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			conn.rollback();
+			return false;
+		}
+		return true;
+	}
+
+	public void deleteItemCheck() throws SQLException {
+		try {
+			String sql = "DELETE FROM items WHERE itemidx IN (SELECT d_i_idx FROM deleteitem WHERE removeExecuteDate <= LEFT(NOW(),10))";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+			sql = "DELETE FROM category WHERE ca_itemidx IN (SELECT d_i_idx FROM deleteitem WHERE removeExecuteDate <= LEFT(NOW(),10))";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+			sql = "DELETE FROM deleteitem WHERE removeExecuteDate <= LEFT(NOW(),10)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+			conn.commit();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			conn.rollback();
+		}
 	}
 }

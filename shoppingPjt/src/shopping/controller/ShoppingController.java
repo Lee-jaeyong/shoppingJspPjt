@@ -1,7 +1,9 @@
 package shopping.controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,6 +37,7 @@ public class ShoppingController extends HttpServlet {
 
 	private void doProcess(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		
 		String requestURI = request.getRequestURI();
 		int cmdIdx = requestURI.lastIndexOf("/") + 1;
 		String command = requestURI.substring(cmdIdx);
@@ -42,10 +45,16 @@ public class ShoppingController extends HttpServlet {
 		ActionForward forward = new ActionForward();
 		Action action = null;
 		if (command.equals("")) {
-
+			
 		} else if (command.equals("adminIndex.do")) {
 			forward.setPath("WEB-INF/backend/index.jsp");
 			forward.setRedirect(false);
+			try {
+				ItemDAO itemDAO = new ItemDAO();
+				itemDAO.deleteItemCheck();
+			} catch (SQLException | NamingException e) {
+				e.printStackTrace();
+			}
 		} else if (command.equals("adminItemList.do")) {
 			forward.setPath("WEB-INF/backend/itemlist.jsp");
 			forward.setRedirect(false);

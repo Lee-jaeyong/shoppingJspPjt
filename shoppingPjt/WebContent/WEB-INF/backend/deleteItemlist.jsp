@@ -5,27 +5,56 @@
 	const ctx = window.location.pathname.substring(0, window.location.pathname
 			.indexOf("/", 2));
 
-	$(document).ready(function() {
-		
-	});
-
-	function getDeleteItemList(pageNum){
+	function btnDeleteCencel(button){
 		$.ajax({
-			url : "./SelectDeleteItemList",
-			pageNum : pageNum,
-			dataType : "json",
+			url : "./UpdateDeleteItemCencel",
+			data : {
+				itemIdx : $(button).parents("tr").children().first().text()
+			},
 			success : function(data){
-				alert(data);
+				if(data === 'true')
+				{
+					alert("삭제 취소 완료");
+					getDeleteItemList(0);					
+				}
+				else
+					alert("삭제 취소 실패");
 			}
 		});
 	}
 	
+	function getDeleteItemList(pageNum) {
+		$.ajax({
+			url : "./SelectDeleteItemList",
+			dataType : "json",
+			success : function(data) {
+				var itemList = data.result;
+				var itemSection = "";
+				for(var i =0;i<itemList.length;i++)
+				{
+					itemSection += "<tr>";
+					itemSection += "<td>"+itemList[i].itemIdx+"</td>";
+					itemSection += "<td>"+itemList[i].itemCode+"</td>";
+					itemSection += "<td><img src='"+(ctx +"/uploadImage/"+ itemList[i].itemMainImg)+" 'style='width: 100px; height: 100px;'></td>";
+					itemSection += "<td>"+itemList[i].itemName+"</td>";
+					itemSection += "<td>"+itemList[i].itemPrice+"</td>";
+					itemSection += "<td>"+itemList[i].itemSalePrice+"</td>";
+					itemSection += "<td>"+itemList[i].removeDate+"</td>";
+					itemSection += "<td>"+itemList[i].removeExecuteDate+"</td>";
+					itemSection += '<td><button onclick="btnDeleteCencel(this);" class="btn btn-info">삭제 취소</button></td>';
+					itemSection += "</tr>";
+				}
+				$("#itemSection").html(itemSection);
+			}
+		});
+	}
+
 	function numberWithCommas(x) {
 		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 
 	window.onload = function() {
-		getDeleteItemList(0)
+		getDeleteItemList(0);
 	}
 </script>
 <body id="page-top">
@@ -38,8 +67,16 @@
 				<div class="jumbotron">
 					<h1>상품 삭제</h1>
 					<br />
-					<p>- 삭제한 상품은 모두 <strong>[삭제일 기준 일주일]</strong> 동안 이곳에 보관되며, <strong>일주일 후 삭제 처리</strong>됩니다.</p>
-					<p>- 삭제된 상품은 <strong>[복구]가 불가능</strong>합니다.</p>
+					<p>
+						- 삭제한 상품은 모두 <strong>[삭제일 기준 일주일]</strong> 동안 이곳에 보관되며, <strong>일주일
+							후 삭제 처리</strong>됩니다.
+					</p>
+					<p>
+						- 삭제된 상품은 <strong>[복구]가 불가능</strong>합니다.
+					</p>
+					<p>
+						- 삭제 취소 시 해당상품은 <strong>[판매 중지]</strong> 상태로 변경됩니다.
+					</p>
 				</div>
 				<hr />
 				<hr>
@@ -50,6 +87,7 @@
 				<table class="table table-striped">
 					<thead>
 						<tr>
+							<th style="width: 100px;">번 호</th>
 							<th style="width: 100px;">상품 코드</th>
 							<th style="width: 50px;">이미지</th>
 							<th style="width: 100px;">상품명</th>

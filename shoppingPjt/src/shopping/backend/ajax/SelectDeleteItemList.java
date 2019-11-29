@@ -27,19 +27,28 @@ public class SelectDeleteItemList extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
+		response.setCharacterEncoding("utf-8");
 		try {
 			ItemDAO itemDAO = new ItemDAO();
-			ArrayList<ItemDTO> list = itemDAO.selectDeleteItemList(pageNum);
+			ArrayList<ItemDTO> list = itemDAO.selectDeleteItemList();
+			response.getWriter().write(getJson(list));
 		} catch (SQLException | NamingException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private String getJson(ArrayList<ItemDTO> list) {
 		StringBuilder json = new StringBuilder();
 		json.append("{\"result\":[");
-		
+		for (int i = 0; i < list.size(); i++) {
+			json.append("{\"itemIdx\":\"" + list.get(i).getItemIdx() + "\",\"itemCode\":\"" + list.get(i).getItemCode()
+					+ "\",\"itemMainImg\":\"" + list.get(i).getItemMainImg() + "\",\"itemName\":\""
+					+ list.get(i).getItemName() + "\",\"itemPrice\":\""+list.get(i).getItemPrice()+ "\",\"itemSalePrice\":\"" + list.get(i).getItemSalePrice()
+					+ "\",\"removeDate\":\"" + list.get(i).getRemoveDate() + "\",\"removeExecuteDate\":\""
+					+ list.get(i).getRemoveExecuteDate() + "\"}");
+			if (i != list.size() - 1)
+				json.append(",");
+		}
 		json.append("]}");
 		return json.toString();
 	}

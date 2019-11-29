@@ -24,8 +24,9 @@ public class ItemDTO {
 	private String removeExecuteDate;
 	
 	// 상품 제거 목록을 보여줄 때 필요한 생성자
-	public ItemDTO(String itemCode, String itemMainImg, String itemName, long itemPrice, long itemSalePrice,
+	public ItemDTO(int itemIdx, String itemCode, String itemMainImg, String itemName, long itemPrice, long itemSalePrice,
 			String removeDate, String removeExecuteDate) {
+		this.itemIdx = itemIdx;
 		this.itemCode = itemCode;
 		this.itemMainImg = itemMainImg;
 		this.itemName = itemName;

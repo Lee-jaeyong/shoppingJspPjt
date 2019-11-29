@@ -20,7 +20,21 @@ public class ItemDTO {
 	private String smallCategoryName;
 	private String itemDate;
 	private int itemStock;
-
+	private String removeDate;
+	private String removeExecuteDate;
+	
+	// 상품 제거 목록을 보여줄 때 필요한 생성자
+	public ItemDTO(String itemCode, String itemMainImg, String itemName, long itemPrice, long itemSalePrice,
+			String removeDate, String removeExecuteDate) {
+		this.itemCode = itemCode;
+		this.itemMainImg = itemMainImg;
+		this.itemName = itemName;
+		this.itemPrice = itemPrice;
+		this.itemSalePrice = itemSalePrice;
+		this.removeDate = removeDate;
+		this.removeExecuteDate = removeExecuteDate;
+	}
+	
 	// 상품 정보 수정시 필요한 생성자
 	public ItemDTO(int itemIdx, String itemName, String itemDetailImg, long itemPrice, long itemSalePrice,
 			String itemManufacuter, String itemOrigin, String itemContent) {
@@ -97,6 +111,22 @@ public class ItemDTO {
 		this.itemColor = itemColor;
 	}
 
+	public void setRemoveExecuteDate(String removeExecuteDate) {
+		this.removeExecuteDate = removeExecuteDate;
+	}
+	
+	public void setRemoveDate(String removeDate) {
+		this.removeDate = removeDate;
+	}
+	
+	public String getRemoveExecuteDate() {
+		return removeExecuteDate;
+	}
+	
+	public String getRemoveDate() {
+		return removeDate;
+	}
+	
 	public String getCategoryName() {
 		return categoryName;
 	}

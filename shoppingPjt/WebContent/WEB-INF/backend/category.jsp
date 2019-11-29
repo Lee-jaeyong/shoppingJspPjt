@@ -11,7 +11,8 @@
 				url : "./updateCategoryStatusServlet",
 				data : {
 					categoryNumber : $(this).parents().prev().prev().val(),
-					status : status
+					status : status,
+					type : "true"
 				},
 				success : function(data) {
 					if (data === 'true')
@@ -73,35 +74,35 @@
 			});
 		});
 
-		$("button[name=dropCategory]").click(function() {
-			$.ajax({
-				url : "./deleteCategoryServlet",
-				data : {
-					data : $(this).parents().prev().prev().val(),
-					type : 'false'
-				},
-				success : function(data) {
-					location.href = './adminCategoryManage.do';
-				}
-			});
-		});
-
-		$("#deleteCategoryBtn").click(function() {
-			var array = "";
-			$("input[name=categoryStatus]:checked").each(function() {
-				array += $(this).val() + ",";
-			});
-			$.ajax({
-				url : "./deleteCategoryServlet",
-				data : {
-					data : array,
-					type : 'true'
-				},
-				success : function(data) {
-					location.href = './adminCategoryManage.do';
-				}
-			});
-		});
+		$("#updateStatusCategoryBtn")
+				.click(
+						function() {
+							var array = "";
+							$("input[name=categoryStatus]:checked").each(
+									function() {
+										array += $(this).val() + ",";
+									});
+							$("input[name='smallCategoryStatus']:checked")
+									.val()
+							$
+									.ajax({
+										url : "./updateCategoryStatusServlet",
+										data : {
+											data : array,
+											status : $(
+													"input[name='smallCategoryStatus']:checked")
+													.val(),
+											type : "false"
+										},
+										success : function(data) {
+											if (data === 'true') {
+												alert("판매 상태 변경 완료");
+												location.href = './adminCategoryManage.do';
+											} else
+												alert("판매 상태 변경 실패");
+										}
+									});
+						});
 
 		$("#addCategoryBtn").click(function() {
 			if ($("#inputCategoryName").val().trim() === '') {
@@ -147,21 +148,19 @@
 					success : function(data) {
 						var html = '';
 						for (var i = 0; i < data.category.length; i++) {
-							var status = "판매 중지";
+							var status = '<button class="btn btn-outline-danger btn-sm">판매 중지</button>';
 							if (data.category[i].categoryStatus == 0)
-								status = "판매 중";
+								status = '<button class="btn btn-outline-primary">판매 중</button>';
 							html += '<li class="mb-2">';
 							html += '<div class="input-group mb-3 col-lg-12">';
 							html += '<input type="hidden" value="'+data.category[i].categoryChkIdx+'" /> <input type="text" class="form-control" value="'+data.category[i].categoryName+'" disabled="disabled">';
 							html += '<div class="input-group-append">';
 							html += '<button name="smallCategoryAddBtn" class="input-group-text">+</button>';
-							html += '<button name="dropCategory" class="input-group-text">삭 제</button>';
-							html += '<button name="updateCategory" class="input-group-text">수 정</button>';
-							html += '<button name="updateCategoryExecute" class="input-group-text" style="display:none">수정 완료</button>';
-							html += '<label class="input-group-text">' + status
-									+ '</label>';
+							html += '<button name="updateCategory" class="btn btn-success">수 정</button>';
+							html += '<button name="updateCategoryExecute" class="btn btn-success" style="display:none">수정 완료</button>';
+							html += status;
 							html += '<input type="hidden" value='+data.category[i].categoryStatus+'/>';
-							html += '<button name="updateStatusCategory" class="input-group-text">판매 상태 수정</button>';
+							html += '<button name="updateStatusCategory" class="btn btn-info">판매 상태 수정</button>';
 							html += '</div></div><ul>';
 							for (var j = 0; j < data.smallCategory.length; j++) {
 								if (data.category[i].categoryChkIdx == data.smallCategory[j].categoryHighIdx) {
@@ -169,8 +168,12 @@
 									html += '<div class="input-group-prepend">';
 									html += '<button name="smallCategoryUpdate" class="input-group-text"> 수 정 </button>';
 									html += '<button name="smallCategoryUpdateExecute" class="input-group-text" style="display:none"> 수정 완료 </button>';
-									html += '</div><input type="checkbox" name="categoryStatus" class="form-check-input" value="'+data.smallCategory[j].categoryChkIdx+'">';
+									html += '</div><input type="checkbox" name="categoryStatus" class="form-check-input" value="'+data.smallCategory[j].categoryChkIdx+'" style="width:17px; height:20px;">';
 									html += '<input type="text" class="form-control" value='+data.smallCategory[j].categoryName+' disabled="disabled">';
+									var smallCategoryStatus = '<label class="form-control btn btn-warning btn-sm">판매 중지</label>';
+									if (data.smallCategory[j].categoryStatus == 1)
+										smallCategoryStatus = '<label class="form-control btn btn-primary btn-sm">판매 중</label>';
+									html += smallCategoryStatus;
 									html += '</div>';
 								}
 							}
@@ -194,7 +197,14 @@ ul {
 		<%@include file="./include/sideBar.jsp"%>
 		<div id="content-wrapper">
 			<div class="container-fluid">
-				<!-- Breadcrumbs-->
+				<div class="jumbotron">
+					<h1>카테고리(분류)관리 시 유의 사항</h1>
+					<br />
+					<p>- 카테고리는 <strong>[삭제가 불가능]</strong>하며 등록시 신중하게 등록해주시기 바랍니다.</p>
+					<p>
+						- <strong>(소)카테고리 판매 상태</strong> 변경시 체크 버튼을 클릭 후 <strong>[소 분류 판매 상태 변경]을 클릭</strong>해주시기 바랍니다.
+					</p>
+				</div>
 				<hr>
 				<strong>분류 관리</strong>
 				<hr>
@@ -204,8 +214,20 @@ ul {
 						<div class="jumbotron">
 							<button id="btnCategoryAdd" type="button"
 								class="btn btn-info mb-3">대 카테고리 추가</button>
-							<button type="button" id="deleteCategoryBtn"
-								class="btn btn-info mb-3">소 분류 삭 제</button>
+							<div class="form-check-inline ml-5">
+								<label class="form-check-label"> <input type="radio"
+									class="form-check-input" name="smallCategoryStatus"
+									checked="checked" value="1">판매 중
+								</label>
+							</div>
+							<div class="form-check-inline disabled">
+								<label class="form-check-label"> <input type="radio"
+									class="form-check-input" name="smallCategoryStatus" value="0">판매
+									중지
+								</label>
+							</div>
+							<button type="button" id="updateStatusCategoryBtn"
+								class="btn btn-info mb-3">소 분류 판매 상태 변경</button>
 							<div id="categoryArea" class="jumbotron bg-light">
 								<ul id="mainCategoryArea">
 								</ul>

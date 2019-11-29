@@ -5,17 +5,30 @@
 	const ctx = window.location.pathname.substring(0, window.location.pathname
 			.indexOf("/", 2));
 	var smallCategory;
+	var checkShowImg = -1;
 	$(function() {
-		$("#showStatus").change(function(){
-			getItemList(0);
-			alert("fds");
+		$("#btnChangeMainImg").click(
+				function() {
+					alert("메인이미지 변경 완료");
+					$("#changeImgForm").attr("action",
+							"./adminItemMainImgUpdate.do").submit();
+				});
+
+		$("#inputChangeMainImg").change(function() {
+			readURL(this, 'changeMainImg');
 		});
-		
+
+		$("#showStatus").change(function() {
+			$("#searchItemStatus").val($(this).val());
+			getItemList(0);
+		});
+
 		$("#selectShowImg").change(function() {
 			if ($(this).val() === 'false')
 				$(".showImg").attr("class", "hideImg");
 			else
 				$(".hideImg").attr("class", "showImg");
+			checkShowImg *= -1;
 		});
 
 		$("#btnAllChkTrue").click(function() {
@@ -149,6 +162,16 @@
 		});
 	});
 
+	function mainImgUpdate(button) {
+		$(button).parents("td").prev().prev().text();
+		var imgPath = $(button).prev().prev().attr("src");
+		var originImg = imgPath.toString().lastIndexOf("/") + ".jpg";
+		$("#beforeMainImg").attr("src", imgPath);
+		$("#inputChangeMainImgIdx").val(
+				$(button).parents("td").prev().prev().text());
+		$("#originMainImg").val(originImg);
+	}
+
 	function showItemOption(button) {
 		$
 				.ajax({
@@ -225,64 +248,78 @@
 						searchItemSmallCategory : $("#searchItemSmallCategory")
 								.val(),
 						searchItemBefore : $("#searchItemBefore").val(),
-						searchItemAfter : $("#searchItemAfter").val()
+						searchItemAfter : $("#searchItemAfter").val(),
+						searchItemStatus : $("#searchItemStatus").val()
 					},
 					dataType : "json",
 					success : function(data) {
 						var items = data.result;
-						var startBlock = parseInt(data.startBlock);
-						var endBlock = parseInt(data.endBlock);
-						var totalBlock = parseInt(data.totalBlock);
-						var nowPageNum = parseInt($("#nowPageNum").val());
-						var itemSection = "";
-						var pageArea = "";
+						if (items.length == 0) {
+							var itemSection = "<tr><td class='text-success' colspan='10'><strong>* 상품이 존재하지 않습니다.</strong></td></tr>";
+							$("#itemSection").html(itemSection);
+						} else {
+							var startBlock = parseInt(data.startBlock);
+							var endBlock = parseInt(data.endBlock);
+							var totalBlock = parseInt(data.totalBlock);
+							var nowPageNum = parseInt($("#nowPageNum").val());
+							var itemSection = "";
+							var pageArea = "";
+							var showImgClass = "showImg";
+							if (checkShowImg == -1)
+								showImgClass = "hideImg";
 
-						for (var i = 0; i < items.length; i++) {
-							var status = items[i].itemStatus == 1 ? "판매중"
-									: "판매 중지";
-							itemSection += "<tr>";
-							itemSection += '<td><input type="checkBox" name="itemIdx" value="'+items[i].itemIdx+'" style="width:25px;height:25px;"/></td>';
-							itemSection += '<td>' + items[i].itemIdx + '</td>';
-							itemSection += '<td>' + items[i].itemCode + '</td>';
-							itemSection += '<td class="hideImg"><img src="'+ctx+'/uploadImage/'+items[i].itemMainImg+'" style="width: 100px; height: 100px;"></td>';
-							itemSection += '<td>' + items[i].itemName + '</td>';
-							itemSection += '<td><button onclick="showItemOption(this)" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">옵션/재고 보기</button></td>';
-							itemSection += '<td>' + status + '</td>';
-							itemSection += '<td>'
-									+ numberWithCommas(items[i].itemPrice)
-									+ '₩</td>';
-							itemSection += '<td>'
-									+ numberWithCommas(items[i].itemSalePrice)
-									+ '₩</td>';
-							itemSection += '<td><button type="button" name="showItem" class="btn btn-secondary" onclick="showItemInfo('
-									+ items[i].itemIdx + ')">보 기</button></td>';
-							itemSection += "<tr>";
-						}
-						$("#itemSection").html(itemSection);
-
-						if (startBlock == 0)
-							pageArea += '<button type="button" class="btn btn-info" disabled="disabled"><</button>';
-						else
-							pageArea += '<button type="button" class="btn btn-info"><</button>';
-
-						for (var i = startBlock; i < endBlock; i++) {
-							if (i == nowPageNum) {
-								pageArea += '<button type="button" disabled="disabled" class="btn btn-success">'
-										+ (i + 1) + '</button>';
-							} else {
-								pageArea += '<button type="button" onclick="getItemList('
-										+ i
-										+ ')" class="btn btn-info">'
-										+ (i + 1) + '</button>';
+							for (var i = 0; i < items.length; i++) {
+								var status = items[i].itemStatus == 1 ? "<label class='btn btn-primary btn-sm'>판매중</label>"
+										: items[i].itemStatus == -1 ? "<label class='btn btn-danger btn-sm'>삭제 보류</label>"
+												: "<label class='btn btn-warning btn-sm'>판매 중지</label>";
+								itemSection += "<tr>";
+								itemSection += '<td><input type="checkBox" name="itemIdx" value="'+items[i].itemIdx+'" style="width:25px;height:25px;"/></td>';
+								itemSection += '<td>' + items[i].itemIdx
+										+ '</td>';
+								itemSection += '<td>' + items[i].itemCode
+										+ '</td>';
+								itemSection += '<td class="'+showImgClass+'"><img src="'+ctx+'/uploadImage/'+items[i].itemMainImg+'" style="width: 100px; height: 100px;"><br><button class="btn btn-info" onclick="mainImgUpdate(this)" data-toggle="modal" data-target="#updateModal">이미지 변경</button></td>';
+								itemSection += '<td><strong>'
+										+ items[i].itemName + '</strong></td>';
+								itemSection += '<td><button onclick="showItemOption(this)" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">옵션/재고 보기</button></td>';
+								itemSection += '<td>' + status + '</td>';
+								itemSection += '<td><strong>'
+										+ numberWithCommas(items[i].itemPrice)
+										+ '₩</strong></td>';
+								itemSection += '<td><strong>'
+										+ numberWithCommas(items[i].itemSalePrice)
+										+ '₩</strong></td>';
+								itemSection += '<td><button type="button" name="showItem" class="btn btn-secondary" onclick="showItemInfo('
+										+ items[i].itemIdx
+										+ ')">보 기</button></td>';
+								itemSection += "<tr>";
 							}
+							$("#itemSection").html(itemSection);
+
+							if (startBlock == 0)
+								pageArea += '<button type="button" class="btn btn-info" disabled="disabled"><</button>';
+							else
+								pageArea += '<button type="button" class="btn btn-info"><</button>';
+
+							for (var i = startBlock; i < endBlock; i++) {
+								if (i == nowPageNum) {
+									pageArea += '<button type="button" disabled="disabled" class="btn btn-success">'
+											+ (i + 1) + '</button>';
+								} else {
+									pageArea += '<button type="button" onclick="getItemList('
+											+ i
+											+ ')" class="btn btn-info">'
+											+ (i + 1) + '</button>';
+								}
+							}
+
+							if (endBlock == totalBlock)
+								pageArea += '<button type="button" class="btn btn-info" disabled="disabled">></button>';
+							else
+								pageArea += '<button type="button" class="btn btn-info">></button>';
+
+							$("#pageArea").html(pageArea);
 						}
-
-						if (endBlock == totalBlock)
-							pageArea += '<button type="button" class="btn btn-info" disabled="disabled">></button>';
-						else
-							pageArea += '<button type="button" class="btn btn-info">></button>';
-
-						$("#pageArea").html(pageArea);
 					}
 				});
 	}
@@ -296,6 +333,18 @@
 		$("#showItemInfo").attr("action", "./adminAddItem.do").attr("method",
 				"post").submit();
 	}
+
+	// 이미지 미리보기
+	function readURL(input, area) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				document.getElementById(area).src = e.target.result;
+			};
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+
 	window.onload = function() {
 		getItemList(0);
 		categoryLoad();
@@ -461,7 +510,8 @@
 					</div>
 					<div class="col-lg-2 mb-4">
 						<select class="form-control" id="showStatus">
-							<option selected="" value="1">판매 중 보기</option>
+							<option selected="" value="-1">전체 보기</option>
+							<option value="1">판매 중 보기</option>
 							<option value="0">판매 중지 보기</option>
 						</select>
 					</div>
@@ -553,12 +603,59 @@
 			</div>
 		</div>
 	</div>
+	<!-- The Modal -->
+	<div class="modal fade" id="updateModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">메인 이미지 변경</h4>
+					<button type="button" class="close" data-dismiss="modal">×</button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-6">
+							<span class="text-danger">* 변경 전 이미지</span> <img src=""
+								id="beforeMainImg" style="width: 200px; height: 200px;" />
+						</div>
+						<div class="col-lg-6">
+							<form id="changeImgForm" method="post"
+								enctype="multipart/form-data">
+								<div class="input-group mb-3">
+									<input id="inputChangeMainImg" name="inputChangeMainImg"
+										type="file" class="form-control">
+								</div>
+								<input type="hidden" id="inputChangeMainImgIdx"
+									name="inputChangeMainImgIdx" value="" /> <input type="hidden"
+									id="originMainImg" name="originMainImg" value="" />
+							</form>
+							* 변경 후 이미지 <img
+								src="${pageContext.request.contextPath}/uploadImage/img.png"
+								id="changeMainImg" style="width: 200px; height: 150px;">
+						</div>
+					</div>
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button id="btnChangeMainImg" type="button" class="btn btn-danger"
+						data-dismiss="modal">변 경</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal">닫
+						기</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<input type="hidden" id="nowPageNum" value="0" />
 	<input type="hidden" id="searchItemType" value="" />
 	<input type="hidden" id="searchItemTitle" value="" />
 	<input type="hidden" id="searchItemSmallCategory" value="" />
 	<input type="hidden" id="searchItemBefore" value="" />
 	<input type="hidden" id="searchItemAfter" value="" />
+	<input type="hidden" id="searchItemStatus" value="-1" />
 	<form id="showItemInfo">
 		<input type="hidden" id="showItemInfoIdx" name="showItemInfoIdx"
 			value="" />

@@ -113,7 +113,7 @@
 		for (int i = 0; i < list.size() - 1; i++) {
 			row = sheet.createRow(i + 2);
 			for (int j = 0; j < list.get(0).length; j++) {
-				row.createCell(j).setCellValue(list.get(i)[j]);
+				row.createCell(j).setCellValue(list.get(i+1)[j]);
 			}
 		}
 		out.clear();

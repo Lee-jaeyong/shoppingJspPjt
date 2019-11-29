@@ -37,6 +37,7 @@ public class SelectItemServlet extends HttpServlet {
 		String searchItemSmallCategory = new SecureString().cleanXSS(request.getParameter("searchItemSmallCategory"));
 		String searchItemBefore = request.getParameter("searchItemBefore");
 		String searchItemAfter = request.getParameter("searchItemAfter");
+		String searchItemStatus = request.getParameter("searchItemStatus");
 
 		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		String sortType = request.getParameter("sortType");
@@ -52,7 +53,7 @@ public class SelectItemServlet extends HttpServlet {
 				endBlock = totalBlock;
 			itemDAO = new ItemDAO();
 			ArrayList<ItemDTO> list = itemDAO.selectItem(pageNum, sortType, showType, searchItemType, searchItemTitle,
-					searchItemSmallCategory, searchItemBefore, searchItemAfter);
+					searchItemSmallCategory, searchItemBefore, searchItemAfter, searchItemStatus);
 			response.getWriter().write(getJson(list, startBlock, endBlock, totalBlock));
 		} catch (SQLException | NamingException e) {
 			e.printStackTrace();

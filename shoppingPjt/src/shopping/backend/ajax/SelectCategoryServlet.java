@@ -54,7 +54,7 @@ public class SelectCategoryServlet extends HttpServlet {
 			str.append("{\"categoryName\" : \"" + sqString.returnString(smallList.get(i).getCategoryName())
 					+ "\",\"categoryChkIdx\" : \"" + smallList.get(i).getCategoryChkIdx()
 					+ "\", \"categoryHighIdx\" : \"" + smallList.get(i).getCategoryHighIdx()
-					+ "\"}");
+					+ "\",\"categoryStatus\" : \""+smallList.get(i).getCategoryStatus()+"\"}");
 			if (i != smallList.size() - 1)
 				str.append(",");
 		}

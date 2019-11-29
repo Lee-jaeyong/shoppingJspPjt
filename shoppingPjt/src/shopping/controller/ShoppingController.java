@@ -13,6 +13,7 @@ import shopping.backend.model.AddItem;
 import shopping.backend.model.ExcelFileUpload;
 import shopping.backend.model.SelectItemInfo;
 import shopping.backend.model.UpdateItem;
+import shopping.backend.model.UpdateItemMainImg;
 import shopping.database.dao.ItemDAO;
 
 @WebServlet("/ShoppingAdminController")
@@ -77,6 +78,12 @@ public class ShoppingController extends HttpServlet {
 		} else if (command.equals("adminUpdateItemExecute.do")) {
 			action = new UpdateItem();
 			forward = action.execute(request, response);
+		} else if (command.equals("adminItemMainImgUpdate.do")) {
+			action = new UpdateItemMainImg();
+			forward = action.execute(request, response);
+		} else if (command.equals("adminDeleteItemList.do")) {
+			forward.setPath("WEB-INF/backend/deleteItemlist.jsp");
+			forward.setRedirect(false);
 		}
 		if (forward.isRedirect()) {
 			response.sendRedirect(forward.getPath());

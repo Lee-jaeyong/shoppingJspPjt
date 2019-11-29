@@ -15,6 +15,26 @@
 	$(document)
 			.ready(
 					function() {
+						$("#btnDeleteItem").click(function(){
+							if(confirm("상품 삭제 시 (7일) 동안 삭제 내역에 보관 되며, 이후 되돌릴 수 없습니다. 정말로 삭제하시겠습니까?")){
+								$.ajax({
+									url : "./DeleteItemServlet",
+									data : {
+										data : $("input[name=itemIdx]").val()
+									},
+									success : function(data){
+										if(data === 'true')
+										{
+											alert("삭제 완료");
+											location.href="./adminItemList.do";										
+										}
+										else
+											alert("삭제 실패");
+									}
+								});
+							}
+						});
+						
 						$("#colorAdd").click(function() {
 							addColorOrSize('opColorArea');
 						});
@@ -244,6 +264,9 @@
 		<div id="content-wrapper">
 
 			<div class="container-fluid">
+				<%
+					if (request.getAttribute("item") == null) {
+				%>
 				<div class="jumbotron">
 					<h1>상품 등록 시 유의 사항</h1>
 					<br />
@@ -255,9 +278,6 @@
 				</div>
 				<hr />
 				<!-- Breadcrumbs-->
-				<%
-					if (request.getAttribute("item") == null) {
-				%>
 				<strong>상품 등록</strong>
 				<%
 					} else {
@@ -485,7 +505,7 @@
 					%>
 				</form>
 				<div class="row" style="margin-bottom: 200px;">
-					<div class="col-sm-7"></div>
+					<div class="col-sm-6"></div>
 					<div class="col-sm-4">
 						<%
 							if (item == null) {
@@ -495,6 +515,7 @@
 							} else {
 						%>
 						<button id="btnUpdateItem" class="btn btn-success">상품 수정</button>
+						<button id="btnDeleteItem" class="btn btn-danger">상품 삭제</button>
 						<%
 							}
 						%>

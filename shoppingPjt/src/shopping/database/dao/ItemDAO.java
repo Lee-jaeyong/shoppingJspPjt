@@ -69,7 +69,8 @@ public class ItemDAO extends Database {
 	}
 
 	public ArrayList<ItemDTO> selectItem(int pageNum, String sortType, int showType, String searchItemType,
-			String searchItemTitle, String searchItemSmallCategory, String searchItemBefore, String searchItemAfter) {
+			String searchItemTitle, String searchItemSmallCategory, String searchItemBefore, String searchItemAfter,
+			String searchItemStatus) {
 		ArrayList<ItemDTO> list = new ArrayList<ItemDTO>();
 		try {
 			StringBuilder sqlWhere = new StringBuilder();
@@ -88,8 +89,14 @@ public class ItemDAO extends Database {
 				if (!searchItemBefore.equals(""))
 					sqlWhere.append(" itemDate BETWEEN '" + searchItemBefore + "' AND '" + searchItemAfter + "'");
 			}
+			String statusChk = "";
+			if (searchItemStatus.equals("1"))
+				statusChk = " AND itemStatus = 1";
+			else if (searchItemStatus.equals("0"))
+				statusChk = " AND itemStatus = 0";
+
 			String sql = "SELECT itemIdx,itemCode,itemMainImg,itemName,itemStatus,itemPrice,itemSalePrice\r\n"
-					+ "FROM items,category WHERE items.itemIdx = category.ca_itemIdx " + sqlWhere.toString()
+					+ "FROM items,category WHERE items.itemIdx = category.ca_itemIdx " + statusChk + sqlWhere.toString()
 					+ " ORDER BY " + sortType + " LIMIT " + pageNum * showType + "," + showType + "";
 			pstmt = conn.prepareStatement(sql);
 			if (!searchItemTitle.equals(""))
@@ -145,6 +152,26 @@ public class ItemDAO extends Database {
 			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return list;
+		}
+		return list;
+	}
+
+	public ArrayList<ItemDTO> selectDeleteItemList(int pageNum) {
+		ArrayList<ItemDTO> list = new ArrayList<ItemDTO>();
+		try {
+			String sql = "SELECT itemCode, itemMainImg,itemName,itemPrice,itemSalePrice,removeDate,removeExecuteDate\r\n"
+					+ "FROM items,deleteItem\r\n" + "WHERE items.itemIdx = deleteItem.d_i_idx \r\n" + "LIMIT "
+					+ (pageNum * 10) + ", 10";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next())
+				list.add(new ItemDTO(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5),
+						rs.getString(6), rs.getString(7)));
+			conn.close();
+			pstmt.close();
+			rs.close();
+		} catch (Exception e) {
 			return list;
 		}
 		return list;
@@ -258,6 +285,36 @@ public class ItemDAO extends Database {
 		} finally {
 			conn.close();
 			pstmt.close();
+		}
+		return true;
+	}
+
+	public boolean updateItemMainImg(int itemIdx, String itemMainImg) {
+		try {
+			String sql = "UPDATE items SET itemMainImg = ? WHERE itemIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, itemMainImg);
+			pstmt.setInt(2, itemIdx);
+			pstmt.executeUpdate();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	public boolean deleteItem(int itemIdx) {
+		try {
+			String sql = "UPDATE items SET itemStatus = -1 WHERE itemIdx = " + itemIdx;
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
 		return true;
 	}

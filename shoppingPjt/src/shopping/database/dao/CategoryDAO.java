@@ -79,39 +79,6 @@ public class CategoryDAO extends Database {
 		return true;
 	}
 
-	public boolean deleteCategory(boolean categoryType, String[] categoryNumbers) throws SQLException {
-		try {
-			conn.setAutoCommit(false);
-			if (categoryType) {
-				for (int i = 0; i < categoryNumbers.length; i++) {
-					String sql = "DELETE FROM smallcategory WHERE smallcategoryIdx = ?";
-					pstmt = conn.prepareStatement(sql);
-					pstmt.setInt(1, Integer.parseInt(categoryNumbers[i]));
-					pstmt.executeUpdate();
-				}
-			} else {
-				String sql = "DELETE FROM categorycheck WHERE categoryChkIdx = ?";
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, Integer.parseInt(categoryNumbers[0]));
-				pstmt.executeUpdate();
-				sql = "DELETE FROM smallcategory WHERE categoryHighIdx = ?";
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, Integer.parseInt(categoryNumbers[0]));
-				pstmt.executeUpdate();
-			}
-			conn.commit();
-		} catch (Exception e) {
-			conn.rollback();
-			return false;
-		} finally {
-			if (conn != null)
-				conn.close();
-			if (pstmt != null)
-				pstmt.close();
-		}
-		return true;
-	}
-
 	public boolean updateCategory(boolean categoryType, int categoryNumber, String categoryName) {
 		try {
 			String sql = "";
@@ -144,5 +111,19 @@ public class CategoryDAO extends Database {
 			return false;
 		}
 		return true;
+	}
+
+	public void updateSmallCategoryStatus(String[] categoryIdx, int categoryStatus) {
+		try {
+			for (int i = 0; i < categoryIdx.length; i++) {
+				String sql = "UPDATE smallcategory SET smallcategoryStatus = " + categoryStatus + " WHERE smallcategoryIdx = "
+						+ categoryIdx[i];
+				pstmt = conn.prepareStatement(sql);
+				pstmt.executeUpdate();
+			}
+			pstmt.close();
+			conn.close();
+		} catch (Exception e) {
+		}
 	}
 }

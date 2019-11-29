@@ -125,14 +125,15 @@
 			});
 		});
 		$("button[name=smallCategoryAddBtn]").click(
-				function() {
-					$("#categoryType").val(
-							$(this).parents().prev().prev().val());
-					$("#addCategoryType").html(
-							"<h4>(" + $("#categoryType").val()
-									+ ")* 소 카테고리 추가</h4>");
-					$("#spanAddCategory").html("소 카테고리 명");
-				});
+			function() {
+				$("#categoryType").val(
+						$(this).parents().prev().children().first().val());
+				alert($("#categoryType").val());
+				$("#addCategoryType").html(
+						"<h4>(" + $("#categoryType").val()
+								+ ")* 소 카테고리 추가</h4>");
+				$("#spanAddCategory").html("소 카테고리 명");
+		});
 		$("#btnCategoryAdd").click(function() {
 			$("#addCategoryType").html("<h4>* 대 카테고리 추가</h4>");
 			$("#spanAddCategory").html("대 카테고리 명");
@@ -140,6 +141,15 @@
 			$("#inputCategoryName").val("");
 		});
 	});
+	
+	function smallCategoryAddBtnAction(smallCategoryIdx){
+		$("#categoryType").val(smallCategoryIdx);
+		$("#addCategoryType").html(
+				"<h4>(" + $("#categoryType").val()
+						+ ")* 소 카테고리 추가</h4>");
+		$("#spanAddCategory").html("소 카테고리 명");
+	}
+	
 	function categoryLoad() {
 		$
 				.ajax({
@@ -153,21 +163,23 @@
 								status = '<button class="btn btn-outline-primary">판매 중</button>';
 							html += '<li class="mb-2">';
 							html += '<div class="input-group mb-3 col-lg-12">';
-							html += '<input type="hidden" value="'+data.category[i].categoryChkIdx+'" /> <input type="text" class="form-control" value="'+data.category[i].categoryName+'" disabled="disabled">';
+							html += '<input type="hidden" value="'+data.category[i].categoryChkIdx+'" />';
+							html += '<button type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#demo'+data.category[i].categoryChkIdx+'">▼</button>';
+							html += '<input type="text" class="form-control" value="'+data.category[i].categoryName+'" disabled="disabled">';
 							html += '<div class="input-group-append">';
-							html += '<button name="smallCategoryAddBtn" class="input-group-text">+</button>';
+							html += '<button onclick="smallCategoryAddBtnAction('+data.category[i].categoryChkIdx+')" class="btn btn-dark">+</button>';
 							html += '<button name="updateCategory" class="btn btn-success">수 정</button>';
 							html += '<button name="updateCategoryExecute" class="btn btn-success" style="display:none">수정 완료</button>';
 							html += status;
 							html += '<input type="hidden" value='+data.category[i].categoryStatus+'/>';
 							html += '<button name="updateStatusCategory" class="btn btn-info">판매 상태 수정</button>';
-							html += '</div></div><ul>';
+							html += '</div></div><div id="demo'+data.category[i].categoryChkIdx+'" class="collapse"><ul>';
 							for (var j = 0; j < data.smallCategory.length; j++) {
 								if (data.category[i].categoryChkIdx == data.smallCategory[j].categoryHighIdx) {
 									html += '<div class="input-group mb-3 col-lg-6 input-group-sm">';
 									html += '<div class="input-group-prepend">';
-									html += '<button name="smallCategoryUpdate" class="input-group-text"> 수 정 </button>';
-									html += '<button name="smallCategoryUpdateExecute" class="input-group-text" style="display:none"> 수정 완료 </button>';
+									html += '<button name="smallCategoryUpdate" class="btn btn-success"> 수 정 </button>';
+									html += '<button name="smallCategoryUpdateExecute" class="btn btn-warning" style="display:none"> 수정 완료 </button>';
 									html += '</div><input type="checkbox" name="categoryStatus" class="form-check-input" value="'+data.smallCategory[j].categoryChkIdx+'" style="width:17px; height:20px;">';
 									html += '<input type="text" class="form-control" value='+data.smallCategory[j].categoryName+' disabled="disabled">';
 									var smallCategoryStatus = '<label class="form-control btn btn-warning btn-sm">판매 중지</label>';
@@ -177,7 +189,7 @@
 									html += '</div>';
 								}
 							}
-							html += '</ul></li><br />';
+							html += '</ul></div></li><br />';
 						}
 						$("#mainCategoryArea").html(html);
 					}
@@ -200,9 +212,12 @@ ul {
 				<div class="jumbotron">
 					<h1>카테고리(분류)관리 시 유의 사항</h1>
 					<br />
-					<p>- 카테고리는 <strong>[삭제가 불가능]</strong>하며 등록시 신중하게 등록해주시기 바랍니다.</p>
 					<p>
-						- <strong>(소)카테고리 판매 상태</strong> 변경시 체크 버튼을 클릭 후 <strong>[소 분류 판매 상태 변경]을 클릭</strong>해주시기 바랍니다.
+						- 카테고리는 <strong>[삭제가 불가능]</strong>하며 등록시 신중하게 등록해주시기 바랍니다.
+					</p>
+					<p>
+						- <strong>(소)카테고리 판매 상태</strong> 변경시 체크 버튼을 클릭 후 <strong>[소
+							분류 판매 상태 변경]을 클릭</strong>해주시기 바랍니다.
 					</p>
 				</div>
 				<hr>

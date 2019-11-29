@@ -357,6 +357,9 @@ public class ItemDAO extends Database {
 			sql = "DELETE FROM deleteitem WHERE removeExecuteDate <= LEFT(NOW(),10)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.executeUpdate();
+			sql = "DELETE FROM itemoptions WHERE op_i_idx IN (SELECT d_i_idx FROM deleteitem WHERE removeExecuteDate <= LEFT(NOW(),10))";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
 			conn.commit();
 			conn.close();
 			pstmt.close();

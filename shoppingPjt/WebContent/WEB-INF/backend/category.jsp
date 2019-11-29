@@ -3,26 +3,6 @@
 <%@include file="./include/head.html"%>
 <script type="text/javascript">
 	$(function() {
-		$("button[name=updateStatusCategory]").click(function() {
-			var status = 0;
-			if ($(this).prev().val() === '0/')
-				status = 1;
-			$.ajax({
-				url : "./updateCategoryStatusServlet",
-				data : {
-					categoryNumber : $(this).parents().prev().prev().val(),
-					status : status,
-					type : "true"
-				},
-				success : function(data) {
-					if (data === 'true')
-						location.href = './adminCategoryManage.do';
-					else
-						alert("카테고리 판매 상태 수정 실패");
-				}
-			});
-		});
-
 		$("button[name=updateCategory]").click(function() {
 			$(this).parents().prev().attr("disabled", false);
 			$(this).next().show();
@@ -49,24 +29,6 @@
 					categoryType : false,
 					categoryNumber : $(this).parents().next().val(),
 					categoryUpdateName : $(this).parents().next().next().val()
-				},
-				success : function(data) {
-					location.href = './adminCategoryManage.do';
-				}
-			});
-		});
-
-		$("button[name=updateCategoryExecute]").click(function() {
-			if ($(this).parents().prev().val().trim() === '') {
-				alert("카테고리 명을 입력해주세요");
-				return;
-			}
-			$.ajax({
-				url : "./updateCategoryServlet",
-				data : {
-					categoryType : true,
-					categoryNumber : $(this).parents().prev().prev().val(),
-					categoryUpdateName : $(this).parents().prev().val()
 				},
 				success : function(data) {
 					location.href = './adminCategoryManage.do';
@@ -142,6 +104,45 @@
 		});
 	});
 	
+	function updateStatusCategory(button,categoryIdx){
+		var status = 0;
+		if ($(button).prev().val() === '0/')
+			status = 1;
+		$.ajax({
+			url : "./updateCategoryStatusServlet",
+			data : {
+				categoryNumber : categoryIdx,
+				status : status,
+				type : "true"
+			},
+			success : function(data) {
+				if (data === 'true')
+					location.href = './adminCategoryManage.do';
+				else
+					alert("카테고리 판매 상태 수정 실패");
+			}
+		});
+	}
+	
+	function updateCategoryExecute(button,categoryIdx)
+	{
+		if ($(button).parents().prev().val().trim() === '') {
+			alert("카테고리 명을 입력해주세요");
+			return;
+		}
+		$.ajax({
+			url : "./updateCategoryServlet",
+			data : {
+				categoryType : true,
+				categoryNumber : categoryIdx,
+				categoryUpdateName : $(button).parents().prev().val()
+			},
+			success : function(data) {
+				location.href = './adminCategoryManage.do';
+			}
+		});
+	}
+	
 	function smallCategoryAddBtnAction(smallCategoryIdx){
 		$("#categoryType").val(smallCategoryIdx);
 		$("#addCategoryType").html(
@@ -169,10 +170,10 @@
 							html += '<div class="input-group-append">';
 							html += '<button onclick="smallCategoryAddBtnAction('+data.category[i].categoryChkIdx+')" class="btn btn-dark">+</button>';
 							html += '<button name="updateCategory" class="btn btn-success">수 정</button>';
-							html += '<button name="updateCategoryExecute" class="btn btn-success" style="display:none">수정 완료</button>';
+							html += '<button onclick="updateCategoryExecute(this,'+data.category[i].categoryChkIdx+')" class="btn btn-success" style="display:none">수정 완료</button>';
 							html += status;
 							html += '<input type="hidden" value='+data.category[i].categoryStatus+'/>';
-							html += '<button name="updateStatusCategory" class="btn btn-info">판매 상태 수정</button>';
+							html += '<button onclick="updateStatusCategory(this,'+data.category[i].categoryChkIdx+')" class="btn btn-info">판매 상태 수정</button>';
 							html += '</div></div><div id="demo'+data.category[i].categoryChkIdx+'" class="collapse"><ul>';
 							for (var j = 0; j < data.smallCategory.length; j++) {
 								if (data.category[i].categoryChkIdx == data.smallCategory[j].categoryHighIdx) {
@@ -228,7 +229,7 @@ ul {
 						* 상품 분류 설정
 						<div class="jumbotron">
 							<button id="btnCategoryAdd" type="button"
-								class="btn btn-info mb-3">대 카테고리 추가</button>
+								class="btn btn-info mb-3 mr-5">대 카테고리 추가</button>
 							<div class="form-check-inline ml-5">
 								<label class="form-check-label"> <input type="radio"
 									class="form-check-input" name="smallCategoryStatus"
@@ -242,13 +243,14 @@ ul {
 								</label>
 							</div>
 							<button type="button" id="updateStatusCategoryBtn"
-								class="btn btn-info mb-3">소 분류 판매 상태 변경</button>
+								class="btn btn-dark mb-3">소 분류 판매 상태 변경</button>
 							<div id="categoryArea" class="jumbotron bg-light">
 								<ul id="mainCategoryArea">
 								</ul>
 							</div>
 						</div>
 					</div>
+					
 					<div class="col-lg-6">
 						<div id="addCategoryType">
 							<h4>*대 카테고리 추가</h4>
@@ -272,7 +274,9 @@ ul {
 								</div>
 							</div>
 						</div>
+						<hr />
 					</div>
+					
 				</div>
 			</div>
 			<%@include file="./include/footer.jsp"%>

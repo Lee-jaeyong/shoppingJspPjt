@@ -27,6 +27,7 @@ public class SelectItemOptionServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		response.setCharacterEncoding("utf-8");
 		ItemDAO itemDAO;
 		try {
 			itemDAO = new ItemDAO();

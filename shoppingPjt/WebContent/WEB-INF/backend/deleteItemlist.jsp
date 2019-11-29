@@ -30,19 +30,26 @@
 			success : function(data) {
 				var itemList = data.result;
 				var itemSection = "";
-				for(var i =0;i<itemList.length;i++)
+				if(itemList.length != 0)
 				{
-					itemSection += "<tr>";
-					itemSection += "<td>"+itemList[i].itemIdx+"</td>";
-					itemSection += "<td>"+itemList[i].itemCode+"</td>";
-					itemSection += "<td><img src='"+(ctx +"/uploadImage/"+ itemList[i].itemMainImg)+" 'style='width: 100px; height: 100px;'></td>";
-					itemSection += "<td>"+itemList[i].itemName+"</td>";
-					itemSection += "<td>"+itemList[i].itemPrice+"</td>";
-					itemSection += "<td>"+itemList[i].itemSalePrice+"</td>";
-					itemSection += "<td>"+itemList[i].removeDate+"</td>";
-					itemSection += "<td>"+itemList[i].removeExecuteDate+"</td>";
-					itemSection += '<td><button onclick="btnDeleteCencel(this);" class="btn btn-info">삭제 취소</button></td>';
-					itemSection += "</tr>";
+					for(var i =0;i<itemList.length;i++)
+					{
+						itemSection += "<tr>";
+						itemSection += "<td>"+itemList[i].itemIdx+"</td>";
+						itemSection += "<td>"+itemList[i].itemCode+"</td>";
+						itemSection += "<td><img src='"+(ctx +"/uploadImage/"+ itemList[i].itemMainImg)+" 'style='width: 100px; height: 100px;'></td>";
+						itemSection += "<td>"+itemList[i].itemName+"</td>";
+						itemSection += "<td>"+itemList[i].itemPrice+"</td>";
+						itemSection += "<td>"+itemList[i].itemSalePrice+"</td>";
+						itemSection += "<td>"+itemList[i].removeDate+"</td>";
+						itemSection += "<td>"+itemList[i].removeExecuteDate+"</td>";
+						itemSection += '<td><button onclick="btnDeleteCencel(this);" class="btn btn-info">삭제 취소</button></td>';
+						itemSection += "</tr>";
+					}
+				}
+				else
+				{
+					itemSection += "<tr><td class='text-success' colspan='9'><strong>* 삭제 내역이 존재하지 않습니다.</strong></td></tr>";
 				}
 				$("#itemSection").html(itemSection);
 			}

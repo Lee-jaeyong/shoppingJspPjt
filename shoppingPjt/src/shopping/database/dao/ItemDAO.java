@@ -347,6 +347,7 @@ public class ItemDAO extends Database {
 
 	public void deleteItemCheck() throws SQLException {
 		try {
+			conn.setAutoCommit(false);
 			String sql = "DELETE FROM items WHERE itemidx IN (SELECT d_i_idx FROM deleteitem WHERE removeExecuteDate <= LEFT(NOW(),10))";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.executeUpdate();

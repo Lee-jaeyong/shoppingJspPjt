@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.oreilly.servlet.MultipartRequest;
 
 import shopping.backend.model.AddItem;
+import shopping.front.model.AddUser;
 
 @WebServlet("/ShoppingAdminController")
 public class ShoppingController extends HttpServlet {
@@ -65,7 +66,7 @@ public class ShoppingController extends HttpServlet {
 		} else if (command.equals("adminAnswer.do")) {
 			forward.setPath("WEB-INF/backend/answer.jsp");
 			forward.setRedirect(false);
-		}
+		} 
 		////프론트////
 		  else if (command.equals("index.do")) {
 			forward.setPath("WEB-INF/front/index.jsp");
@@ -85,6 +86,9 @@ public class ShoppingController extends HttpServlet {
 		} else if (command.equals("join.do")) {
 			forward.setPath("WEB-INF/front/join.jsp");
 			forward.setRedirect(false);
+		} else if(command.equals("joinSubmit.do")) {
+			action = new AddUser();
+			forward = action.execute(request, response);
 		} else if (command.equals("thankyou.do")) {
 			forward.setPath("WEB-INF/front/thankyou.jsp");
 			forward.setRedirect(false);
@@ -93,6 +97,9 @@ public class ShoppingController extends HttpServlet {
 			forward.setRedirect(false);
 		} else if (command.equals("question.do")) {
 			forward.setPath("WEB-INF/front/question.jsp");
+			forward.setRedirect(false);
+		} else if(command.equals("userAddress.do")) {
+			forward.setPath("WEB-INF/front/address/jusoPopup.jsp");
 			forward.setRedirect(false);
 		}
 		

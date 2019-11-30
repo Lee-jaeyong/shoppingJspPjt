@@ -21,9 +21,7 @@ public class AddItem implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(true);
-		forward.setPath("./adminAddItem.do");
-		String fileName = "";
-		String fileLength = "";
+		forward.setPath("./adminItemList.do");
 		File file = null;
 		String savePath = request.getRealPath("uploadImage");
 		int maxSize = 5 * 1024 * 1024;
@@ -58,6 +56,7 @@ public class AddItem implements Action {
 			itemDAO.insertItem(new ItemDTO(itemName, itemStatus, img[0], itemPrice, itemSalePrice, img[1], itemManufacuter, itemOrigin,
 					itemContent, size, color), smCategoryNumber);
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.print("예외 발생 : " + e);
 		}
 		return forward;

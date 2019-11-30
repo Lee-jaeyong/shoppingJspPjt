@@ -28,8 +28,11 @@ public class updateCategoryStatusServlet extends HttpServlet {
 			throws ServletException, IOException {
 		try {
 			CategoryDAO categoryDAO = new CategoryDAO();
+			if(request.getParameter("type").equals("true"))
 			categoryDAO.updateCategoryStatus(Integer.parseInt(request.getParameter("categoryNumber")),
 					Integer.parseInt(request.getParameter("status")));
+			else
+				categoryDAO.updateSmallCategoryStatus(request.getParameter("data").split(","),Integer.parseInt(request.getParameter("status")));
 			response.getWriter().write("true");
 		} catch (SQLException | NamingException e) {
 			response.getWriter().write("false");

@@ -3,7 +3,7 @@
 	<Resource auth="Container"
 		driverClassName="com.mysql.jdbc.Driver" maxWait="5000"
 		name="jdbc/mydb" password="apmsetup" type="javax.sql.DataSource"
-		url="jdbc:mysql://localhost:3306/shoppingBase" username="root"
+		url="jdbc:mysql://localhost:3306/shoppingBase?characterEncoding=euckr&amp;useUnicode=true&amp;mysqlEncoding=euckr" username="root"
 		testOnBorrow="true" validationQuery="SELECT 1 FROM DUAL" />
 	<ResourceLink type="javax.sql.data.DataSource"
 		name="jdbc/mydb" global="jdbc/shoppingPjt" />

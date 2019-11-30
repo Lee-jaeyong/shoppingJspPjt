@@ -18,6 +18,7 @@ import shopping.backend.model.UpdateItem;
 import shopping.backend.model.UpdateItemMainImg;
 import shopping.database.dao.ItemDAO;
 import shopping.front.model.AddUser;
+import shopping.front.model.LoginUser;
 
 @WebServlet("/ShoppingAdminController")
 public class ShoppingController extends HttpServlet {
@@ -42,7 +43,7 @@ public class ShoppingController extends HttpServlet {
 		String requestURI = request.getRequestURI();
 		int cmdIdx = requestURI.lastIndexOf("/") + 1;
 		String command = requestURI.substring(cmdIdx);
-
+		
 		ActionForward forward = new ActionForward();
 		Action action = null;
 		if (command.equals("")) {
@@ -102,6 +103,9 @@ public class ShoppingController extends HttpServlet {
 		} else if (command.equals("shop.do")) {
 			forward.setPath("WEB-INF/front/shop.jsp");
 			forward.setRedirect(false);
+		} else if (command.equals("loginAction.do")) {
+			action = new LoginUser();
+			forward = action.execute(request, response);
 		} else if (command.equals("single.do")) {
 			forward.setPath("WEB-INF/front/shop-single.jsp");
 			forward.setRedirect(false);

@@ -1,5 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(
+			function() {
+				$("#btnLoginExecute").click(
+						function() {
+							if ($("#loginId").val().trim() === ''
+									|| $("#loginPw").val().trim() === '')
+								alert("아이디 혹은 비밀번호를 입력해주세요.");
+							else
+								$("#loginForm").attr("method", "post").attr(
+										"action", "./loginAction.do").submit();
+						});
+			});
+</script>
 <header class="site-navbar" role="banner">
 	<div class="site-navbar-top">
 		<div class="container">
@@ -23,21 +39,29 @@
 				<div class="col-6 col-md-4 order-3 order-md-3 text-right">
 					<div class="site-top-icons">
 						<ul>
-
+							<%
+								if (session.getAttribute("userId") == null) {
+							%>
 							<li><a href="#">회원가입</a></li>
 							<li><a href="#" data-toggle="modal" data-target="#myModal">로그인</a>
+								<%
+									} else {
+								%>
+							<li><a href="#">로그아웃</a></li>
+							<%
+								}
+							%>
+							<!-- The Modal -->
+							<div class="modal fade" id="myModal">
+								<div class="modal-dialog">
+									<div class="modal-content">
 
-								<!-- The Modal -->
-								<div class="modal fade" id="myModal">
-									<div class="modal-dialog">
-										<div class="modal-content">
-
-											<!-- Modal Header -->
-											<div class="modal-header">
-												<h4 class="modal-title">로그인</h4>
-												<button type="button" class="close" data-dismiss="modal">&times;</button>
-											</div>
-
+										<!-- Modal Header -->
+										<div class="modal-header">
+											<h4 class="modal-title">로그인</h4>
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+										</div>
+										<form id="loginForm">
 											<!-- Modal body -->
 											<div class="modal-body">
 												<br> <input type="text" class="form-control"
@@ -48,12 +72,14 @@
 
 											<!-- Modal footer -->
 											<div class="modal-footer">
-												<button type="button" class="btn btn-primary">Login</button>
+												<button id="btnLoginExecute" type="button"
+													class="btn btn-primary">Login</button>
 											</div>
-
-										</div>
+										</form>
 									</div>
-								</div></li>
+								</div>
+							</div>
+							</li>
 
 							<li style="display: none;"><a href="#">로그아웃</a></li>
 

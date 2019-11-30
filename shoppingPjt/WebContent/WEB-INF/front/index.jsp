@@ -1,14 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="./include/head.jsp"%>
-<body>
-	<style type="text/css">
+<style type="text/css">
 .carousel-item img {
 	width: 1350px;
 	height: 500px;
 }
 </style>
-
+<body>
+	<%
+		if (request.getQueryString() != null && request.getQueryString().equals("error")) {
+	%>
+	<script>
+		alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
+	</script>
+	<%
+		}
+	%>
 	<div class="site-wrap">
 		<%@include file="./include/header.jsp"%>
 		<div class="row" style="margin-bottom: 70px;">

@@ -11,6 +11,20 @@ public class UserDTO {
 	private String userAddress;
 	private int userRank;
 	
+	
+	// 로그인 시 반환되는 사용자 정보
+	public UserDTO(int userIdx, String userIdenty, String userName, String userEmail, String userPhone,
+			String userBirth, String userAddress, int userRank) {
+		this.userIdx = userIdx;
+		this.userIdenty = userIdenty;
+		this.userName = userName;
+		this.userEmail = userEmail;
+		this.userPhone = userPhone;
+		this.userBirth = userBirth;
+		this.userAddress = userAddress;
+		this.userRank = userRank;
+	}
+	
 	public UserDTO(String userIdenty, String userName, String userPass, String userEmail, String userPhone,
 			String userBirth, String userAddress, int userRank) {
 		super();
@@ -23,7 +37,7 @@ public class UserDTO {
 		this.userAddress = userAddress;
 		this.userRank = userRank;
 	}
-	
+
 	public int getUserIdx() {
 		return userIdx;
 	}

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import javax.naming.NamingException;
 
-import com.mysql.jdbc.PreparedStatement;
 
 import shopping.database.dto.CategoryDTO;
 

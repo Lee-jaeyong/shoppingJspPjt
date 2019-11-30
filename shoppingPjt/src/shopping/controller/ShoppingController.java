@@ -94,6 +94,37 @@ public class ShoppingController extends HttpServlet {
 			forward.setPath("WEB-INF/backend/deleteItemlist.jsp");
 			forward.setRedirect(false);
 		}
+		////프론트////
+		  else if (command.equals("index.do")) {
+			forward.setPath("WEB-INF/front/index.jsp");
+			forward.setRedirect(false);
+		} else if (command.equals("shop.do")) {
+			forward.setPath("WEB-INF/front/shop.jsp");
+			forward.setRedirect(false);
+		} else if (command.equals("single.do")) {
+			forward.setPath("WEB-INF/front/shop-single.jsp");
+			forward.setRedirect(false);
+		} else if (command.equals("cart.do")) {
+			forward.setPath("WEB-INF/front/cart.jsp");
+			forward.setRedirect(false);
+		} else if (command.equals("order.do")) {
+			forward.setPath("WEB-INF/front/checkout.jsp");
+			forward.setRedirect(false);
+		} else if (command.equals("join.do")) {
+			forward.setPath("WEB-INF/front/join.jsp");
+			forward.setRedirect(false);
+		} else if (command.equals("thankyou.do")) {
+			forward.setPath("WEB-INF/front/thankyou.jsp");
+			forward.setRedirect(false);
+		} else if (command.equals("qna.do")) {
+			forward.setPath("WEB-INF/front/q-and-a.jsp");
+			forward.setRedirect(false);
+		} else if (command.equals("question.do")) {
+			forward.setPath("WEB-INF/front/question.jsp");
+			forward.setRedirect(false);
+		}
+		
+
 		if (forward.isRedirect()) {
 			response.sendRedirect(forward.getPath());
 		} else {

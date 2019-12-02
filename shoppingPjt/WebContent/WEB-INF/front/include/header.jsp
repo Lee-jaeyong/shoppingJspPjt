@@ -1,19 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(
 			function() {
-				$("#btnLoginExecute").click(
-						function() {
-							if ($("#loginId").val().trim() === ''
-									|| $("#loginPw").val().trim() === '')
-								alert("아이디 혹은 비밀번호를 입력해주세요.");
-							else
-								$("#loginForm").attr("method", "post").attr(
-										"action", "./loginAction.do").submit();
-						});
+				$("#btnLoginExecute").click(function() {
+					if ($("#loginId").val().trim() === ''|| $("#loginPw").val().trim() === '')
+							alert("아이디 혹은 비밀번호를 입력해주세요.");
+					else
+							$("#loginForm").attr("method", "post").attr("action", "./loginAction.do").submit();
+				});
+				
+				$("#loginPw").keyup(function(e){
+					if(e.keyCode == 13)  
+						$("#btnLoginExecute").click();
+				});
+				
+				$("#loginId").keyup(function(e){
+					if(e.keyCode == 13)  
+						$("#btnLoginExecute").click();
+				});
 			});
 	
 	function categoryLoad() {
@@ -55,7 +61,7 @@
 				<div
 					class="col-12 mb-3 mb-md-0 col-md-4 order-1 order-md-2 text-center">
 					<div class="site-logo">
-						<a href="index.html" class="js-logo-clone">Shopping</a>
+						<a href="index.do" class="js-logo-clone">Shopping</a>
 					</div>
 				</div>
 
@@ -65,12 +71,13 @@
 							<%
 								if (session.getAttribute("userId") == null) {
 							%>
-							<li><a href="#">회원가입</a></li>
+							<li><a href="join.do">회원가입</a></li>
 							<li><a href="#" data-toggle="modal" data-target="#myModal">로그인</a>
 								<%
 									} else {
 								%>
-							<li><a href="#">로그아웃</a></li>
+								<li><b><%=session.getAttribute("userName")%></b>님 &nbsp;&nbsp; </li>
+							<li><a href="logoutAction.do">로그아웃</a></li>
 							<%
 								}
 							%>
@@ -124,7 +131,7 @@
 		role="navigation">
 		<div class="container">
 			<ul class="site-menu js-clone-nav d-none d-md-block">
-				<li><a href="shop.html">Home</a></li>
+				<li><a href="index.do">Home</a></li>
 				<li class="has-children active"><a href="about.html">BEST10</a>
 					<ul class="dropdown">
 						<li><a href="#">Menu One</a></li>
@@ -153,7 +160,7 @@
 							</ul></li>
 					</ul></li>
 				<li><a href="#">Review</a></li>
-				<li><a href="#">Q & A</a></li>
+				<li><a href="qna.do">Q & A</a></li>
 			</ul>
 		</div>
 	</nav>

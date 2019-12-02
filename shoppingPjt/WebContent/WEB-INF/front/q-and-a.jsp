@@ -1,7 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="./include/head.jsp" %>
+<script>
+$(document).ready(function() {
+	$("#writeQuestionBtn").click(function(){
+		alert("회원만 작성")
+	});
+});
+</script>
 <body>
+	
 
 	<div class="site-wrap">
 		<%@include file="./include/header.jsp"%>
@@ -21,7 +29,7 @@
 							</div>
 							<div class="col-md-7"></div>
 							<div class="col-md-2">
-								<input type="button" class="btn btn-primary btn-sm" id="OkJoin"
+								<input type="button" class="btn btn-primary btn-sm" id="writeQuestionBtn"
 									value="문의하기" />
 
 							</div>

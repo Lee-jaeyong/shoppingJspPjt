@@ -1,31 +1,19 @@
-package shopping.backend.ajax;
+package shopping.backend.ajax.model;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.naming.NamingException;
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import shopping.action.ShoppingService;
 import shopping.database.dao.CategoryDAO;
 import shopping.database.dto.CategoryDTO;
 import shopping.filter.SecureString;
 
-@WebServlet("/SelectCategoryServlet")
-public class SelectCategoryServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+public class SelectCategoryImplAction implements ShoppingService {
 
-	public SelectCategoryServlet() {
-		super();
-	}
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	@Override
+	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			response.setCharacterEncoding("utf8");
 			CategoryDAO categoryDAO = new CategoryDAO();
@@ -33,7 +21,7 @@ public class SelectCategoryServlet extends HttpServlet {
 			categoryDAO = new CategoryDAO();
 			ArrayList<CategoryDTO> smallList = categoryDAO.selectSmallCategory();
 			response.getWriter().write(getJson(list, smallList));
-		} catch (SQLException | NamingException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -54,7 +42,7 @@ public class SelectCategoryServlet extends HttpServlet {
 			str.append("{\"categoryName\" : \"" + sqString.returnString(smallList.get(i).getCategoryName())
 					+ "\",\"categoryChkIdx\" : \"" + smallList.get(i).getCategoryChkIdx()
 					+ "\", \"categoryHighIdx\" : \"" + smallList.get(i).getCategoryHighIdx()
-					+ "\",\"categoryStatus\" : \""+smallList.get(i).getCategoryStatus()+"\"}");
+					+ "\",\"categoryStatus\" : \"" + smallList.get(i).getCategoryStatus() + "\"}");
 			if (i != smallList.size() - 1)
 				str.append(",");
 		}

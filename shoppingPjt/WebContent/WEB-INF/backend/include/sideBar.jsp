@@ -4,29 +4,29 @@
 <!-- Sidebar -->
 <ul class="sidebar navbar-nav">
 	<li class="nav-item active"><a class="nav-link"
-		href="./adminIndex.do"> <i class="fas fa-fw fa-tachometer-alt"></i>
+		href="./adminIndex.admin"> <i class="fas fa-fw fa-tachometer-alt"></i>
 			<span>쇼핑몰 관리</span>
 	</a></li>
-	<li class="nav-item"><a class="nav-link" href="./adminItemList.do">
+	<li class="nav-item"><a class="nav-link" href="./adminItemList.admin">
 			<i class="fas fa-file"></i> <span>상품 목록</span>
 	</a></li>
-	<li class="nav-item"><a class="nav-link" href="./adminAddItem.do">
+	<li class="nav-item"><a class="nav-link" href="./adminAddItem.admin">
 			<i class="fas fa-fw fa-chart-area"></i> <span>상품 등록</span>
 	</a></li>
 	<li class="nav-item"><a class="nav-link"
-		href="./adminCategoryManage.do"> <i
+		href="./adminCategoryManage.admin"> <i
 			class="fas fa-fw fa-chart-area"></i> <span>분류 관리</span></a></li>
 	<li class="nav-item"><a class="nav-link"
-		href="./adminDeleteItemList.do"> <i
+		href="./adminDeleteItemList.admin"> <i
 			class="fas fa-fw fa-chart-area"></i> <span>삭제 상품 내역</span></a></li>
 	<li class="nav-item"><a class="nav-link"
-		href="./adminOrderList.do"> <i class="fas fa-fw fa-chart-area"></i>
+		href="./adminOrderList.admin"> <i class="fas fa-fw fa-chart-area"></i>
 			<span>주문 내역</span>
 	</a></li>
-	<li class="nav-item"><a class="nav-link" href="./adminReview.do">
+	<li class="nav-item"><a class="nav-link" href="./adminReview.admin">
 			<i class="fas fa-fw fa-chart-area"></i> <span>후기 관리</span>
 	</a></li>
-	<li class="nav-item"><a class="nav-link" href="./adminAnswer.do">
+	<li class="nav-item"><a class="nav-link" href="./adminAnswer.admin">
 			<i class="fas fa-fw fa-chart-area"></i> <span>Q/A 관리</span>
 	</a></li>
 </ul>

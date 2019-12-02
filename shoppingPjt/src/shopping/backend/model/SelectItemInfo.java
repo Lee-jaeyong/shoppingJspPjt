@@ -6,8 +6,8 @@ import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import shopping.controller.Action;
-import shopping.controller.ActionForward;
+import shopping.action.Action;
+import shopping.action.ActionForward;
 import shopping.database.dao.ItemDAO;
 import shopping.database.dto.ItemDTO;
 

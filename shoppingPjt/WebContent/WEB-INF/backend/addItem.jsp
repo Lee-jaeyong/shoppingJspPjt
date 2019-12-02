@@ -18,7 +18,7 @@
 						$("#btnDeleteItem").click(function(){
 							if(confirm("상품 삭제 시 (7일) 동안 삭제 내역에 보관 되며, 이후 되돌릴 수 없습니다. 정말로 삭제하시겠습니까?")){
 								$.ajax({
-									url : "./DeleteItemServlet",
+									url : "./DeleteItem.ajax",
 									data : {
 										data : $("input[name=itemIdx]").val()
 									},
@@ -52,34 +52,58 @@
 							readURL(this, 'mainImage');
 						});
 
-						$("#btnAddItem")
-								.click(
-										function() {
+						$("#btnAddItem").click(function() {
+											var colorChk = new Array();
 											var chk = false;
-											$("input[name=opColorArea]")
-													.each(
-															function() {
+											$("input[name=opColorArea]").each(function() {
+												
+												if ($(this).val() === '') {
+													chk = true;
+													return;
+												}
+												colorChk.push($(this).val());
+											})
+											var sizeChk = new Array();
+											$("input[name=opSizeArea]").each(function() {
 																if ($(this)
 																		.val() === '') {
 																	chk = true;
 																	return;
 																}
-															})
-
-											$("input[name=opSizeArea]")
-													.each(
-															function() {
-																if ($(this)
-																		.val() === '') {
-																	chk = true;
-																	return;
-																}
+																sizeChk.push($(this).val());
 															})
 											if (chk) {
 												alert("비어있는 색상 또는 사이즈가 존재합니다.");
 												return;
 											}
-
+											else
+											{
+												for(var i =0;i<colorChk.length;i++)
+												{
+													var colorDupChk = colorChk[i];
+													for(var j = 0;j<colorChk.length;j++)
+													{
+														if(i != j && colorDupChk == colorChk[j])
+														{
+															alert("중복된 색상이 존재합니다.");
+															return;
+														}
+													}
+												}
+												for(var i =0;i<sizeChk.length;i++)
+												{
+													var sizeDupChk = sizeChk[i];
+													for(var j = 0;j<sizeChk.length;j++)
+													{
+														if(i != j && sizeDupChk == sizeChk[j])
+														{
+															alert("중복된 사이즈가 존재합니다.");
+															return;
+														}
+													}
+												}												
+											}
+											
 											if ($("#category").val() === '')
 												alert("대분류를 선택해주세요.");
 											else if ($("#smallCategory").val() === '')
@@ -225,7 +249,7 @@
 	function categoryLoad() {
 		$
 				.ajax({
-					url : "./SelectCategoryServlet",
+					url : "./SelectCategory.ajax",
 					dataType : "json",
 					success : function(data) {
 						smallCategory = data.smallCategory;

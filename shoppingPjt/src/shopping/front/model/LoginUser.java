@@ -4,8 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import shopping.controller.Action;
-import shopping.controller.ActionForward;
+import shopping.action.Action;
+import shopping.action.ActionForward;
 import shopping.database.dao.UserDAO;
 import shopping.database.dto.UserDTO;
 

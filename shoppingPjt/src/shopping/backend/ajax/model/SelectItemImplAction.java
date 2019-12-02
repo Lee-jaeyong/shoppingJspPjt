@@ -1,35 +1,27 @@
-package shopping.backend.ajax;
+package shopping.backend.ajax.model;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.naming.NamingException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import shopping.action.ShoppingService;
 import shopping.database.dao.ItemDAO;
 import shopping.database.dto.ItemDTO;
-import shopping.database.dto.ItemOptionDTO;
 import shopping.filter.SecureString;
 
-/**
- * Servlet implementation class SelectItemServlet
- */
-@WebServlet("/SelectItemServlet")
-public class SelectItemServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+public class SelectItemImplAction implements ShoppingService {
 
-	public SelectItemServlet() {
-		super();
-	}
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
+	@Override
+	public void execute(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
 		response.setCharacterEncoding("utf-8");
 
 		String searchItemType = request.getParameter("searchItemType");
@@ -55,7 +47,7 @@ public class SelectItemServlet extends HttpServlet {
 			ArrayList<ItemDTO> list = itemDAO.selectItem(pageNum, sortType, showType, searchItemType, searchItemTitle,
 					searchItemSmallCategory, searchItemBefore, searchItemAfter, searchItemStatus);
 			response.getWriter().write(getJson(list, startBlock, endBlock, totalBlock));
-		} catch (SQLException | NamingException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -77,4 +69,5 @@ public class SelectItemServlet extends HttpServlet {
 				+ totalBlock + "\"}");
 		return json.toString();
 	}
+
 }

@@ -1,4 +1,4 @@
-package shopping.controller;
+package shopping.action;
 
 public class ActionForward {
 	private String path = "";

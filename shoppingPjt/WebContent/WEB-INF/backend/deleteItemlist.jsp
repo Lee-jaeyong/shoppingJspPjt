@@ -7,7 +7,7 @@
 
 	function btnDeleteCencel(button){
 		$.ajax({
-			url : "./UpdateDeleteItemCencel",
+			url : "./UpdateDeleteItemCencel.ajax",
 			data : {
 				itemIdx : $(button).parents("tr").children().first().text()
 			},
@@ -25,7 +25,7 @@
 	
 	function getDeleteItemList(pageNum) {
 		$.ajax({
-			url : "./SelectDeleteItemList",
+			url : "./SelectDeleteItemList.ajax",
 			dataType : "json",
 			success : function(data) {
 				var itemList = data.result;

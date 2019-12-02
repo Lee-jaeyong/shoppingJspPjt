@@ -1,40 +1,26 @@
-package shopping.backend.ajax;
+package shopping.backend.ajax.model;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.naming.NamingException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import shopping.action.ShoppingService;
 import shopping.database.dao.ItemDAO;
 import shopping.database.dto.ItemDTO;
 
-/**
- * Servlet implementation class SelectDeleteItemList
- */
-@WebServlet("/SelectDeleteItemList")
-public class SelectDeleteItemList extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+public class SelectDeleteItemListImplAction implements ShoppingService {
 
-	public SelectDeleteItemList() {
-		super();
-	}
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	@Override
+	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		response.setCharacterEncoding("utf-8");
 		try {
 			ItemDAO itemDAO = new ItemDAO();
 			ArrayList<ItemDTO> list = itemDAO.selectDeleteItemList();
 			response.getWriter().write(getJson(list));
-		} catch (SQLException | NamingException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}		
 	}
 
 	private String getJson(ArrayList<ItemDTO> list) {
@@ -52,4 +38,5 @@ public class SelectDeleteItemList extends HttpServlet {
 		json.append("]}");
 		return json.toString();
 	}
+
 }

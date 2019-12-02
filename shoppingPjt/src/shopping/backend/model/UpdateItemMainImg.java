@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
-import shopping.controller.Action;
-import shopping.controller.ActionForward;
+import shopping.action.Action;
+import shopping.action.ActionForward;
 import shopping.database.dao.ItemDAO;
 
 public class UpdateItemMainImg implements Action {

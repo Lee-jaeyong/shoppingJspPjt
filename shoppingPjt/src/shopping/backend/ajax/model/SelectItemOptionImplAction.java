@@ -1,43 +1,29 @@
-package shopping.backend.ajax;
+package shopping.backend.ajax.model;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.naming.NamingException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import shopping.action.ShoppingService;
 import shopping.database.dao.ItemDAO;
 import shopping.database.dto.ItemOptionDTO;
 
-/**
- * Servlet implementation class SelectItemOptionServlet
- */
-@WebServlet("/SelectItemOptionServlet")
-public class SelectItemOptionServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+public class SelectItemOptionImplAction implements ShoppingService {
 
-	public SelectItemOptionServlet() {
-		super();
-	}
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	@Override
+	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		response.setCharacterEncoding("utf-8");
 		ItemDAO itemDAO;
 		try {
 			itemDAO = new ItemDAO();
 			ArrayList<ItemOptionDTO> list = itemDAO.selectItemOption(Integer.parseInt(request.getParameter("itemIdx")));
 			response.getWriter().write(getJson(list));
-		} catch (SQLException | NamingException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}		
 	}
-
+	
 	private String getJson(ArrayList<ItemOptionDTO> list) {
 		StringBuilder json = new StringBuilder();
 		json.append("{\"options\":[");

@@ -24,7 +24,7 @@
 				return;
 			}
 			$.ajax({
-				url : "./updateCategoryServlet",
+				url : "./updateCategory.ajax",
 				data : {
 					categoryType : false,
 					categoryNumber : $(this).parents().next().val(),
@@ -48,7 +48,7 @@
 									.val()
 							$
 									.ajax({
-										url : "./updateCategoryStatusServlet",
+										url : "./UpdateCategoryStatus.ajax",
 										data : {
 											data : array,
 											status : $(
@@ -72,7 +72,7 @@
 				return;
 			}
 			$.ajax({
-				url : "./AddCategoryServlet",
+				url : "./AddCategory.ajax",
 				data : {
 					categoryName : $("#inputCategoryName").val(),
 					categoryType : $("#categoryType").val()
@@ -109,7 +109,7 @@
 		if ($(button).prev().val() === '0/')
 			status = 1;
 		$.ajax({
-			url : "./updateCategoryStatusServlet",
+			url : "./UpdateCategoryStatus.ajax",
 			data : {
 				categoryNumber : categoryIdx,
 				status : status,
@@ -131,7 +131,7 @@
 			return;
 		}
 		$.ajax({
-			url : "./updateCategoryServlet",
+			url : "./updateCategory.ajax",
 			data : {
 				categoryType : true,
 				categoryNumber : categoryIdx,
@@ -154,7 +154,7 @@
 	function categoryLoad() {
 		$
 				.ajax({
-					url : "./SelectCategoryServlet",
+					url : "./SelectCategory.ajax",
 					dataType : "json",
 					success : function(data) {
 						var html = '';

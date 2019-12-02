@@ -49,7 +49,7 @@
 				return;
 			}
 			$.ajax({
-				url : "./UpdateItemStatusServlet",
+				url : "./UpdateItemStatus.ajax",
 				data : {
 					chkIdx : chkIdx,
 					status : $("input[name=itemStatus]:checked").val()
@@ -150,7 +150,7 @@
 				}
 			}
 			$.ajax({
-				url : "./UpdateStockServlet",
+				url : "./UpdateStock.ajax",
 				data : {
 					updateStockIdx : updateStockIdx,
 					updateStock : updateStock
@@ -175,7 +175,7 @@
 	function showItemOption(button) {
 		$
 				.ajax({
-					url : "./SelectItemOptionServlet",
+					url : "./SelectItemOption.ajax",
 					data : {
 						itemIdx : $(button).parents("td").prev().prev().prev()
 								.prev().text()
@@ -217,7 +217,7 @@
 	function categoryLoad() {
 		$
 				.ajax({
-					url : "./SelectCategoryServlet",
+					url : "./SelectCategory.ajax",
 					dataType : "json",
 					success : function(data) {
 						smallCategory = data.smallCategory;
@@ -238,7 +238,7 @@
 		$("#nowPageNum").val(pageNum);
 		$
 				.ajax({
-					url : "./SelectItemServlet",
+					url : "./SelectItem.ajax",
 					data : {
 						pageNum : pageNum,
 						showType : $("#showType").val(),

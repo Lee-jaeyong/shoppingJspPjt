@@ -311,7 +311,7 @@ public class ItemDAO extends Database {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.executeUpdate();
 			sql = "INSERT INTO deleteItem VALUES (" + itemIdx
-					+ ",LEFT(NOW(),10),DATE_ADD(LEFT(NOW(),10), INTERVAL 10 DAY))";
+					+ ",LEFT(NOW(),10),DATE_ADD(LEFT(NOW(),10), INTERVAL 7 DAY))";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.executeUpdate();
 			conn.commit();
@@ -351,13 +351,13 @@ public class ItemDAO extends Database {
 			String sql = "DELETE FROM items WHERE itemidx IN (SELECT d_i_idx FROM deleteitem WHERE removeExecuteDate <= LEFT(NOW(),10))";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.executeUpdate();
+			sql = "DELETE FROM itemoptions WHERE op_i_idx IN (SELECT d_i_idx FROM deleteitem WHERE removeExecuteDate <= LEFT(NOW(),10))";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
 			sql = "DELETE FROM category WHERE ca_itemidx IN (SELECT d_i_idx FROM deleteitem WHERE removeExecuteDate <= LEFT(NOW(),10))";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.executeUpdate();
 			sql = "DELETE FROM deleteitem WHERE removeExecuteDate <= LEFT(NOW(),10)";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.executeUpdate();
-			sql = "DELETE FROM itemoptions WHERE op_i_idx IN (SELECT d_i_idx FROM deleteitem WHERE removeExecuteDate <= LEFT(NOW(),10))";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.executeUpdate();
 			conn.commit();

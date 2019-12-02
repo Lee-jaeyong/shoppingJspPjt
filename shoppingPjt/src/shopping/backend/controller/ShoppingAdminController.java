@@ -1,4 +1,4 @@
-package shopping.controller;
+package shopping.backend.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -11,20 +11,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import shopping.action.Action;
+import shopping.action.ActionForward;
 import shopping.backend.model.AddItem;
 import shopping.backend.model.ExcelFileUpload;
 import shopping.backend.model.SelectItemInfo;
 import shopping.backend.model.UpdateItem;
 import shopping.backend.model.UpdateItemMainImg;
 import shopping.database.dao.ItemDAO;
-import shopping.front.model.AddUser;
-import shopping.front.model.LoginUser;
 
 @WebServlet("/ShoppingAdminController")
-public class ShoppingController extends HttpServlet {
+public class ShoppingAdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public ShoppingController() {
+	public ShoppingAdminController() {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,7 +48,7 @@ public class ShoppingController extends HttpServlet {
 		Action action = null;
 		if (command.equals("")) {
 
-		} else if (command.equals("adminIndex.do")) {
+		} else if (command.equals("adminIndex.admin")) {
 			forward.setPath("WEB-INF/backend/index.jsp");
 			forward.setRedirect(false);
 			try {
@@ -57,10 +57,10 @@ public class ShoppingController extends HttpServlet {
 			} catch (SQLException | NamingException e) {
 				e.printStackTrace();
 			}
-		} else if (command.equals("adminItemList.do")) {
+		} else if (command.equals("adminItemList.admin")) {
 			forward.setPath("WEB-INF/backend/itemlist.jsp");
 			forward.setRedirect(false);
-		} else if (command.equals("adminAddItem.do")) {
+		} else if (command.equals("adminAddItem.admin")) {
 			if (request.getParameter("showItemInfoIdx") != null) {
 				action = new SelectItemInfo();
 				forward = action.execute(request, response);
@@ -68,72 +68,35 @@ public class ShoppingController extends HttpServlet {
 				forward.setPath("WEB-INF/backend/addItem.jsp");
 				forward.setRedirect(false);
 			}
-		} else if (command.equals("adminAddItemExecute.do")) {
+		} else if (command.equals("adminAddItemExecute.admin")) {
 			action = new AddItem();
 			forward = action.execute(request, response);
-		} else if (command.equals("adminCategoryManage.do")) {
+		} else if (command.equals("adminCategoryManage.admin")) {
 			forward.setPath("WEB-INF/backend/category.jsp");
 			forward.setRedirect(false);
-		} else if (command.equals("adminOrderList.do")) {
+		} else if (command.equals("adminOrderList.admin")) {
 			forward.setPath("WEB-INF/backend/orderlist.jsp");
 			forward.setRedirect(false);
-		} else if (command.equals("adminReview.do")) {
+		} else if (command.equals("adminReview.admin")) {
 			forward.setPath("WEB-INF/backend/review.jsp");
 			forward.setRedirect(false);
-		} else if (command.equals("adminAnswer.do")) {
+		} else if (command.equals("adminAnswer.admin")) {
 			forward.setPath("WEB-INF/backend/answer.jsp");
 			forward.setRedirect(false);
-		} else if (command.equals("adminExcelUpload.do")) {
+		} else if (command.equals("adminExcelUpload.admin")) {
 			action = new ExcelFileUpload();
 			forward = action.execute(request, response);
-		} else if (command.equals("adminUpdateItemExecute.do")) {
+		} else if (command.equals("adminUpdateItemExecute.admin")) {
 			action = new UpdateItem();
 			forward = action.execute(request, response);
-		} else if (command.equals("adminItemMainImgUpdate.do")) {
+		} else if (command.equals("adminItemMainImgUpdate.admin")) {
 			action = new UpdateItemMainImg();
 			forward = action.execute(request, response);
-		} else if (command.equals("adminDeleteItemList.do")) {
+		} else if (command.equals("adminDeleteItemList.admin")) {
 			forward.setPath("WEB-INF/backend/deleteItemlist.jsp");
 			forward.setRedirect(false);
 		}
-		//// 프론트////
-		  else if (command.equals("index.do")) {
-			forward.setPath("WEB-INF/front/index.jsp");
-			forward.setRedirect(false);
-		} else if (command.equals("shop.do")) {
-			forward.setPath("WEB-INF/front/shop.jsp");
-			forward.setRedirect(false);
-		} else if (command.equals("loginAction.do")) {
-			action = new LoginUser();
-			forward = action.execute(request, response);
-		} else if (command.equals("single.do")) {
-			forward.setPath("WEB-INF/front/shop-single.jsp");
-			forward.setRedirect(false);
-		} else if (command.equals("cart.do")) {
-			forward.setPath("WEB-INF/front/cart.jsp");
-			forward.setRedirect(false);
-		} else if (command.equals("order.do")) {
-			forward.setPath("WEB-INF/front/checkout.jsp");
-			forward.setRedirect(false);
-		} else if (command.equals("join.do")) {
-			forward.setPath("WEB-INF/front/join.jsp");
-			forward.setRedirect(false);
-		} else if(command.equals("joinSubmit.do")) {
-			action = new AddUser();
-			forward = action.execute(request, response);
-		} else if (command.equals("thankyou.do")) {
-			forward.setPath("WEB-INF/front/thankyou.jsp");
-			forward.setRedirect(false);
-		} else if (command.equals("qna.do")) {
-			forward.setPath("WEB-INF/front/q-and-a.jsp");
-			forward.setRedirect(false);
-		} else if (command.equals("question.do")) {
-			forward.setPath("WEB-INF/front/question.jsp");
-			forward.setRedirect(false);
-		} else if(command.equals("userAddress.do")) {
-			forward.setPath("WEB-INF/front/address/jusoPopup.jsp");
-			forward.setRedirect(false);
-		}
+		
 		if (forward.isRedirect()) {
 			response.sendRedirect(forward.getPath());
 		} else {

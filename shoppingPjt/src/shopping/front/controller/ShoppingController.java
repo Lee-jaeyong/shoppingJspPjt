@@ -13,6 +13,7 @@ import shopping.action.Action;
 import shopping.action.ActionForward;
 import shopping.front.model.AddUser;
 import shopping.front.model.LoginUser;
+import shopping.front.model.LogoutUser;
 
 @WebServlet("/ShoppingController")
 public class ShoppingController extends HttpServlet {
@@ -50,7 +51,11 @@ public class ShoppingController extends HttpServlet {
 		} else if (command.equals("loginAction.do")) {
 			action = new LoginUser();
 			forward = action.execute(request, response);
-		} else if (command.equals("single.do")) {
+		} else if (command.equals("logoutAction.do")) {
+			action = new LogoutUser();
+			forward = action.execute(request, response);
+		}
+		else if (command.equals("single.do")) {
 			forward.setPath("WEB-INF/front/shop-single.jsp");
 			forward.setRedirect(false);
 		} else if (command.equals("cart.do")) {

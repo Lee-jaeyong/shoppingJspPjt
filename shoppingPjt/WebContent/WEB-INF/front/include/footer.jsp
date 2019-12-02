@@ -11,6 +11,7 @@
 					<div class="col-md-6 col-lg-4">
 						<ul class="list-unstyled">
 							<li><a href="#">이용약관</a></li>
+							<li><a href="#">사이트맵</a></li>
 							<li><a href="#">A/S 정보</a></li>
 						</ul>
 					</div>

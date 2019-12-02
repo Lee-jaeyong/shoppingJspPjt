@@ -66,10 +66,10 @@ public class UserDAO extends Database {
 
 		rs = pstmt.executeQuery();
 		rs.next();
-		conn.close();
-		rs.close();
-		pstmt.close();
 		int re = rs.getInt(1);
+		rs.close();
+		conn.close();
+		pstmt.close();
 		return re;
 	}
 

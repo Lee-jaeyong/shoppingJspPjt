@@ -16,7 +16,7 @@
     <url-pattern>*.admin</url-pattern>
   </servlet-mapping>
   
-    <!-- 백엔드 Ajax 컨트롤러 -->
+  <!-- 백엔드 Ajax 컨트롤러 -->
   <servlet>
     <description>ajaxController</description>
     <servlet-name>ajaxController</servlet-name>
@@ -38,4 +38,14 @@
     <url-pattern>*.do</url-pattern>
   </servlet-mapping>
   
+  <!-- 프론트 Ajax 컨트롤러 -->
+  <servlet>
+    <description>ajaxfrontController</description>
+    <servlet-name>ajaxfrontController</servlet-name>
+    <servlet-class>shopping.front.controller.AjaxShoppingfrontController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ajaxfrontController</servlet-name>
+    <url-pattern>*.aj</url-pattern>
+  </servlet-mapping>
 </web-app>

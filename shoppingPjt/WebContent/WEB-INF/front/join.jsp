@@ -40,7 +40,7 @@
 				$("#idMsg").text("5~20자의 영문 소문자, 숫자만 사용 가능합니다.");
 			} else {
 				$.ajax({
-					url : "./userIdDupChk",
+					url : "./userIdDupChk.aj",
 					data : {
 						inputId : $("#inputId").val()
 					},

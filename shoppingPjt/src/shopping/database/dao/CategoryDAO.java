@@ -5,8 +5,6 @@ import java.util.ArrayList;
 
 import javax.naming.NamingException;
 
-import com.mysql.jdbc.PreparedStatement;
-
 import shopping.database.dto.CategoryDTO;
 
 public class CategoryDAO extends Database {
@@ -15,6 +13,30 @@ public class CategoryDAO extends Database {
 		dbConnect();
 	}
 
+	public ArrayList<CategoryDTO> selectSmallCategoryEquelsInput(String smallCategory) throws SQLException{
+		ArrayList<CategoryDTO> list = new ArrayList<CategoryDTO>();
+		try {
+			String sql = "SELECT smallCategoryName,smallCategoryIdx,smallCategoryStatus FROM smallcategory d\r\n" + 
+					"WHERE categoryHighIdx IN (SELECT s.categoryHighIdx FROM smallcategory s WHERE s.categoryHighIdx = d.categoryHighIdx AND categoryHighIdx = \r\n" + 
+					"(SELECT categoryHighIdx FROM smallcategory WHERE smallCategoryIdx = ?))";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, smallCategory);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(new CategoryDTO(rs.getString(1), rs.getInt(2), rs.getInt(3)));
+			}
+			rs.close();
+		} catch (Exception e) {
+			return null;
+		} finally {
+			if (conn != null)
+				conn.close();
+			if (pstmt != null)
+				pstmt.close();
+		}
+		return list;
+	}
+	
 	public ArrayList<CategoryDTO> selectSmallCategory() throws SQLException {
 		ArrayList<CategoryDTO> list = new ArrayList<CategoryDTO>();
 		try {
@@ -55,6 +77,34 @@ public class CategoryDAO extends Database {
 		return list;
 	}
 
+	public String[] selectCategoryIntoSingle(String itemIdx) throws SQLException {
+		String[] list = new String[3];
+		try {
+			String sql = "SELECT categoryName,smallCategoryName,itemName\r\n" + 
+					"FROM items,categorycheck,smallCategory,category\r\n" + 
+					"WHERE items.itemIdx = category.ca_itemidx\r\n" + 
+					"AND categorycheck.categoryChkIdx = smallCategory.categoryHighIdx\r\n" + 
+					"AND category.ca_smallIdx = smallCategory.smallCategoryIdx\r\n" + 
+					"AND items.itemIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, itemIdx);
+			rs = pstmt.executeQuery();
+			rs.next();
+			list[0] = rs.getString(1);
+			list[1] = rs.getString(2);
+			list[2] = rs.getString(3);
+			rs.close();
+		} catch (Exception e) {
+			return list;
+		} finally {
+			if (conn != null)
+				conn.close();
+			if (pstmt != null)
+				pstmt.close();
+		}
+		return list;
+	}
+	
 	public boolean insertCategory(String categoryType, String categoryName) throws SQLException {
 		try {
 			if (categoryType.equals("")) {

@@ -1,8 +1,50 @@
+<%@page import="java.util.List"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="shopping.database.dto.ItemDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="./include/head.jsp"%>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+	$(document).ready(function() {
+		$("#addShoppingCart").click(function() {
+			if ($("#op_color").val() == '') {
+				alert("색상을 선택해주세요.");
+				return;
+			} else {
+				if($("#userName").val() === '')
+				{
+					alert("로그인이 필요한 기능입니다.");
+					return;
+				}
+				$("#shoppingCartCount").val($("#itemCount").val());
+				$("#optionIdx").val($("#op_color").val());
+				$.ajax({
+					url:"",
+					data:{
+						userId:$("#userName").val(),
+						shoppingCartCount:$("#shoppingCartCount").val(),
+						optionIdx:$("#optionIdx").val()
+					},
+					success:function(data){
+						if(data === 'true')
+						{
+							if(confirm("장바구니에 추가하였습니다. 장바구니로 이동하시겠습니까?"))
+								location.href='';
+						}
+						else
+							alert("장바구니 추가 실패");
+					}
+				});
+			}
+		});
+	});
+</script>
 <body>
-
+	<%
+		String[] categoryInfo = (String[]) request.getAttribute("categoryInfo");
+		ItemDTO item = (ItemDTO) request.getAttribute("itemInfo");
+	%>
 	<div class="site-wrap">
 		<%@include file="./include/header.jsp"%>
 
@@ -10,8 +52,9 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12 mb-0">
-						<a href="index.html">Home</a> <span class="mx-2 mb-0">/</span> <strong
-							class="text-black">Tank Top T-Shirt</strong>
+						<a href="index.html"><%=categoryInfo[0]%></a> <span
+							class="mx-2 mb-0">/</span> <strong class="text-black"><%=categoryInfo[1]%>&nbsp;&nbsp;/
+							<%=categoryInfo[2]%></strong>
 					</div>
 				</div>
 			</div>
@@ -21,44 +64,38 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-6">
-						<img src="front/images/cloth_1.jpg" alt="Image" class="img-fluid">
+						<img
+							src="${pageContext.request.contextPath}/uploadImage/<%=item.getItemMainImg() %>"
+							alt="Image" class="img-fluid">
 					</div>
 					<div class="col-md-6">
-						<h2 class="text-black">Tank Top T-Shirt</h2>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-							Pariatur, vitae, explicabo? Incidunt facere, natus soluta dolores
-							iusto! Molestiae expedita veritatis nesciunt doloremque sint
-							asperiores fuga voluptas, distinctio, aperiam, ratione dolore.</p>
+						<h2 class="text-black"><%=categoryInfo[2]%></h2>
+						<p><%=item.getItemContent()%></p>
 
 						<p>
-							<strong class="text-primary h4">$50.00</strong>
+							<strong class="text-primary h4"><%=item.getItemSalePrice()%></strong>
 						</p>
 						<div class="mb-2 d-flex">
 							<select id="op_color" class="form-control">
-								<option value="1">색상을 선택해주세요</option>
-								<option value="2">070</option>
-								<option value="3">011</option>
+								<option value="">색상을 선택해주세요</option>
+								<%
+									List<ItemDTO> list = (ArrayList<ItemDTO>) request.getAttribute("itemOption");
+									for (int i = 0; i < list.size(); i++) {
+								%>
+								<option value="<%=list.get(i).getItemIdx()%>"><%=list.get(i).getSize()%>[<%=list.get(i).getColor()%>]=<%=list.get(i).getItemStock()%></option>
+								<%
+									}
+								%>
 							</select>
 
 						</div>
-						<div class="mb-2 d-flex">
-							<select id="op_size" class="form-control">
-								<option value="1">사이즈를 선택해주세요</option>
-								<option value="2">070</option>
-								<option value="3">011</option>
-							</select>
-
-						</div>
-
-
-
 						<div class="mb-3">
 							<div class="input-group mb-3" style="max-width: 120px;">
 								<div class="input-group-prepend">
 									<button class="btn btn-outline-primary js-btn-minus"
 										type="button">&minus;</button>
 								</div>
-								<input type="text" class="form-control text-center" value="1"
+								<input type="text" id="itemCount" class="form-control text-center" value="1"
 									placeholder="" aria-label="Example text with button addon"
 									aria-describedby="button-addon1">
 								<div class="input-group-append">
@@ -69,8 +106,8 @@
 
 						</div>
 						<p>
-							<a href="cart.html" class="buy-now btn btn-sm btn-primary">Add
-								To Cart</a>
+							<button id="addShoppingCart"
+								class="buy-now btn btn-sm btn-primary">Add To Cart</button>
 						</p>
 
 					</div>
@@ -81,7 +118,9 @@
 		<div class="site-section block-3 site-blocks-2 bg-light">
 			<div class="container">
 				<center>
-					<img id="detailImg" src="front/images/img11.jpg" alt="Image">
+					<img id="detailImg"
+						src="${pageContext.request.contextPath}/uploadImage/<%=item.getItemDetailImg() %>"
+						alt="Image">
 				</center>
 				<br>
 				<hr>
@@ -175,10 +214,14 @@
 			</div>
 		</div>
 
-		<%@include file="./include/footer.jsp" %>
+		<%@include file="./include/footer.jsp"%>
 	</div>
 
-	<%@include file="./include/scriptArea.html" %>
-
+	<%@include file="./include/scriptArea.html"%>
+	<form id="addShoppingCartForm">
+		<input type="hidden" id="optionIdx" name="optionIdx" value=""/>
+		<input type="hidden" id="userName" name="userName" value="<%=session.getAttribute("")%>"/>
+		<input type="hidden" id="shoppingCartCount" name="shoppingCartCount" value=""/>
+	</form>
 </body>
 </html>

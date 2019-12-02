@@ -19,10 +19,10 @@ public class FrontSelectItemImplShoppingService implements ShoppingService {
 			response.setCharacterEncoding("utf-8");
 			ItemDAO itemDAO = new ItemDAO();
 			int pageNum = 0;
-			String sortType = "itemIdx";
+			String sortType = "itemDate";
 			if (request.getParameter("pageNum") != null)
 				pageNum = Integer.parseInt(request.getParameter("pageNum"));
-			if(request.getParameter("sortType") != null)
+			if (request.getParameter("sortType") != null)
 				sortType = request.getParameter("sortType");
 			int showType = 8;
 			int showBlock = 10;
@@ -32,12 +32,11 @@ public class FrontSelectItemImplShoppingService implements ShoppingService {
 			String category = "41";
 			if (request.getParameter("category") != null)
 				category = request.getParameter("category");
-			totalBlock = (int) Math.ceil(itemDAO.selectCountItem() / (showBlock * 1.0));
+			totalBlock = (int) Math.ceil(itemDAO.selectCountItem(category) / (showType * 1.0));
 			if (totalBlock < endBlock)
 				endBlock = totalBlock;
 			itemDAO = new ItemDAO();
-			ArrayList<ItemDTO> list = itemDAO.selectItem(pageNum, sortType, showType,
-					"", "", category, "", "", "1");
+			ArrayList<ItemDTO> list = itemDAO.selectItem(pageNum, sortType, showType, "", "", category, "", "", "1");
 			response.getWriter().write(getJson(list, startBlock, endBlock, totalBlock));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -53,7 +52,7 @@ public class FrontSelectItemImplShoppingService implements ShoppingService {
 					+ "\",\"itemMainImg\":\"" + list.get(i).getItemMainImg() + "\",\"itemName\":\""
 					+ list.get(i).getItemName() + "\",\"itemStatus\":\"" + list.get(i).getItemStatus()
 					+ "\",\"itemPrice\":\"" + list.get(i).getItemPrice() + "\",\"itemSalePrice\":\""
-					+ list.get(i).getItemSalePrice() + "\"}");
+					+ list.get(i).getItemSalePrice() + "\", \"itemInfo\":\"" + list.get(i).getItemContent() + "\"}");
 			if (i != list.size() - 1)
 				json.append(",");
 		}

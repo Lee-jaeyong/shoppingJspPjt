@@ -40,7 +40,7 @@ public class SelectItemImplAction implements ShoppingService {
 		int totalBlock;
 		try {
 			ItemDAO itemDAO = new ItemDAO();
-			totalBlock = (int) Math.ceil(itemDAO.selectCountItem() / (showBlock * 1.0));
+			totalBlock = (int) Math.ceil(itemDAO.selectCountItem(searchItemSmallCategory) / (showType * 1.0));
 			if (totalBlock < endBlock)
 				endBlock = totalBlock;
 			itemDAO = new ItemDAO();

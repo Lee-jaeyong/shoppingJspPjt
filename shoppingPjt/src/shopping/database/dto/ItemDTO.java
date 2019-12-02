@@ -22,10 +22,18 @@ public class ItemDTO {
 	private int itemStock;
 	private String removeDate;
 	private String removeExecuteDate;
-	
+
+	// 상품 옵션 가져올 때 필요한 생성자
+	public ItemDTO(int itemIdx, String size, String color, int itemStock) {
+		this.itemIdx = itemIdx;
+		this.size = size;
+		this.color = color;
+		this.itemStock = itemStock;
+	}
+
 	// 상품 제거 목록을 보여줄 때 필요한 생성자
-	public ItemDTO(int itemIdx, String itemCode, String itemMainImg, String itemName, long itemPrice, long itemSalePrice,
-			String removeDate, String removeExecuteDate) {
+	public ItemDTO(int itemIdx, String itemCode, String itemMainImg, String itemName, long itemPrice,
+			long itemSalePrice, String removeDate, String removeExecuteDate) {
 		this.itemIdx = itemIdx;
 		this.itemCode = itemCode;
 		this.itemMainImg = itemMainImg;
@@ -35,7 +43,7 @@ public class ItemDTO {
 		this.removeDate = removeDate;
 		this.removeExecuteDate = removeExecuteDate;
 	}
-	
+
 	// 상품 정보 수정시 필요한 생성자
 	public ItemDTO(int itemIdx, String itemName, String itemDetailImg, long itemPrice, long itemSalePrice,
 			String itemManufacuter, String itemOrigin, String itemContent) {
@@ -50,8 +58,8 @@ public class ItemDTO {
 	}
 
 	// 상품 정보 확인시 필요한 생성자
-	public ItemDTO(int itemIdx,String itemName, String itemDetailImg, long itemPrice, long itemSalePrice, String itemMainImg,
-			String itemManufacuter, String itemOrigin, String itemContent) {
+	public ItemDTO(int itemIdx, String itemName, String itemDetailImg, long itemPrice, long itemSalePrice,
+			String itemMainImg, String itemManufacuter, String itemOrigin, String itemContent) {
 		this.itemIdx = itemIdx;
 		this.itemName = itemName;
 		this.itemDetailImg = itemDetailImg;
@@ -85,7 +93,7 @@ public class ItemDTO {
 
 	// 상품 리스트를 가져오는 생성자
 	public ItemDTO(int itemIdx, String itemCode, String itemMainImg, String itemName, int itemStatus, long itemPrice,
-			long itemSalePrice) {
+			long itemSalePrice, String itemContent) {
 		this.itemIdx = itemIdx;
 		this.itemCode = itemCode;
 		this.itemMainImg = itemMainImg;
@@ -93,6 +101,7 @@ public class ItemDTO {
 		this.itemStatus = itemStatus;
 		this.itemPrice = itemPrice;
 		this.itemSalePrice = itemSalePrice;
+		this.itemContent = itemContent;
 	}
 
 	// 상품을 추가할 때 필요한 생성자
@@ -115,19 +124,19 @@ public class ItemDTO {
 	public void setRemoveExecuteDate(String removeExecuteDate) {
 		this.removeExecuteDate = removeExecuteDate;
 	}
-	
+
 	public void setRemoveDate(String removeDate) {
 		this.removeDate = removeDate;
 	}
-	
+
 	public String getRemoveExecuteDate() {
 		return removeExecuteDate;
 	}
-	
+
 	public String getRemoveDate() {
 		return removeDate;
 	}
-	
+
 	public String getCategoryName() {
 		return categoryName;
 	}

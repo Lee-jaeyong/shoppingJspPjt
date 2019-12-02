@@ -7,18 +7,8 @@
 		<%@include file="./include/header.jsp"%>
 
 		<div class="bg-light py-3">
-			<div class="container">
-				<center>
-					<div class="row">
-						<!--<div class="col-md-3"></div>-->
-						<div class="col-md-12 mb-0">
-							<a href="index.html">아우터</a>&nbsp;&nbsp;&nbsp;<a
-								href="index.html">블라우스</a> &nbsp;&nbsp;&nbsp;<a
-								href="index.html">맨투맨</a>&nbsp;&nbsp;&nbsp;<a href="index.html">후드</a>
-						</div>
-						<!--<div class="col-md-3"></div>-->
-					</div>
-				</center>
+			<div class="container" id="top">
+				<div class="row" id="smallCategorySection"></div>
 			</div>
 		</div>
 
@@ -36,10 +26,6 @@
 								</div>
 								<div class="d-flex">
 									<div class="dropdown mr-1 ml-md-auto">
-										<button type="button"
-											class="btn btn-secondary btn-sm dropdown-toggle"
-											id="dropdownMenuOffset" data-toggle="dropdown"
-											aria-haspopup="true" aria-expanded="false">Latest</button>
 										<div class="dropdown-menu"
 											aria-labelledby="dropdownMenuOffset">
 											<a class="dropdown-item" href="#">Men</a> <a
@@ -50,15 +36,17 @@
 									<div class="btn-group">
 										<button type="button"
 											class="btn btn-secondary btn-sm dropdown-toggle"
-											id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
+											id="dropdownMenuReference" data-toggle="dropdown">정
+											렬</button>
 										<div class="dropdown-menu"
 											aria-labelledby="dropdownMenuReference">
-											<a class="dropdown-item" href="#">Relevance</a> <a
-												class="dropdown-item" href="#">Name, A to Z</a> <a
-												class="dropdown-item" href="#">Name, Z to A</a>
-											<div class="dropdown-divider"></div>
-											<a class="dropdown-item" href="#">Price, low to high</a> <a
-												class="dropdown-item" href="#">Price, high to low</a>
+											<a class="dropdown-item"
+												href="javascript:sortChange('itemDate')">상품 등록일 순</a> <a
+												class="dropdown-item"
+												href="javascript:sortChange('itemSalePrice')">가격 낮은 순</a> <a
+												class="dropdown-item"
+												href="javascript:sortChange('itemSalePrice desc')">가격 높은
+												순</a>
 										</div>
 									</div>
 								</div>
@@ -135,7 +123,8 @@
 		if (request.getParameter("category") != null)
 			category = request.getParameter("category");
 	%>
-	<input type="text" id="category" value="<%=category%>">
+	<input type="hidden" id="category" value="<%=category%>">
+	<input type="hidden" id="sortType" value="itemDate">
 	<%@include file="./include/footer.jsp"%>
 
 	<%@include file="./include/scriptArea.html"%>
@@ -147,13 +136,40 @@
 
 		});
 
+		function sortChange(sortType) {
+			$("#sortType").val(sortType);
+			pageLoad(0);
+		}
+
+		function selectSmallCategoryList() {
+			$.ajax({
+				url : "./SelectSmallCategoryEqulsNow.aj",
+				data : {
+					smallCategory : $("#category").val()
+				},
+				dataType : "json",
+				success : function(data) {
+					var smallCategory = data.result;
+					var html = '';
+					for (var i = 0; i < smallCategory.length; i++) {
+						html += '<div class="mb-2 ml-5">';
+						html += '<a href="./shop.do?category='
+								+ smallCategory[i].categoryNum + '">'
+								+ smallCategory[i].categoryName + '</a></div>';
+					}
+					$("#smallCategorySection").html(html);
+				}
+			});
+		}
+
 		function pageLoad(pageNum) {
 			$
 					.ajax({
 						url : "./SelectItemList.aj",
 						data : {
 							pageNum : pageNum,
-							category : $("#category").val()
+							category : $("#category").val(),
+							sortType : $("#sortType").val()
 						},
 						dataType : "json",
 						success : function(data) {
@@ -162,10 +178,12 @@
 							for (var i = 0; i < itemList.length; i++) {
 								html += '<div class="col-sm-4 col-lg-3 mb-4" data-aos="fade-up">';
 								html += '<div class="block-4 text-center border"><figure class="block-4-image">';
-								html += '<a href="shop-single.html"><img src="'+ctx+'/uploadImage/'+itemList[i].itemMainImg+'" style="height:300px; width:250px;" class="img-fluid"></a></figure>';
-								html += '<div class="block-4-text p-4"><h3><a href="shop-single.html">'
+								html += '<a href="./single.do?itemNumber='+itemList[i].itemIdx+'"><img src="'+ctx+'/uploadImage/'+itemList[i].itemMainImg+'" style="height:300px; width:250px;" class="img-fluid"></a></figure>';
+								html += '<div class="block-4-text p-4"><h3><a href="./single.do?itemNumber='+itemList[i].itemIdx+'">'
 										+ itemList[i].itemName
-										+ '</a></h3><p class="text-primary font-weight-bold">'
+										+ '</a></h3><p class="mb-0">'
+										+ itemList[i].itemInfo
+										+ '</p><p class="text-primary font-weight-bold">'
 										+ itemList[i].itemPrice
 										+ '원</p></div></div></div>';
 							}
@@ -181,14 +199,15 @@
 								pageArea += '<li><a href="#">&lt;</a></li>';
 							else
 								pageArea += '<li><a href="#">&lt;</a></li>';
-							
-							for (var i = startBlock; i <= endBlock; i++) {
+
+							for (var i = startBlock; i < endBlock; i++) {
 								if (i == nowPageNum) {
 									pageArea += '<li class="active"><span>'
 											+ (i + 1) + '</span></li>';
 								} else {
-									pageArea += '<li><a href="javascript:pageLoad('+i+')"><span>' + (i + 1)
-											+ '</span></a></li>';
+									pageArea += '<li><a onclick="pageLoad(' + i
+											+ ');" href="#top"><span>'
+											+ (i + 1) + '</span></a></li>';
 								}
 							}
 
@@ -201,7 +220,10 @@
 					});
 		}
 
-		window.onload = pageLoad(0);
+		window.onload = function() {
+			selectSmallCategoryList();
+			pageLoad(0);
+		}
 	</script>
 </body>
 </html>

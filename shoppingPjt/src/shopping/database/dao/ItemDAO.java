@@ -34,10 +34,12 @@ public class ItemDAO extends Database {
 		return item;
 	}
 
-	public int selectCountItem() {
+	public int selectCountItem(String category) {
 		int count = 0;
 		try {
 			String sql = "SELECT COUNT(itemIdx) FROM items";
+			if (!category.equals(""))
+				sql += ",category WHERE category.ca_itemIdx = items.itemIdx AND ca_smallidx = " + category;
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			rs.next();
@@ -46,6 +48,7 @@ public class ItemDAO extends Database {
 			pstmt.close();
 			conn.close();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return count;
 	}
@@ -95,7 +98,7 @@ public class ItemDAO extends Database {
 			else if (searchItemStatus.equals("0"))
 				statusChk = " AND itemStatus = 0 ";
 
-			String sql = "SELECT itemIdx,itemCode,itemMainImg,itemName,itemStatus,itemPrice,itemSalePrice\r\n"
+			String sql = "SELECT itemIdx,itemCode,itemMainImg,itemName,itemStatus,itemPrice,itemSalePrice,itemContent\r\n"
 					+ "FROM items,category WHERE items.itemIdx = category.ca_itemIdx " + statusChk + sqlWhere.toString()
 					+ " ORDER BY " + sortType + " LIMIT " + pageNum * showType + "," + showType + "";
 			pstmt = conn.prepareStatement(sql);
@@ -104,7 +107,7 @@ public class ItemDAO extends Database {
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				list.add(new ItemDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
-						rs.getInt(6), rs.getInt(7)));
+						rs.getInt(6), rs.getInt(7), rs.getString(8)));
 			}
 			conn.close();
 			pstmt.close();
@@ -167,6 +170,26 @@ public class ItemDAO extends Database {
 			while (rs.next())
 				list.add(new ItemDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
 						rs.getInt(6), rs.getString(7), rs.getString(8)));
+			conn.close();
+			pstmt.close();
+			rs.close();
+		} catch (Exception e) {
+			return list;
+		}
+		return list;
+	}
+
+	public ArrayList<ItemDTO> selectItemOptionSingle(String itemIdx) {
+		ArrayList<ItemDTO> list = new ArrayList<ItemDTO>();
+		try {
+			String sql = "SELECT opIdx,opSize,opColor,opStock FROM itemoptions" + " WHERE op_i_idx = ?"
+					+ "ORDER BY opColor, opSize";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, itemIdx);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(new ItemDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
+			}
 			conn.close();
 			pstmt.close();
 			rs.close();

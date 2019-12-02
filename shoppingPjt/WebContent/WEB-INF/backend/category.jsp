@@ -31,7 +31,7 @@
 					categoryUpdateName : $(this).parents().next().next().val()
 				},
 				success : function(data) {
-					location.href = './adminCategoryManage.do';
+					location.href = './adminCategoryManage.admin';
 				}
 			});
 		});
@@ -59,7 +59,7 @@
 										success : function(data) {
 											if (data === 'true') {
 												alert("판매 상태 변경 완료");
-												location.href = './adminCategoryManage.do';
+												location.href = './adminCategoryManage.admin';
 											} else
 												alert("판매 상태 변경 실패");
 										}
@@ -80,7 +80,7 @@
 				success : function(data) {
 					if (data === 'true') {
 						categoryLoad();
-						location.href = './adminCategoryManage.do';
+						location.href = './adminCategoryManage.admin';
 					} else
 						alert("카테고리 추가 실패");
 				}
@@ -117,7 +117,7 @@
 			},
 			success : function(data) {
 				if (data === 'true')
-					location.href = './adminCategoryManage.do';
+					location.href = './adminCategoryManage.admin';
 				else
 					alert("카테고리 판매 상태 수정 실패");
 			}
@@ -138,7 +138,7 @@
 				categoryUpdateName : $(button).parents().prev().val()
 			},
 			success : function(data) {
-				location.href = './adminCategoryManage.do';
+				location.href = './adminCategoryManage.admin';
 			}
 		});
 	}

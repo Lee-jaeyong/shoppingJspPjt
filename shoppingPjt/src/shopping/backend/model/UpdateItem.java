@@ -21,7 +21,7 @@ public class UpdateItem implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(true);
-		forward.setPath("./adminItemList.do");
+		forward.setPath("./adminItemList.admin");
 		File file = null;
 		String savePath = request.getRealPath("uploadImage");
 		int maxSize = 5 * 1024 * 1024;

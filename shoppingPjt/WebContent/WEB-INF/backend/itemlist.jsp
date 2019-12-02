@@ -11,7 +11,7 @@
 				function() {
 					alert("메인이미지 변경 완료");
 					$("#changeImgForm").attr("action",
-							"./adminItemMainImgUpdate.do").submit();
+							"./adminItemMainImgUpdate.admin").submit();
 				});
 
 		$("#inputChangeMainImg").change(function() {
@@ -75,7 +75,7 @@
 					if (chk == '')
 						alert("문서화할 항목을 선택해주세요.");
 					else
-						location.href = "./adminExcelUpload.do?query=" + chk
+						location.href = "./adminExcelUpload.admin?query=" + chk
 								+ "&header=" + chkText;
 				});
 
@@ -330,7 +330,7 @@
 
 	function showItemInfo(idx) {
 		$("#showItemInfoIdx").val(idx);
-		$("#showItemInfo").attr("action", "./adminAddItem.do").attr("method",
+		$("#showItemInfo").attr("action", "./adminAddItem.admin").attr("method",
 				"post").submit();
 	}
 

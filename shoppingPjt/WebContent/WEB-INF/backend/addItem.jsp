@@ -26,7 +26,7 @@
 										if(data === 'true')
 										{
 											alert("삭제 완료");
-											location.href="./adminItemList.do";										
+											location.href="./adminItemList.admin";										
 										}
 										else
 											alert("삭제 실패");
@@ -146,7 +146,7 @@
 											else
 												$("#itemForm")
 														.attr("action",
-																"./adminAddItemExecute.do")
+																"./adminAddItemExecute.admin")
 														.attr("enctype",
 																"multipart/form-data")
 														.attr("method", "post")
@@ -184,7 +184,7 @@
 											else
 												$("#itemForm")
 														.attr("action",
-																"./adminUpdateItemExecute.do")
+																"./adminUpdateItemExecute.admin")
 														.attr("enctype",
 																"multipart/form-data")
 														.attr("method", "post")

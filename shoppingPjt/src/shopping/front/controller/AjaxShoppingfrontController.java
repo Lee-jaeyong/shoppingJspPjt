@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import shopping.action.Action;
 import shopping.action.ActionForward;
+import shopping.backend.ajax.model.SelectItemImplAction;
+import shopping.front.ajax.model.FrontSelectItemImplShoppingService;
 import shopping.front.ajax.model.UserIdDupChkImplShoppingService;
 import shopping.front.model.AddUser;
 import shopping.front.model.LoginUser;
@@ -41,6 +43,8 @@ public class AjaxShoppingfrontController extends HttpServlet {
 
 		if (command.equals("userIdDupChk.aj")) {
 			new UserIdDupChkImplShoppingService().execute(request, response);
+		} else if (command.equals("SelectItemList.aj")) {
+			new FrontSelectItemImplShoppingService().execute(request, response);
 		}
 	}
 }

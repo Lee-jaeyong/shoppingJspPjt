@@ -91,9 +91,9 @@ public class ItemDAO extends Database {
 			}
 			String statusChk = "";
 			if (searchItemStatus.equals("1"))
-				statusChk = " AND itemStatus = 1";
+				statusChk = " AND itemStatus = 1 ";
 			else if (searchItemStatus.equals("0"))
-				statusChk = " AND itemStatus = 0";
+				statusChk = " AND itemStatus = 0 ";
 
 			String sql = "SELECT itemIdx,itemCode,itemMainImg,itemName,itemStatus,itemPrice,itemSalePrice\r\n"
 					+ "FROM items,category WHERE items.itemIdx = category.ca_itemIdx " + statusChk + sqlWhere.toString()

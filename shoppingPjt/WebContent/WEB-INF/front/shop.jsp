@@ -64,97 +64,16 @@
 								</div>
 							</div>
 						</div>
-						<div class="row mb-5">
-
-							<div class="col-sm-4 col-lg-3 mb-4" data-aos="fade-up">
-								<div class="block-4 text-center border">
-									<figure class="block-4-image">
-										<a href="shop-single.html"><img
-											src="front/images/cloth_1.jpg" alt="Image placeholder"
-											class="img-fluid"></a>
-									</figure>
-									<div class="block-4-text p-4">
-										<h3>
-											<a href="shop-single.html">Tank Top</a>
-										</h3>
-										<p class="mb-0">Finding perfect t-shirt</p>
-										<p class="text-primary font-weight-bold">$50</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-4 col-lg-3 mb-4" data-aos="fade-up">
-								<div class="block-4 text-center border">
-									<figure class="block-4-image">
-										<a href="shop-single.html"><img
-											src="front/images/shoe_1.jpg" alt="Image placeholder"
-											class="img-fluid"></a>
-									</figure>
-									<div class="block-4-text p-4">
-										<h3>
-											<a href="shop-single.html">Corater</a>
-										</h3>
-										<p class="mb-0">Finding perfect products</p>
-										<p class="text-primary font-weight-bold">$50</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-4 col-lg-3 mb-4" data-aos="fade-up">
-								<div class="block-4 text-center border">
-									<figure class="block-4-image">
-										<a href="shop-single.html"><img
-											src="front/images/cloth_2.jpg" alt="Image placeholder"
-											class="img-fluid"></a>
-									</figure>
-									<div class="block-4-text p-4">
-										<h3>
-											<a href="shop-single.html">Polo Shirt</a>
-										</h3>
-										<p class="mb-0">Finding perfect products</p>
-										<p class="text-primary font-weight-bold">$50</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-4 col-lg-3 mb-4" data-aos="fade-up">
-								<div class="block-4 text-center border">
-									<figure class="block-4-image">
-										<a href="shop-single.html"><img
-											src="front/images/cloth_2.jpg" alt="Image placeholder"
-											class="img-fluid"></a>
-									</figure>
-									<div class="block-4-text p-4">
-										<h3>
-											<a href="shop-single.html">Polo Shirt</a>
-										</h3>
-										<p class="mb-0">Finding perfect products</p>
-										<p class="text-primary font-weight-bold">$50</p>
-									</div>
-								</div>
-							</div>
-
-
-
-
-						</div>
+						<div class="row mb-5" id="itemSection"></div>
 						<div class="row" data-aos="fade-up">
 							<div class="col-md-12 text-center">
 								<div class="site-block-27">
-									<ul>
-										<li><a href="#">&lt;</a></li>
-										<li class="active"><span>1</span></li>
-										<li><a href="#">2</a></li>
-										<li><a href="#">3</a></li>
-										<li><a href="#">4</a></li>
-										<li><a href="#">5</a></li>
-										<li><a href="#">&gt;</a></li>
+									<ul id="pageSection">
 									</ul>
 								</div>
 							</div>
 						</div>
 					</div>
-
-
-
-
 				</div>
 			</div>
 
@@ -211,11 +130,78 @@
 
 		</div>
 	</div>
+	<%
+		String category = "41";
+		if (request.getParameter("category") != null)
+			category = request.getParameter("category");
+	%>
+	<input type="text" id="category" value="<%=category%>">
+	<%@include file="./include/footer.jsp"%>
 
-	<%@include file="./include/footer.jsp" %>
-	</div>
+	<%@include file="./include/scriptArea.html"%>
+	<script>
+		const ctx = window.location.pathname.substring(0,
+				window.location.pathname.indexOf("/", 2));
 
-	<%@include file="./include/scriptArea.html" %>
+		$(document).ready(function() {
 
+		});
+
+		function pageLoad(pageNum) {
+			$
+					.ajax({
+						url : "./SelectItemList.aj",
+						data : {
+							pageNum : pageNum,
+							category : $("#category").val()
+						},
+						dataType : "json",
+						success : function(data) {
+							var itemList = data.result;
+							var html = '';
+							for (var i = 0; i < itemList.length; i++) {
+								html += '<div class="col-sm-4 col-lg-3 mb-4" data-aos="fade-up">';
+								html += '<div class="block-4 text-center border"><figure class="block-4-image">';
+								html += '<a href="shop-single.html"><img src="'+ctx+'/uploadImage/'+itemList[i].itemMainImg+'" style="height:300px; width:250px;" class="img-fluid"></a></figure>';
+								html += '<div class="block-4-text p-4"><h3><a href="shop-single.html">'
+										+ itemList[i].itemName
+										+ '</a></h3><p class="text-primary font-weight-bold">'
+										+ itemList[i].itemPrice
+										+ '원</p></div></div></div>';
+							}
+							$("#itemSection").html(html);
+
+							var startBlock = parseInt(data.startBlock);
+							var endBlock = parseInt(data.endBlock);
+							var totalBlock = parseInt(data.totalBlock);
+							var nowPageNum = parseInt($("#nowPageNum").val());
+							var pageArea = '';
+
+							if (startBlock == 0)
+								pageArea += '<li><a href="#">&lt;</a></li>';
+							else
+								pageArea += '<li><a href="#">&lt;</a></li>';
+							
+							for (var i = startBlock; i <= endBlock; i++) {
+								if (i == nowPageNum) {
+									pageArea += '<li class="active"><span>'
+											+ (i + 1) + '</span></li>';
+								} else {
+									pageArea += '<li><a href="javascript:pageLoad('+i+')"><span>' + (i + 1)
+											+ '</span></a></li>';
+								}
+							}
+
+							if (endBlock == totalBlock)
+								pageArea += '<li><a href="#">&gt;</a></li>';
+							else
+								pageArea += '<li><a href="#">&gt;</a></li>';
+							$("#pageSection").html(pageArea);
+						}
+					});
+		}
+
+		window.onload = pageLoad(0);
+	</script>
 </body>
 </html>

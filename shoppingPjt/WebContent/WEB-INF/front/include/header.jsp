@@ -15,6 +15,29 @@
 										"action", "./loginAction.do").submit();
 						});
 			});
+	
+	function categoryLoad() {
+		$.ajax({
+					url : "./SelectCategory.ajax",
+					dataType : "json",
+					success : function(data) {
+						var category = data.category;
+						var smallCategory = data.smallCategory;
+						var html = '';
+						for (var i = 0; i < category.length; i++) {
+							html += '<li class="has-children"><a href="#">'+category[i].categoryName+'</a><ul class="dropdown">';
+							for (var j = 0; j < smallCategory.length; j++) {
+								if (category[i].categoryChkIdx == smallCategory[j].categoryHighIdx) {
+									html += '<li><a href="./shop.do?category='+smallCategory[j].categoryChkIdx+'">'+smallCategory[j].categoryName+'</a></li>';
+								}
+							}
+							html += '</ul></li>';
+						}
+						$("#categoryArea").html(html);
+					}
+				});
+	}
+	window.onload = categoryLoad();
 </script>
 <header class="site-navbar" role="banner">
 	<div class="site-navbar-top">
@@ -109,10 +132,19 @@
 						<li><a href="#">Menu Three</a></li>
 					</ul></li>
 				<li class="has-children"><a href="index.html">Shop</a>
-					<ul class="dropdown">
-						<li><a href="#">Menu One</a></li>
-						<li><a href="#">Menu Two</a></li>
-						<li><a href="#">Menu Three</a></li>
+					<ul class="dropdown" id="categoryArea">
+						<li class="has-children"><a href="#">Sub Menu</a>
+							<ul class="dropdown">
+								<li><a href="#">Menu One</a></li>
+								<li><a href="#">Menu Two</a></li>
+								<li><a href="#">Menu Three</a></li>
+							</ul></li>
+						<li class="has-children"><a href="#">Sub Menu</a>
+							<ul class="dropdown">
+								<li><a href="#">Menu One</a></li>
+								<li><a href="#">Menu Two</a></li>
+								<li><a href="#">Menu Three</a></li>
+							</ul></li>
 						<li class="has-children"><a href="#">Sub Menu</a>
 							<ul class="dropdown">
 								<li><a href="#">Menu One</a></li>

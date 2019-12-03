@@ -15,6 +15,7 @@ import shopping.action.ActionForward;
 import shopping.front.model.AddUser;
 import shopping.front.model.LoginUser;
 import shopping.front.model.LogoutUser;
+import shopping.front.model.ShoppingCartToOrder;
 import shopping.front.model.ShowItemInfo;
 
 @WebServlet("/ShoppingController")
@@ -72,8 +73,8 @@ public class ShoppingController extends HttpServlet {
 				forward.setRedirect(true);
 			}
 		} else if (command.equals("order.do")) {
-			forward.setPath("WEB-INF/front/checkout.jsp");
-			forward.setRedirect(false);
+			action = new ShoppingCartToOrder();
+			forward = action.execute(request, response);
 		} else if (command.equals("join.do")) {
 			forward.setPath("WEB-INF/front/join.jsp");
 			forward.setRedirect(false);

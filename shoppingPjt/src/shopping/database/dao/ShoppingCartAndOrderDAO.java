@@ -52,4 +52,49 @@ public class ShoppingCartAndOrderDAO extends Database {
 		}
 		return list;
 	}
+
+	/*
+	 * public boolean insertShoppingCartToOrder(String shoppingCartList) throws
+	 * SQLException { try { String[] _shoppingCartList =
+	 * shoppingCartList.split(","); conn.setAutoCommit(false); for(int i
+	 * =0;i<_shoppingCartList.length;i++) { String sql = ""; pstmt =
+	 * conn.prepareStatement(sql);
+	 * 
+	 * } conn.commit(); } catch (Exception e) { e.printStackTrace();
+	 * conn.rollback(); } }
+	 */
+
+	public boolean updateShoppingCartCount(String idx, String type) {
+		try {
+			String updateType = "cartCount = cartCount - 1";
+			if (type.equals("true"))
+				updateType = "cartCount = cartCount + 1";
+			String sql = "UPDATE shoppingCart SET " + updateType + " WHERE cartIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(idx));
+			pstmt.executeUpdate();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	public boolean deleteShoppingCart(String idx, String userIdx) {
+		try {
+			String sql = "DELETE FROM shoppingCart WHERE cartIdx = ? AND cartUserIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(idx));
+			pstmt.setInt(2, Integer.parseInt(userIdx));
+			pstmt.executeUpdate();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 }

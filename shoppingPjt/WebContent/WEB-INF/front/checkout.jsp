@@ -2,7 +2,11 @@
 	pageEncoding="UTF-8"%>
 <%@include file="./include/head.jsp" %>
 <body>
-
+	<%
+		String totalList = request.getParameter("totalList");	
+		String sendShoppingCartTotal = request.getParameter("sendShoppingCartTotal");	
+		String sendShoppingCartSubTotal = request.getParameter("sendShoppingCartSubTotal");	
+	%>
 	<div class="site-wrap">
 		<%@include file="./include/header.jsp"%>
 
@@ -132,12 +136,12 @@
 											<tr>
 												<td class="text-black font-weight-bold"><strong>Cart
 														Subtotal</strong></td>
-												<td class="text-black">$350.00</td>
+												<td class="text-black"><%=sendShoppingCartTotal %></td>
 											</tr>
 											<tr>
 												<td class="text-black font-weight-bold"><strong>Order
 														Total</strong></td>
-												<td class="text-black font-weight-bold"><strong>$350.00</strong></td>
+												<td class="text-black font-weight-bold"><strong><%=sendShoppingCartSubTotal %></strong></td>
 											</tr>
 										</tbody>
 									</table>

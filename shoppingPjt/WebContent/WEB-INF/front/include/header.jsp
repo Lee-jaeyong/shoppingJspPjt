@@ -59,6 +59,8 @@
 			alert("로그인이 필요한 기능입니다.");
 			$("#loginBtn").click();
 		}
+		else
+			location.href='./cart.do';
 	}
 
 	window.onload = categoryLoad();

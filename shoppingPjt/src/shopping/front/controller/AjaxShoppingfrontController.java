@@ -8,10 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import shopping.front.ajax.model.DeleteShoppingCart;
 import shopping.front.ajax.model.FrontSelectItemImplShoppingService;
 import shopping.front.ajax.model.InsertShoppingCart;
 import shopping.front.ajax.model.SelectShoppingCart;
 import shopping.front.ajax.model.SelectSmallCategoryEqulsNow;
+import shopping.front.ajax.model.UpdateCartCount;
 import shopping.front.ajax.model.UserIdDupChkImplShoppingService;
 
 @WebServlet("/AjaxShoppingfrontController")
@@ -37,7 +39,7 @@ public class AjaxShoppingfrontController extends HttpServlet {
 		String requestURI = request.getRequestURI();
 		int cmdIdx = requestURI.lastIndexOf("/") + 1;
 		String command = requestURI.substring(cmdIdx);
-
+		
 		if (command.equals("userIdDupChk.aj")) {
 			new UserIdDupChkImplShoppingService().execute(request, response);
 		} else if (command.equals("SelectItemList.aj")) {
@@ -48,6 +50,11 @@ public class AjaxShoppingfrontController extends HttpServlet {
 			new InsertShoppingCart().execute(request, response);
 		}else if (command.equals("SelectShoppingCart.aj")) {
 			new SelectShoppingCart().execute(request, response);
+		}else if (command.equals("UpdateCartCount.aj")) {
+			new UpdateCartCount().execute(request, response);
+		}else if (command.equals("deleteShoppingCart.aj")) {
+			new DeleteShoppingCart().execute(request, response);
 		}
+
 	}
 }

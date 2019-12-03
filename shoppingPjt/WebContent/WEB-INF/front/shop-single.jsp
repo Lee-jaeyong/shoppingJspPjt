@@ -6,10 +6,11 @@
 <%@include file="./include/head.jsp"%>
 <%
 	String userIdx = "";
-	if(session.getAttribute("userIdx") !=null)
+	if (session.getAttribute("userIdx") != null)
 		userIdx = session.getAttribute("userIdx").toString();
 %>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
 	$(document).ready(function() {
 		$("#addShoppingCart").click(function() {
@@ -17,27 +18,24 @@
 				alert("색상을 선택해주세요.");
 				return;
 			} else {
-				if($("#userName").val() === '')
-				{
+				if ($("#userloginChk").val() === '') {
 					alert("로그인이 필요한 기능입니다.");
 					return;
 				}
 				$("#shoppingCartCount").val($("#itemCount").val());
 				$("#optionIdx").val($("#op_color").val());
 				$.ajax({
-					url:"./InsertShoppingCart.aj",
-					data:{
-						userId:$("#userName").val(),
-						shoppingCartCount:$("#shoppingCartCount").val(),
-						optionIdx:$("#optionIdx").val()
+					url : "./InsertShoppingCart.aj",
+					data : {
+						userId : $("#userloginChk").val(),
+						shoppingCartCount : $("#shoppingCartCount").val(),
+						optionIdx : $("#optionIdx").val()
 					},
-					success:function(data){
-						if(data === 'true')
-						{
-							if(confirm("장바구니에 추가하였습니다. 장바구니로 이동하시겠습니까?"))
-								location.href='./cart.do';
-						}
-						else
+					success : function(data) {
+						if (data === 'true') {
+							if (confirm("장바구니에 추가하였습니다. 장바구니로 이동하시겠습니까?"))
+								location.href = './cart.do';
+						} else
 							alert("장바구니 추가 실패");
 					}
 				});
@@ -100,8 +98,9 @@
 									<button class="btn btn-outline-primary js-btn-minus"
 										type="button">&minus;</button>
 								</div>
-								<input type="text" id="itemCount" class="form-control text-center" value="1"
-									placeholder="" aria-label="Example text with button addon"
+								<input type="text" id="itemCount"
+									class="form-control text-center" value="1" placeholder=""
+									aria-label="Example text with button addon"
 									aria-describedby="button-addon1">
 								<div class="input-group-append">
 									<button class="btn btn-outline-primary js-btn-plus"
@@ -223,10 +222,8 @@
 	</div>
 
 	<%@include file="./include/scriptArea.html"%>
-	<form id="addShoppingCartForm">
-		<input type="hidden" id="optionIdx" name="optionIdx" value=""/>
-		<input type="hidden" id="userName" name="userName" value="<%=userIdx%>"/>
-		<input type="hidden" id="shoppingCartCount" name="shoppingCartCount" value=""/>
-	</form>
+	<input type="hidden" id="optionIdx" name="optionIdx" value="" />
+	<input type="hidden" id="shoppingCartCount" name="shoppingCartCount"
+		value="" />
 </body>
 </html>

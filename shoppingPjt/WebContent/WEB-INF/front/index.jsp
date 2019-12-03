@@ -9,10 +9,19 @@
 </style>
 <body>
 	<%
-		if (request.getQueryString() != null && request.getQueryString().equals("error")) {
+		if (session.getAttribute("userIdx") == null && request.getQueryString() != null
+				&& request.getQueryString().equals("error")) {
 	%>
 	<script>
 		alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
+	</script>
+	<%
+		} else if (session.getAttribute("userIdx") == null && request.getQueryString() != null
+				&& request.getQueryString().equals("login")) {
+	%>
+	<script>
+		alert("로그인이 필요한 기능입니다.");
+		$("#loginBtn").click();
 	</script>
 	<%
 		}

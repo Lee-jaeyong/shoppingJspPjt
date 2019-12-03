@@ -27,32 +27,40 @@
 
 	function categoryLoad() {
 		$
-				.ajax({
-					url : "./SelectCategory.ajax",
-					dataType : "json",
-					success : function(data) {
-						var category = data.category;
-						var smallCategory = data.smallCategory;
-						var html = '';
-						for (var i = 0; i < category.length; i++) {
-							html += '<li class="has-children"><a href="#">'
-									+ category[i].categoryName
-									+ '</a><ul class="dropdown">';
-							for (var j = 0; j < smallCategory.length; j++) {
-								if (category[i].categoryChkIdx == smallCategory[j].categoryHighIdx) {
-									html += '<li><a href="./shop.do?category='
-											+ smallCategory[j].categoryChkIdx
-											+ '">'
-											+ smallCategory[j].categoryName
-											+ '</a></li>';
-								}
-							}
-							html += '</ul></li>';
+		.ajax({
+			url : "./SelectCategory.ajax",
+			dataType : "json",
+			success : function(data) {
+				var category = data.category;
+				var smallCategory = data.smallCategory;
+				var html = '';
+				for (var i = 0; i < category.length; i++) {
+					html += '<li class="has-children"><a href="#">'
+							+ category[i].categoryName
+							+ '</a><ul class="dropdown">';
+					for (var j = 0; j < smallCategory.length; j++) {
+						if (category[i].categoryChkIdx == smallCategory[j].categoryHighIdx) {
+							html += '<li><a href="./shop.do?category='
+									+ smallCategory[j].categoryChkIdx
+									+ '">'
+									+ smallCategory[j].categoryName
+									+ '</a></li>';
 						}
-						$("#categoryArea").html(html);
 					}
-				});
+					html += '</ul></li>';
+				}
+				$("#categoryArea").html(html);
+			}
+		});
 	}
+
+	function checkLogin() {
+		if ($("#userloginChk").val() === '') {
+			alert("로그인이 필요한 기능입니다.");
+			$("#loginBtn").click();
+		}
+	}
+
 	window.onload = categoryLoad();
 </script>
 <header class="site-navbar" role="banner">
@@ -82,10 +90,10 @@
 								if (session.getAttribute("userId") == null) {
 							%>
 							<li><a href="join.do">회원가입</a></li>
-							<li><a href="#" data-toggle="modal" data-target="#myModal">로그인</a>
-								<%
-									} else {
-								%>
+							<li><a href="#" id="loginBtn" data-toggle="modal"
+								data-target="#myModal">로그인</a> <%
+ 	} else {
+ %>
 							<li><b><%=session.getAttribute("userName")%></b>님
 								&nbsp;&nbsp;</li>
 							<li><a href="logoutAction.do">로그아웃</a></li>
@@ -95,9 +103,9 @@
 
 							<li style="display: none;"><a href="#">로그아웃</a></li>
 
-							<li><a href="#">마이페이지</a></li>
-							<li><a href="./cart.do" class="site-cart"> <span
-									class="icon icon-shopping_cart"></span> <span class="count">2</span>
+							<li><a href="javascript:checkLogin()">마이페이지</a></li>
+							<li><a href="javascript:checkLogin()" class="site-cart">
+									<span class="icon icon-shopping_cart"></span>
 							</a></li>
 							<li class="d-inline-block d-md-none ml-md-0"><a href="#"
 								class="site-menu-toggle js-menu-toggle"><span
@@ -157,3 +165,9 @@
 		</div>
 	</div>
 </header>
+<%
+	String userName = "";
+	if (session.getAttribute("userIdx") != null)
+		userName = session.getAttribute("userIdx").toString();
+%>
+<input type="hidden" id="userloginChk" value="<%=userName%>" />

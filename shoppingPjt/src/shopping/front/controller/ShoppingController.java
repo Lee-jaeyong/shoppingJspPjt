@@ -68,7 +68,7 @@ public class ShoppingController extends HttpServlet {
 			}
 			else
 			{
-				forward.setPath("./index.do");
+				forward.setPath("./index.do?login");
 				forward.setRedirect(true);
 			}
 		} else if (command.equals("order.do")) {

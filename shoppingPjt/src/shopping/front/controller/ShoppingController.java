@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import shopping.action.Action;
 import shopping.action.ActionForward;
@@ -59,8 +60,17 @@ public class ShoppingController extends HttpServlet {
 			action = new LogoutUser();
 			forward = action.execute(request, response);
 		}else if (command.equals("cart.do")) {
-			forward.setPath("WEB-INF/front/cart.jsp");
-			forward.setRedirect(false);
+			HttpSession session = request.getSession();
+			if(session.getAttribute("userIdx") != null)
+			{
+				forward.setPath("WEB-INF/front/cart.jsp");
+				forward.setRedirect(false);
+			}
+			else
+			{
+				forward.setPath("./index.do");
+				forward.setRedirect(true);
+			}
 		} else if (command.equals("order.do")) {
 			forward.setPath("WEB-INF/front/checkout.jsp");
 			forward.setRedirect(false);

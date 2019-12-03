@@ -4,6 +4,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="./include/head.jsp"%>
+<%
+	String userIdx = "";
+	if(session.getAttribute("userIdx") !=null)
+		userIdx = session.getAttribute("userIdx").toString();
+%>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
 	$(document).ready(function() {
@@ -20,7 +25,7 @@
 				$("#shoppingCartCount").val($("#itemCount").val());
 				$("#optionIdx").val($("#op_color").val());
 				$.ajax({
-					url:"",
+					url:"./InsertShoppingCart.aj",
 					data:{
 						userId:$("#userName").val(),
 						shoppingCartCount:$("#shoppingCartCount").val(),
@@ -30,7 +35,7 @@
 						if(data === 'true')
 						{
 							if(confirm("장바구니에 추가하였습니다. 장바구니로 이동하시겠습니까?"))
-								location.href='';
+								location.href='./cart.do';
 						}
 						else
 							alert("장바구니 추가 실패");
@@ -220,7 +225,7 @@
 	<%@include file="./include/scriptArea.html"%>
 	<form id="addShoppingCartForm">
 		<input type="hidden" id="optionIdx" name="optionIdx" value=""/>
-		<input type="hidden" id="userName" name="userName" value="<%=session.getAttribute("")%>"/>
+		<input type="hidden" id="userName" name="userName" value="<%=userIdx%>"/>
 		<input type="hidden" id="shoppingCartCount" name="shoppingCartCount" value=""/>
 	</form>
 </body>

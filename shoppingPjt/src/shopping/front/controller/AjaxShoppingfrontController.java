@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import shopping.front.ajax.model.FrontSelectItemImplShoppingService;
+import shopping.front.ajax.model.InsertShoppingCart;
+import shopping.front.ajax.model.SelectShoppingCart;
 import shopping.front.ajax.model.SelectSmallCategoryEqulsNow;
 import shopping.front.ajax.model.UserIdDupChkImplShoppingService;
 
@@ -42,6 +44,10 @@ public class AjaxShoppingfrontController extends HttpServlet {
 			new FrontSelectItemImplShoppingService().execute(request, response);
 		}else if (command.equals("SelectSmallCategoryEqulsNow.aj")) {
 			new SelectSmallCategoryEqulsNow().execute(request, response);
+		}else if (command.equals("InsertShoppingCart.aj")) {
+			new InsertShoppingCart().execute(request, response);
+		}else if (command.equals("SelectShoppingCart.aj")) {
+			new SelectShoppingCart().execute(request, response);
 		}
 	}
 }

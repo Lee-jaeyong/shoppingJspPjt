@@ -18,7 +18,7 @@ public class ShowItemInfo implements Action {
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
 		ActionForward forward = new ActionForward();
-		forward.setPath("WEB-INF/front/shop-single.jsp");
+		forward.setPath("WEB-INF/front/single.jsp");
 		forward.setRedirect(false);
 		if (request.getParameter("itemNumber") == null) {
 			forward.setPath("index.do");

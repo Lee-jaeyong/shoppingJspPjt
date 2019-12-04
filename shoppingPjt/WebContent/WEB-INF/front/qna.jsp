@@ -4,15 +4,30 @@
 <script>
 $(document).ready(function() {
 	$("#writeQuestionBtn").click(function(){
-		alert("회원만 작성")
+		if($("#sessionChk").val() == 0){
+			if(confirm("회원만 작성이 가능합니다. 로그인하시겠습니까?")){
+				$("#loginBtn").click();
+			}
+		}else{
+			location.href="question.do";
+		}
 	});
 });
 </script>
 <body>
-	
+	<%
+		if (request.getQueryString() != null && request.getQueryString().equals("error")) {
+	%>
+	<script>
+		alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
+	</script>
+	<%
+		}
+	%>
 
 	<div class="site-wrap">
 		<%@include file="./include/header.jsp"%>
+		<% int sessionCheck = 0; %>
 
 
 		<div class="site-section">
@@ -26,13 +41,19 @@ $(document).ready(function() {
 									<span class="icon icon-search2"></span> <input type="text"
 										class="form-control border-0" placeholder="Search">
 								</form>
+								
 							</div>
 							<div class="col-md-7"></div>
 							<div class="col-md-2">
+							<%if (session.getAttribute("userId") != null){ 	
+									sessionCheck = 1;
+							} %>
+								<input type="hidden" id="sessionChk" value="<%=sessionCheck%>"/>
 								<input type="button" class="btn btn-primary btn-sm" id="writeQuestionBtn"
 									value="문의하기" />
-
+							
 							</div>
+							
 
 						</div>
 						<br>

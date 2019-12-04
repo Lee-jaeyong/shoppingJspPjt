@@ -5,6 +5,7 @@
 	$(document).ready(
 			function() {
 				$("#btnLoginExecute").click(function() {
+					
 					if ($("#loginId").val().trim() === ''|| $("#loginPw").val().trim() === '')
 							alert("아이디 혹은 비밀번호를 입력해주세요.");
 					else
@@ -46,6 +47,13 @@
 	window.onload = categoryLoad();
 </script>
 <header class="site-navbar" role="banner">
+<%
+	String url = request.getRequestURL().toString(); 
+	int lastIndexOf = url.lastIndexOf("/")+1;
+	int urlLength = url.lastIndexOf(".");
+	url = url.substring(lastIndexOf,urlLength);
+%>
+
 	<div class="site-navbar-top">
 		<div class="container">
 			<div class="row align-items-center">
@@ -71,8 +79,9 @@
 							<%
 								if (session.getAttribute("userId") == null) {
 							%>
+							
 							<li><a href="join.do">회원가입</a></li>
-							<li><a href="#" data-toggle="modal" data-target="#myModal">로그인</a>
+							<li><a href="#" id="loginBtn" data-toggle="modal" data-target="#myModal">로그인</a>
 								<%
 									} else {
 								%>
@@ -96,8 +105,9 @@
 											<div class="modal-body">
 												<br> <input type="text" class="form-control"
 													id="loginId" name="loginId" placeholder="아이디"><br>
-												<input type="text" class="form-control" id="loginPw"
+												<input type="password" class="form-control" id="loginPw"
 													name="loginPw" placeholder="비밀번호"> <br>
+													<input type="hidden" value="<%=url %>" id="getNowPage" name="getNowPage"/>
 											</div>
 
 											<!-- Modal footer -->
@@ -109,7 +119,6 @@
 									</div>
 								</div>
 							</div>
-							</li>
 
 							<li style="display: none;"><a href="#">로그아웃</a></li>
 

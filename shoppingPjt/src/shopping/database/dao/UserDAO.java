@@ -28,7 +28,6 @@ public class UserDAO extends Database {
 			conn.close();
 			pstmt.close();
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 		return user;

@@ -154,6 +154,7 @@
 														.submit();
 											});
 						});
+
 		function getShoppingCartList() {
 			$
 					.ajax({
@@ -182,7 +183,7 @@
 								html += '<div class="input-group-prepend"><button type="button" class="btn btn-outline-primary" onclick="plusAndMinusCount('
 										+ shoppingCart[i].cartIdx
 										+ ',false,this)">&minus;</button></div>';
-								html += '<input type="text" name="shoppingCartCount" class="form-control text-center" value="' + shoppingCart[i].cartCount + '">';
+								html += '<input type="text" name="shoppingCartCount" class="form-control text-center" readonly value="' + shoppingCart[i].cartCount + '">';
 								html += '<div class="input-group-append">';
 								html += '<button type="button" class="btn btn-outline-primary" onclick="plusAndMinusCount('
 										+ shoppingCart[i].cartIdx
@@ -194,7 +195,7 @@
 										+ numberWithCommas(totalPrice)
 										+ '원</td><td><button type="button" onclick="deleteShoppingCart('
 										+ shoppingCart[i].cartIdx
-										+ ')" class="btn btn-primary btn-sm">X</button></td></tr>';
+										+ ',this)" class="btn btn-primary btn-sm">X</button></td></tr>';
 							}
 							$("#shoppingCartList").html(html);
 							$("#total").text(resultTotal + "원");
@@ -202,9 +203,11 @@
 						}
 					});
 		}
+
 		function numberWithCommas(x) {
 			return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		}
+
 		function plusAndMinusCount(idx, type, button, count) {
 			if (type == false)
 				if ($(button).parents().next().val() === "1")
@@ -226,11 +229,17 @@
 												.text() * $(button).parents()
 												.next().val())
 												+ "원");
-								if(checkBoxChk == true)
-								{
-									resultSubTotal -= $(button).parents("td")
-											.prev().text()
-											* $(button).parents("div").next().val();
+								if ($(button).parents("tr").children()
+										.children().is(":checked")) {
+									var price = $(button).parents("tr")
+											.children().last().prev().text();
+									
+									resultSubTotal -= parseInt($(button)
+											.parents("td").prev().text());
+
+									resultTotal -= parseInt($(button)
+											.parents("td").prev().prev().text());
+
 									$("#total").text(resultTotal + "원");
 									$("#subTotal").text(resultSubTotal + "원");
 								}
@@ -243,11 +252,17 @@
 												.text() * $(button).parents()
 												.prev().val())
 												+ "원");
-								if(checkBoxChk == true)
-								{
-									resultSubTotal += $(button).parents("td")
-											.prev().text()
-											* $(button).parents("div").prev().val();
+								if ($(button).parents("tr").children()
+										.children().is(":checked")) {
+									var price = $(button).parents("tr")
+											.children().last().prev().text();
+									
+									resultSubTotal += parseInt($(button)
+											.parents("td").prev().text());
+
+									resultTotal += parseInt($(button)
+											.parents("td").prev().prev().text());
+									
 									$("#total").text(resultTotal + "원");
 									$("#subTotal").text(resultSubTotal + "원");
 								}
@@ -278,11 +293,10 @@
 				checkBoxChk = true;
 			} else {
 				checkBoxChk = true;
-				if($('input:checkbox[name=shoppingCartList]:checked').length == 0)
-				{
+				if ($('input:checkbox[name=shoppingCartList]:checked').length == 0) {
 					checkBoxChk = false;
 					$("#total").text(0 + "원");
-					$("#subTotal").text(0 + "원");					
+					$("#subTotal").text(0 + "원");
 				}
 				changeExecute(button, false);
 			}
@@ -290,16 +304,24 @@
 			$("#subTotal").text(resultSubTotal + "원");
 		}
 
-		function deleteShoppingCart(idx) {
-			$.ajax({
+		function deleteShoppingCart(idx,button) {
+		 	var _originPrice = $(button).parents("td").prev().prev().prev().text();
+		 	var _price = $(button).parents("td").prev().prev().prev().prev().text();
+		 	var _count = $(button).parents("tr").children().last().prev().prev()
+			.children().children("input").val();
+			   $.ajax({
 				url : "./deleteShoppingCart.aj",
 				data : {
 					cartIdx : idx
 				},
 				success : function(data) {
 					getShoppingCartList();
+					resultTotal = 0;
+					resultSubTotal = 0;
+					$("#total").text(0 + "원");
+					$("#subTotal").text(0 + "원");
 				}
-			});
+			});   
 		}
 		window.onload = function() {
 			getShoppingCartList();

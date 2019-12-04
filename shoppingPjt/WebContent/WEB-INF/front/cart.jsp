@@ -25,13 +25,13 @@
 								<thead>
 									<tr>
 										<th class="product-thumbnail" style="width: 50px;"></th>
-										<th class="product-thumbnail">Image</th>
-										<th class="product-name">Product</th>
-										<th class="product-price">Price</th>
-										<th class="product-price">Price</th>
-										<th class="product-quantity">Quantity</th>
-										<th class="product-total">Total</th>
-										<th class="product-remove">Remove</th>
+										<th class="product-thumbnail">이미지</th>
+										<th class="product-name">상품명</th>
+										<th class="product-price">할인가</th>
+										<th class="product-price">판매가</th>
+										<th class="product-quantity">수 량</th>
+										<th class="product-total">총 결제금액</th>
+										<th class="product-remove">삭 제</th>
 									</tr>
 								</thead>
 								<tbody id="shoppingCartList">
@@ -97,6 +97,8 @@
 	</form>
 	<%@include file="./include/scriptArea.html"%>
 	<script>
+		var resultTotal = 0;
+		var resultSubTotal = 0;
 				const ctx = window
 			    .location
 			    .pathname
@@ -151,22 +153,22 @@
 			            var _totalPrice = 0;
 			            html = '';
 			            for (var i = 0; i < shoppingCart.length; i++) {
-			                html += '<tr><td class="product-name"><input type="checkbox" name="shoppingCartList" style="width:25px; height:25px;" value="' + shoppingCart[i].cartIdx + '"></td>';
+			                html += '<tr><td class="product-name"><input type="checkbox" onchange="chanageTotalPrice(this);" name="shoppingCartList" style="width:25px; height:25px;" value="' + shoppingCart[i].cartIdx + '"></td>';
 			                html += '<td class="product-thumbnail"><img src="' + ctx + '/uploadImage/' + shoppingCart[i].itemMainImg + '" style="height:150px; width:330px;" class="img-fluid">';
 			                html += '</td><td class="product-name"><h2 class="h5 text-black">' + shoppingCart[i].itemName + '</h2></td>';
 			                html += '<td>' + shoppingCart[i].itemSalePrice + '</td><td>' + shoppingCart[i].itemPrice + '</td><td><div class="input-group mb-3" style="max-width: 120px;">';
 			                html += '<div class="input-group-prepend"><button type="button" class="btn btn-outline-primary" onclick="plusAndMinusCount(' + shoppingCart[i].cartIdx + ',false,this)">&minus;</button></div>';
-			                html += '<input type="text" class="form-control text-center" value="' + shoppingCart[i].cartCount + '">';
+			                html += '<input type="text" name="shoppingCartCount" class="form-control text-center" value="' + shoppingCart[i].cartCount + '">';
 			                html += '<div class="input-group-append">';
 			                html += '<button type="button" class="btn btn-outline-primary" onclick="plusAndMinusCount(' + shoppingCart[i].cartIdx + ',true,this)">&plus;</button></div></div></td>';
 			                var totalPrice = (shoppingCart[i].cartCount * shoppingCart[i].itemSalePrice);
 			                totalSalePrice += parseInt(shoppingCart[i].itemSalePrice);
 			                _totalPrice += parseInt(shoppingCart[i].itemPrice);
-			                html += '<td>' + numberWithCommas(totalPrice) + '원</td><td><button type="button" onclick="deleteShoppingCart(' + shoppingCart[i].cartIdx + ')" class="btn btn-primary btn-sm">X</button></td></tr>';
+			                html += '<td id="tdTotalPrice">' + numberWithCommas(totalPrice) + '원</td><td><button type="button" onclick="deleteShoppingCart(' + shoppingCart[i].cartIdx + ')" class="btn btn-primary btn-sm">X</button></td></tr>';
 			            }
 			            $("#shoppingCartList").html(html);
-			            $("#total").text(numberWithCommas(totalSalePrice) + "원");
-			            $("#subTotal").text(numberWithCommas(_totalPrice) + "원");
+			            $("#total").text(resultTotal+"원");
+			            $("#subTotal").text(resultSubTotal+"원");
 			        }
 			    });
 			}
@@ -174,6 +176,9 @@
 			    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 			}
 			function plusAndMinusCount(idx, type, button, count) {
+				if(type == false)
+					if($(button).parents().next().val() === "1")
+						return;
 			    $.ajax({
 			        url: "./UpdateCartCount.aj",
 			        data: {
@@ -181,15 +186,19 @@
 			            type: type
 			        },
 			        success: function (data) {
-			            if (type == false) 
-			                $(button)
-			                    .parents()
-			                    .next()
-			                    .val(parseInt($(button)
-			                        .parents()
-			                        .next()
-			                        .val()) - 1);
-			             else 
+			            if (type == false)
+			            	{
+				                $(button)
+				                    .parents()
+				                    .next()
+				                    .val(parseInt($(button)
+				                        .parents()
+				                        .next()
+				                        .val()) - 1);
+				                $(button).parents("td").next().text(($(button).parents("td").prev().prev().text() * $(button).parents().next().val())+"원");	
+			            	}
+			             else
+		            	 {
 			                $(button)
 			                    .parents()
 			                    .prev()
@@ -197,10 +206,37 @@
 			                        .parents()
 			                        .prev()
 			                        .val()) + 1);
-			            
+			                $(button).parents("td").next().text(($(button).parents("td").prev().prev().text() * $(button).parents().prev().val())+"원");
+		            	 }
 			        }
 			    });
 			}
+			
+			function changeExecute(button,type){
+				var price = $(button).parents("tr").children().last().prev().text();
+				var originprice = $(button).parents("tr").children().last().prev().prev().prev().text() * $(button).parents("tr").children().last().prev().prev().children().children("input").val();
+				price = price.substring(0,price.length-1);
+				if(type==true)
+					{
+						resultTotal += parseInt(price);
+						resultSubTotal += parseInt(originprice);
+					}			
+				else
+					{
+						resultTotal -= parseInt(price);
+						resultSubTotal -= parseInt(originprice);
+					}
+			}
+			
+			function chanageTotalPrice(button){
+				if($(button).is(":checked"))
+					changeExecute(button,true);
+				else
+					changeExecute(button,false);
+				$("#total").text(resultTotal+"원");
+	            $("#subTotal").text(resultSubTotal+"원");
+			}
+			
 			function deleteShoppingCart(idx) {
 			    $.ajax({
 			        url: "./deleteShoppingCart.aj",

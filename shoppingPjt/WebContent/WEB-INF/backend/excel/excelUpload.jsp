@@ -29,8 +29,6 @@
 	response.setHeader("Content-Description", "JSP Generated Data");
 %>
 
-
-
 <%@page
 	import="org.apache.poi.hssf.usermodel.*,
 

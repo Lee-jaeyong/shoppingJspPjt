@@ -20,7 +20,6 @@ public class ExcelFileUpload implements Action {
 		String[] header = request.getParameter("header").split(",");
 		ArrayList<String> newHeader = new ArrayList<String>();
 		boolean chkHeader = true;
-
 		for (int i = 0; i < header.length; i++) {
 			if (header[i].equals("옵션및 재고"))
 				chkHeader = false;

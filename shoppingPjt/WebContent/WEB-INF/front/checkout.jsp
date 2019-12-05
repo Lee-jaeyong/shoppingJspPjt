@@ -18,8 +18,8 @@
 <body>
 	<%
 		String totalList = request.getParameter("sendShoppingCartList");
-		String sendShoppingCartTotal = request.getParameter("sendShoppingCartTotal");
-		String sendShoppingCartSubTotal = request.getParameter("sendShoppingCartSubTotal");
+		String sendShoppingCartTotal = request.getParameter("sendShoppingCartSubTotal");
+		String sendShoppingCartSubTotal = request.getParameter("sendShoppingCartTotal");
 	%>
 	<input type="hidden" id="myInfo"
 		value="<%=session.getAttribute("userIdx").toString()%>">
@@ -241,80 +241,82 @@
 
 	<%@include file="./include/scriptArea.html"%>
 	<script>
-		var user;
-		$(document).ready(function() {
-			$("#btnAddressInfo").click(function(){
-				goPopup();
-			});
-			
-			$("#btnOrderInsert").click(function() {
-
-			});
-
-			$("input[name=recipientCheck]").change(function() {
-				if ($(this).val() === "myinfo")
-					changeInfo();
-				else {
-					$("#name").val("");
-					$("#phone2").val("");
-					$("#phone3").val("");
-					$("#email").val("");
-					$("#address").val("");
-					$("#address2").val("");
-					$("#notes").text("");
-					$("#name").attr("readonly", false);
-					$("#phone1").attr("readonly", false);
-					$("#phone2").attr("readonly", false);
-					$("#phone3").attr("readonly", false);
-					$("#email").attr("readonly", false);
-					$("#address").attr("readonly", false);
-					$("#address2").attr("readonly", false);
-					$("#btnAddressInfo").attr("disabled",false);
-				}
-			});
-		});
-
-		function getMyInfo() {
-			$.ajax({
-				url : "./selectUserInfo.aj",
-				data : {
-					customer : $("#myInfo").val()
-				},
-				dataType : "json",
-				success : function(data) {
-					user = data;
-					changeInfo();
-				}
-			});
-		}
-
-		function changeInfo() {
-			var address = user.userAddress.split('#');
-			$("#name").val(user.userName);
-			$('#phone1 option').each(
-					function(index) {
-						if (this.value == user.userPhone.substring(0, 3)) {
-							$("#phone1 option:eq(" + index + ")").attr(
-									"selected", "selected");
-							return;
-						}
-					});
-			$("#phone2").val(user.userPhone.substring(3, 7));
-			$("#phone3").val(user.userPhone.substring(7, 11));
-			$("#email").val(user.userEmail);
-			$("#address").val(address[0]);
-			$("#address2").val(address[1]);
-			$("#name").attr("readonly", true);
-			$("#phone1").attr("readonly", true);
-			$("#phone2").attr("readonly", true);
-			$("#phone3").attr("readonly", true);
-			$("#email").attr("readonly", true);
-			$("#address").attr("readonly", true);
-			$("#address2").attr("readonly", true);
-			$("#btnAddressInfo").attr("disabled",true);
-		}
-
-		window.onload = getMyInfo();
+	var user;
+	$(document).ready(function () {
+	    $("#btnAddressInfo").click(function () {
+	        goPopup();
+	    });
+	    $("#btnOrderInsert").click(function () {
+	        if ($("#c_fname").val() === '') 
+	            alert("이름을 입력해주세요.");
+	         else if ($("#phone2").val() === '' || $("#phone3").val() === '') 
+	            alert("전화번호를 입력해주세요.");
+	         else if ($("#email").val() === '') 
+	            alert("이메일을 입력해주세요.");
+	         else if ($("#address2").val() === '') 
+	            alert("주소를 입력해주세요.");
+	         else if ($("#address").val() === '') 
+	            alert("상세 주소를 입력해주세요.");
+	         else {
+	        	 $("#orderForm").attr("method","post").attr("action","./thankyou.do").submit();
+	         }
+	    });
+	    $("input[name=recipientCheck]").change(function () {
+	        if ($(this).val() === "myinfo") 
+	            changeInfo();
+	         else {
+	            $("#name").val("");
+	            $("#phone2").val("");
+	            $("#phone3").val("");
+	            $("#email").val("");
+	            $("#address").val("");
+	            $("#address2").val("");
+	            $("#notes").text("");
+	    	    inputReadOnly(false);
+	        }
+	    });
+	});
+	function getMyInfo() {
+	    $.ajax({
+	        url: "./selectUserInfo.aj",
+	        data: {
+	            customer: $("#myInfo").val()
+	        },
+	        dataType: "json",
+	        success: function (data) {
+	            user = data;
+	            changeInfo();
+	        }
+	    });
+	}
+	function changeInfo() {
+	    var address = user.userAddress.split('#');
+	    $("#name").val(user.userName);
+	    $('#phone1 option').each(function (index) {
+	        if (this.value == user.userPhone.substring(0, 3)) {
+	            $("#phone1 option:eq(" + index + ")").attr("selected", "selected");
+	            return;
+	        }
+	    });
+	    $("#phone2").val(user.userPhone.substring(3, 7));
+	    $("#phone3").val(user.userPhone.substring(7, 11));
+	    $("#email").val(user.userEmail);
+	    $("#address").val(address[0]);
+	    $("#address2").val(address[1]);
+	    inputReadOnly(true);
+	}
+	
+	function inputReadOnly(type){
+		$("#name").attr("readonly", type);
+	    $("#phone1").attr("readonly", type);
+	    $("#phone2").attr("readonly", type);
+	    $("#phone3").attr("readonly", type);
+	    $("#email").attr("readonly", type);
+	    $("#address").attr("readonly", type);
+	    $("#address2").attr("readonly", type);
+	    $("#btnAddressInfo").attr("disabled", type);
+	}
+	window.onload = getMyInfo();
 	</script>
 </body>
 </html>

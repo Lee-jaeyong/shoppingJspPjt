@@ -94,6 +94,10 @@
 			id="sendShoppingCartTotal" name="sendShoppingCartTotal" value="" />
 		<input type="hidden" id="sendShoppingCartSubTotal"
 			name="sendShoppingCartSubTotal" value="" />
+		<input type="hidden" id="sendShoppingCartCount"
+			name="sendShoppingCartCount" value="" />
+		<input type="hidden" id="shoppingCartItemList"
+			name="shoppingCartItemList" value="" />
 	</form>
 	<%@include file="./include/scriptArea.html"%>
 	<script>
@@ -112,16 +116,22 @@
 	        var shoppingCartSelectInfo = "";
 	        var sendShoppingCartSubTotal = 0;
 	        var sendShoppingCartTotal = 0;
+	       	var sendShoppingCartCount = "";
+	       	var shoppingCartList = "";
 	        $("input[name=shoppingCartList]:checked").each(function () {
 	            shoppingCartSelectInfo += $(this).val() + ",";
+				sendShoppingCartCount += $(this).parents().next().next().next().next().next().children().children("input").val() + ",";
+				shoppingCartList += $(this).parents("tr").children().children("input[name=cartIdx]").val() + ",";
 	        });
 	        if (shoppingCartSelectInfo === '') {
 	            alert("주문할 상품을 선택해주세요.");
 	            return;
 	        }
+	        $("#shoppingCartItemList").val(shoppingCartList);
 	        $("#sendShoppingCartList").val(shoppingCartSelectInfo);
 	        $("#sendShoppingCartTotal").val(resultTotal);
 	        $("#sendShoppingCartSubTotal").val(resultSubTotal);
+	        $("#sendShoppingCartCount").val(sendShoppingCartCount);
 	        $("#shoppingCartToOrderForm")
 	            .attr("method", "post")
 	            .attr("action", "./order.do")
@@ -141,7 +151,7 @@
 	            var _totalPrice = 0;
 	            html = '';
 	            for (var i = 0; i < shoppingCart.length; i++) {
-	                html += '<tr><td class="product-name"><input type="checkbox" onchange="chanageTotalPrice(this);" name="shoppingCartList" style="width:25px; height:25px;" value="' + shoppingCart[i].cartItemOpidx + '"></td>';
+	                html += '<tr><td class="product-name"><input type="hidden" name="cartIdx" value="'+shoppingCart[i].cartIdx+'"><input type="checkbox" onchange="chanageTotalPrice(this);" name="shoppingCartList" style="width:25px; height:25px;" value="' + shoppingCart[i].cartItemOpidx + '"></td>';
 	                html += '<td class="product-thumbnail"><img src="' + ctx + '/uploadImage/' + shoppingCart[i].itemMainImg + '" style="height:150px; width:330px;" class="img-fluid">';
 	                html += '</td><td class="product-name"><h2 class="h5 text-black">' + shoppingCart[i].itemName + '</h2><br>' + '[' + shoppingCart[i].optionSize + '-' + shoppingCart[i].optionColor + ']' + '</td>';
 	                html += '<td>' + shoppingCart[i].itemSalePrice + '</td><td>' + shoppingCart[i].itemPrice + '</td><td><div class="input-group mb-3" style="max-width: 120px;">';

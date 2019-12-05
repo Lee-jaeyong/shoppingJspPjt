@@ -20,9 +20,9 @@
 		String totalList = request.getParameter("sendShoppingCartList");
 		String sendShoppingCartTotal = request.getParameter("sendShoppingCartSubTotal");
 		String sendShoppingCartSubTotal = request.getParameter("sendShoppingCartTotal");
+		String optionCount = request.getParameter("sendShoppingCartCount");
+		String shoppingCartList = request.getParameter("shoppingCartItemList");
 	%>
-	<input type="hidden" id="myInfo"
-		value="<%=session.getAttribute("userIdx").toString()%>">
 	<div class="site-wrap">
 		<%@include file="./include/header.jsp"%>
 
@@ -41,6 +41,11 @@
 		<div class="site-section">
 			<div class="container">
 				<form id="orderForm">
+				<input type="hidden" id="myInfo" name="myInfo"
+					value="<%=session.getAttribute("userIdx").toString()%>">
+				 <input type="hidden" value="<%=optionCount%>"
+						name="optionCount" /><input type="text"
+						value="<%=shoppingCartList%>" name="shoppingCartItemList" />
 					<div class="row">
 						<div class="col-md-6 mb-5 mb-md-0">
 							<h2 class="h3 mb-3 text-black">주문 정보</h2>
@@ -52,7 +57,8 @@
 									name="totalOrderList"> <input type="hidden"
 									value="<%=sendShoppingCartTotal%>" name="orderTotal"> <input
 									type="hidden" value="<%=sendShoppingCartSubTotal%>"
-									name="orderSubTotal">
+									name="orderSubTotal"><input type="hidden"
+									value="<%=sendShoppingCartSubTotal%>" name="shoppingCartList">
 								<div class="form-group row">
 									<div class="col-md-12">
 										<label for="c_fname" class="text-black">이름 <span
@@ -65,7 +71,7 @@
 									<div class="col-md-4">
 										<label for="c_companyname" class="text-black">전화번호<span
 											class="text-danger">*</span></label> <select id="phone1"
-											class="form-control">
+											class="form-control" name="phone1">
 											<option value="010">010</option>
 											<option value="070">070</option>
 											<option value="011">011</option>
@@ -96,23 +102,24 @@
 								</div>
 
 								<div class="form-group">
-								<div class="row">
-									<div class="col-md-8">
-										<label for="c_address" class="text-black">주소 <span
-											class="text-danger">*</span></label> <input type="text"
-											class="form-control" id="address" name="address"
-											placeholder="주소">
-									</div>
-									<div class="col-md-4">
-									<br>
-									<button type="button" class="btn btn-success mt-2" id="btnAddressInfo">주소 검색</button>
-									</div>
+									<div class="row">
+										<div class="col-md-8">
+											<label for="c_address" class="text-black">주소 <span
+												class="text-danger">*</span></label> <input type="text"
+												class="form-control" id="address" name="address"
+												placeholder="주소">
+										</div>
+										<div class="col-md-4">
+											<br>
+											<button type="button" class="btn btn-success mt-2"
+												id="btnAddressInfo">주소 검색</button>
+										</div>
 									</div>
 								</div>
 
 								<div class="form-group">
-									<input type="text" class="form-control" id="address2"
-										placeholder="상세주소">
+									<input type="text" class="form-control" name="address2"
+										id="address2" placeholder="상세주소">
 								</div>
 
 								<div class="form-group">
@@ -241,82 +248,89 @@
 
 	<%@include file="./include/scriptArea.html"%>
 	<script>
-	var user;
-	$(document).ready(function () {
-	    $("#btnAddressInfo").click(function () {
-	        goPopup();
-	    });
-	    $("#btnOrderInsert").click(function () {
-	        if ($("#c_fname").val() === '') 
-	            alert("이름을 입력해주세요.");
-	         else if ($("#phone2").val() === '' || $("#phone3").val() === '') 
-	            alert("전화번호를 입력해주세요.");
-	         else if ($("#email").val() === '') 
-	            alert("이메일을 입력해주세요.");
-	         else if ($("#address2").val() === '') 
-	            alert("주소를 입력해주세요.");
-	         else if ($("#address").val() === '') 
-	            alert("상세 주소를 입력해주세요.");
-	         else {
-	        	 $("#orderForm").attr("method","post").attr("action","./thankyou.do").submit();
-	         }
-	    });
-	    $("input[name=recipientCheck]").change(function () {
-	        if ($(this).val() === "myinfo") 
-	            changeInfo();
-	         else {
-	            $("#name").val("");
-	            $("#phone2").val("");
-	            $("#phone3").val("");
-	            $("#email").val("");
-	            $("#address").val("");
-	            $("#address2").val("");
-	            $("#notes").text("");
-	    	    inputReadOnly(false);
-	        }
-	    });
-	});
-	function getMyInfo() {
-	    $.ajax({
-	        url: "./selectUserInfo.aj",
-	        data: {
-	            customer: $("#myInfo").val()
-	        },
-	        dataType: "json",
-	        success: function (data) {
-	            user = data;
-	            changeInfo();
-	        }
-	    });
-	}
-	function changeInfo() {
-	    var address = user.userAddress.split('#');
-	    $("#name").val(user.userName);
-	    $('#phone1 option').each(function (index) {
-	        if (this.value == user.userPhone.substring(0, 3)) {
-	            $("#phone1 option:eq(" + index + ")").attr("selected", "selected");
-	            return;
-	        }
-	    });
-	    $("#phone2").val(user.userPhone.substring(3, 7));
-	    $("#phone3").val(user.userPhone.substring(7, 11));
-	    $("#email").val(user.userEmail);
-	    $("#address").val(address[0]);
-	    $("#address2").val(address[1]);
-	    inputReadOnly(true);
-	}
-	
-	function inputReadOnly(type){
-		$("#name").attr("readonly", type);
-	    $("#phone1").attr("readonly", type);
-	    $("#phone2").attr("readonly", type);
-	    $("#phone3").attr("readonly", type);
-	    $("#email").attr("readonly", type);
-	    $("#address").attr("readonly", type);
-	    $("#address2").attr("readonly", type);
-	    $("#btnAddressInfo").attr("disabled", type);
-	}
-	window.onload = getMyInfo();
+		var user;
+		$(document).ready(
+				function() {
+					$("#btnAddressInfo").click(function() {
+						goPopup();
+					});
+					$("#btnOrderInsert").click(
+							function() {
+								if ($("#c_fname").val() === '')
+									alert("이름을 입력해주세요.");
+								else if ($("#phone2").val() === ''
+										|| $("#phone3").val() === '')
+									alert("전화번호를 입력해주세요.");
+								else if ($("#email").val() === '')
+									alert("이메일을 입력해주세요.");
+								else if ($("#address2").val() === '')
+									alert("주소를 입력해주세요.");
+								else if ($("#address").val() === '')
+									alert("상세 주소를 입력해주세요.");
+								else {
+									$("#orderForm").attr("method", "post")
+											.attr("action", "./thankyou.do")
+											.submit();
+								}
+							});
+					$("input[name=recipientCheck]").change(function() {
+						if ($(this).val() === "myinfo")
+							changeInfo();
+						else {
+							$("#name").val("");
+							$("#phone2").val("");
+							$("#phone3").val("");
+							$("#email").val("");
+							$("#address").val("");
+							$("#address2").val("");
+							$("#notes").text("");
+							inputReadOnly(false);
+						}
+					});
+				});
+		function getMyInfo() {
+			$.ajax({
+				url : "./selectUserInfo.aj",
+				data : {
+					customer : $("#myInfo").val()
+				},
+				dataType : "json",
+				success : function(data) {
+					user = data;
+					changeInfo();
+				}
+			});
+		}
+		function changeInfo() {
+			var address = user.userAddress.split('#');
+			$("#name").val(user.userName);
+			$('#phone1 option').each(
+					function(index) {
+						if (this.value == user.userPhone.substring(0, 3)) {
+							$("#phone1 option:eq(" + index + ")").attr(
+									"selected", "selected");
+							return;
+						}
+					});
+			$("#phone2").val(user.userPhone.substring(3, 7));
+			$("#phone3").val(user.userPhone.substring(7, 11));
+			$("#email").val(user.userEmail);
+			$("#address").val(address[0]);
+			$("#address2").val(address[1]);
+			inputReadOnly(true);
+		}
+
+		function inputReadOnly(type) {
+			$("#name").attr("readonly", type);
+			$("#phone1").attr("readonly", type);
+			$("#phone2").attr("readonly", type);
+			$("#phone3").attr("readonly", type);
+			$("#email").attr("readonly", type);
+			$("#address").attr("readonly", type);
+			$("#address2").attr("readonly", type);
+			$("#btnAddressInfo").attr("disabled", type);
+		}
+		window.onload = getMyInfo();
 	</script>
 </body>
 </html>

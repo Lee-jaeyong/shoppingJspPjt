@@ -33,7 +33,7 @@ public class ShoppingCartAndOrderDAO extends Database {
 	public ArrayList<ShoppingCartDTO> selectShoppingCart(String userIdx) {
 		ArrayList<ShoppingCartDTO> list = new ArrayList<ShoppingCartDTO>();
 		try {
-			String sql = "SELECT cartIdx,cartItemOpidx,cartUserIdx,itemMainImg,itemName,itemSalePrice,cartCount,itemPrice\r\n"
+			String sql = "SELECT cartIdx,cartItemOpidx,cartUserIdx,itemMainImg,itemName,itemSalePrice,cartCount,itemPrice,opColor,opSize\r\n"
 					+ "FROM items,shoppingcart,itemoptions\r\n"
 					+ "WHERE items.itemIdx = itemOptions.op_i_idx AND shoppingCart.cartItemOpIdx = itemOptions.opidx AND cartUserIdx = ?";
 			pstmt = conn.prepareStatement(sql);
@@ -41,7 +41,7 @@ public class ShoppingCartAndOrderDAO extends Database {
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				list.add(new ShoppingCartDTO(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5),
-						rs.getLong(6), rs.getInt(7), rs.getLong(8)));
+						rs.getLong(6), rs.getInt(7), rs.getLong(8),rs.getString(9),rs.getString(10)));
 			}
 			pstmt.close();
 			conn.close();

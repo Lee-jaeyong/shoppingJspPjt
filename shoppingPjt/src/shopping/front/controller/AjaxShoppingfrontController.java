@@ -13,6 +13,7 @@ import shopping.front.ajax.model.FrontSelectItemImplShoppingService;
 import shopping.front.ajax.model.InsertShoppingCart;
 import shopping.front.ajax.model.SelectShoppingCart;
 import shopping.front.ajax.model.SelectSmallCategoryEqulsNow;
+import shopping.front.ajax.model.SelectUserInfo;
 import shopping.front.ajax.model.UpdateCartCount;
 import shopping.front.ajax.model.UserIdDupChkImplShoppingService;
 
@@ -54,6 +55,8 @@ public class AjaxShoppingfrontController extends HttpServlet {
 			new UpdateCartCount().execute(request, response);
 		}else if (command.equals("deleteShoppingCart.aj")) {
 			new DeleteShoppingCart().execute(request, response);
+		}else if (command.equals("selectUserInfo.aj")) {
+			new SelectUserInfo().execute(request, response);
 		}
 
 	}

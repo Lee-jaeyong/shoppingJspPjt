@@ -9,10 +9,12 @@ public class ShoppingCartDTO {
 	private String itemName;
 	private long itemSalePrice;
 	private long itemPrice;
-
+	private String optionColor;
+	private String optionSize;
+	
 	// 장바구니 목록을 가져올 시 사용되는 생성자
 	public ShoppingCartDTO(int cartIdx, int itemOpIdx, int cartUserIdx, String itemMainImg, String itemName,
-			long itemSalePrice, int cartCount, long itemPrice) {
+			long itemSalePrice, int cartCount, long itemPrice,String optionColor, String optionSize) {
 		this.cartIdx = cartIdx;
 		ItemOpIdx = itemOpIdx;
 		this.cartUserIdx = cartUserIdx;
@@ -21,8 +23,18 @@ public class ShoppingCartDTO {
 		this.itemSalePrice = itemSalePrice;
 		this.cartCount = cartCount;
 		this.itemPrice = itemPrice;
+		this.optionColor = optionColor;
+		this.optionSize = optionSize;
 	}
 
+	public String getOptionSize() {
+		return optionSize;
+	}
+	
+	public String getOptionColor() {
+		return optionColor;
+	}
+	
 	public void setItemPrice(long itemPrice) {
 		this.itemPrice = itemPrice;
 	}

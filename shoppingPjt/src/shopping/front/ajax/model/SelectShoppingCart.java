@@ -33,7 +33,8 @@ public class SelectShoppingCart implements ShoppingService {
 					+ "\",\"itemMainImg\":\"" + list.get(i).getItemMainImg() + "\",\"itemName\":\""
 					+ list.get(i).getItemName() + "\",\"itemSalePrice\":\"" + list.get(i).getItemSalePrice()
 					+ "\",\"cartCount\":\"" + list.get(i).getCartCount() + "\",\"itemPrice\":\""
-					+ list.get(i).getItemPrice() + "\"}");
+					+ list.get(i).getItemPrice() + "\",\"optionColor\":\"" + list.get(i).getOptionColor()
+					+ "\",\"optionSize\":\"" + list.get(i).getOptionSize() + "\"}");
 			if (i != list.size() - 1)
 				json.append(",");
 		}

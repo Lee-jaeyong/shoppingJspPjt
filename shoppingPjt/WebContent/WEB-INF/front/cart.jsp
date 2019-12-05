@@ -170,11 +170,11 @@
 							html = '';
 							for (var i = 0; i < shoppingCart.length; i++) {
 								html += '<tr><td class="product-name"><input type="checkbox" onchange="chanageTotalPrice(this);" name="shoppingCartList" style="width:25px; height:25px;" value="'
-										+ shoppingCart[i].cartIdx + '"></td>';
+										+ shoppingCart[i].cartItemOpidx + '"></td>';
 								html += '<td class="product-thumbnail"><img src="' + ctx + '/uploadImage/' + shoppingCart[i].itemMainImg + '" style="height:150px; width:330px;" class="img-fluid">';
 								html += '</td><td class="product-name"><h2 class="h5 text-black">'
 										+ shoppingCart[i].itemName
-										+ '</h2></td>';
+										+ '</h2><br>'+'['+shoppingCart[i].optionSize+'-'+shoppingCart[i].optionColor+']'+'</td>';
 								html += '<td>'
 										+ shoppingCart[i].itemSalePrice
 										+ '</td><td>'
@@ -212,8 +212,7 @@
 			if (type == false)
 				if ($(button).parents().next().val() === "1")
 					return;
-			$
-					.ajax({
+			$.ajax({
 						url : "./UpdateCartCount.aj",
 						data : {
 							cartIdx : idx,

@@ -12,6 +12,25 @@ public class UserDAO extends Database {
 		dbConnect();
 	}
 
+	public UserDTO selectUserInfo(String idx) {
+		UserDTO user;
+		try {
+			String sql = "SELECT userIdx,userIdenty,userName,userEmail,userPhone,userBirth,userAddress,userRank FROM user where userIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, idx);
+			rs = pstmt.executeQuery();
+			rs.next();
+			user = new UserDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+					rs.getString(6), rs.getString(7), rs.getInt(8));
+			rs.close();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			return null;
+		}
+		return user;
+	}
+	
 	public UserDTO userLogin(String id, String pw) {
 		UserDTO user;
 		try {

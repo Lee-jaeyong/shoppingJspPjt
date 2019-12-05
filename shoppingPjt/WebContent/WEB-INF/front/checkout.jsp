@@ -17,7 +17,18 @@
 </script>
 <body>
 	<%
-		String totalList = request.getParameter("sendShoppingCartList");
+		String userIdx = "";
+		if(request.getParameter("userIdx") != null)
+			userIdx = request.getParameter("userIdx");
+		else if(request.getSession().getAttribute("userIdx") != null)
+			userIdx = request.getSession().getAttribute("userIdx").toString();
+		boolean type = true;
+		String totalList = "";
+		if (request.getParameter("sendShoppingCartList") != null)
+		{
+			totalList = request.getParameter("sendShoppingCartList");
+			type = false;			
+		}
 		String sendShoppingCartTotal = request.getParameter("sendShoppingCartSubTotal");
 		String sendShoppingCartSubTotal = request.getParameter("sendShoppingCartTotal");
 		String optionCount = request.getParameter("sendShoppingCartCount");
@@ -41,11 +52,12 @@
 		<div class="site-section">
 			<div class="container">
 				<form id="orderForm">
-				<input type="hidden" id="myInfo" name="myInfo"
-					value="<%=session.getAttribute("userIdx").toString()%>">
-				 <input type="hidden" value="<%=optionCount%>"
-						name="optionCount" /><input type="text"
-						value="<%=shoppingCartList%>" name="shoppingCartItemList" />
+					<input type="hidden" name="orderType" value="<%=type%>"/>
+					<input type="hidden" id="myInfo" name="myInfo"
+						value="<%=userIdx%>"> <input
+						type="hidden" value="<%=optionCount%>" name="optionCount" /><input
+						type="hidden" value="<%=shoppingCartList%>"
+						name="shoppingCartItemList" />
 					<div class="row">
 						<div class="col-md-6 mb-5 mb-md-0">
 							<h2 class="h3 mb-3 text-black">주문 정보</h2>
@@ -53,7 +65,7 @@
 								checked="checked"> 내정보 &nbsp;&nbsp; <input type="radio"
 								name="recipientCheck" value="different"> 다른사람
 							<div class="p-3 p-lg-5 border">
-								<input type="hidden" value="<%=totalList%>"
+								<input type="hidden" value="<%=shoppingCartList%>"
 									name="totalOrderList"> <input type="hidden"
 									value="<%=sendShoppingCartTotal%>" name="orderTotal"> <input
 									type="hidden" value="<%=sendShoppingCartSubTotal%>"
@@ -289,17 +301,18 @@
 					});
 				});
 		function getMyInfo() {
-			$.ajax({
-				url : "./selectUserInfo.aj",
-				data : {
-					customer : $("#myInfo").val()
-				},
-				dataType : "json",
-				success : function(data) {
-					user = data;
-					changeInfo();
-				}
-			});
+			if($("#myInfo").val() != '')
+				$.ajax({
+					url : "./selectUserInfo.aj",
+					data : {
+						customer : $("#myInfo").val()
+					},
+					dataType : "json",
+					success : function(data) {
+						user = data;
+						changeInfo();
+					}
+				});
 		}
 		function changeInfo() {
 			var address = user.userAddress.split('#');

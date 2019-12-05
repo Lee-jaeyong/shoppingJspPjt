@@ -19,6 +19,7 @@ public class OrderInsert implements Action {
 		forward.setPath("WEB-INF/front/thankyou.jsp");
 		forward.setRedirect(false);
 		try {
+			request.setCharacterEncoding("utf-8");
 			ShoppingCartAndOrderDAO shoppingCartAndOrderDAO = new ShoppingCartAndOrderDAO();
 			String name = request.getParameter("name");
 			String phone = request.getParameter("phone1") + "-" + request.getParameter("phone2") + "-"
@@ -27,15 +28,17 @@ public class OrderInsert implements Action {
 			String address = request.getParameter("address") + "#" + request.getParameter("address2");
 			String notes = request.getParameter("notes");
 			String optionCount = request.getParameter("optionCount");
-			String totalOrderList = request.getParameter("totalOrderList");
+			String totalOrderList = "";
+			if (!request.getParameter("shoppingCartItemList").equals(""))
+				totalOrderList = request.getParameter("shoppingCartItemList");
 			long totalSalePrice = Long.parseLong(request.getParameter("orderSubTotal"));
 			int userIdx = Integer.parseInt(request.getParameter("myInfo"));
-			String shoppingCartList = request.getParameter("shoppingCartItemList");
+			String shoppingCartList = request.getParameter("totalOrderList");
+			boolean orderType = Boolean.parseBoolean(request.getParameter("orderType"));
 			OrderDTO orderDTO = new OrderDTO(userIdx, totalOrderList.split(","), optionCount.split(","), totalSalePrice,
 					address, name, phone, email, notes, shoppingCartList.split(","));
-					System.out.println(orderDTO.getShoppingCartList()[0]);
-			shoppingCartAndOrderDAO.insertShoppingCartToOrder(orderDTO);
-		} catch (SQLException | NamingException e) {
+			shoppingCartAndOrderDAO.insertShoppingCartToOrder(orderDTO,orderType);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return forward;

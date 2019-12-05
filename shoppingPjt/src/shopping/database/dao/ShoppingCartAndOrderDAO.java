@@ -55,7 +55,7 @@ public class ShoppingCartAndOrderDAO extends Database {
 		return list;
 	}
 
-	public boolean insertShoppingCartToOrder(OrderDTO orderDTO) throws SQLException {
+	public boolean insertShoppingCartToOrder(OrderDTO orderDTO, boolean type) throws SQLException {
 		try {
 			conn.setAutoCommit(false);
 			String sql = "INSERT INTO orderinfo VALUES (NULL,?)";
@@ -70,7 +70,7 @@ public class ShoppingCartAndOrderDAO extends Database {
 			for (int i = 0; i < orderDTO.getOrderItemOption().length; i++) {
 				sql = "INSERT INTO orders VALUES (NULL,'"
 						+ new SecureString().MD5(Integer.toString(maxIdx)).substring(0, 6)
-						+ "',?,?,?,?,0,LEFT(NOW(),10),?,?,?,?," + maxIdx + ")";
+						+ "',?,?,?,?,0,NOW(),?,?,?,?," + maxIdx + ")";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, orderDTO.getOrderUserIdx());
 				pstmt.setInt(2, Integer.parseInt(orderDTO.getOrderItemOption()[i]));
@@ -82,12 +82,13 @@ public class ShoppingCartAndOrderDAO extends Database {
 				pstmt.setString(8, orderDTO.getNotes());
 				pstmt.executeUpdate();
 			}
-			for (int i = 0; i < orderDTO.getShoppingCartList().length; i++) {
-				sql = "DELETE FROM shoppingcart WHERE cartIdx = ?";
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, Integer.parseInt(orderDTO.getShoppingCartList()[i]));
-				pstmt.executeUpdate();
-			}
+			if (!type)
+				for (int i = 0; i < orderDTO.getShoppingCartList().length; i++) {
+					sql = "DELETE FROM shoppingcart WHERE cartIdx = ?";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setInt(1, Integer.parseInt(orderDTO.getShoppingCartList()[i]));
+					pstmt.executeUpdate();
+				}
 			conn.commit();
 			conn.close();
 			rs.close();

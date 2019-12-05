@@ -15,21 +15,27 @@ public class ShoppingCartAndOrderDAO extends Database {
 		dbConnect();
 	}
 
-	public boolean insertShoppingCart(String userId, String shoppingCartCount, String optionIdx) {
+	public ArrayList<OrderDTO> selectOrderList(String pageNum, String sortType, String showType) {
+		ArrayList<OrderDTO> list = new ArrayList<OrderDTO>();
 		try {
-			String sql = "INSERT INTO shoppingCart VALUES (?,NULL,?,?)";
+			String sql = "SELECT oiIdx,orderCode, orderStatus, itemName,RelationOrder(orderInfoIdx),orderCount,orderCustomer,orderTotalSalePrice\r\n" + 
+					"FROM orders,orderInfo,itemoptions,items\r\n" + 
+					"WHERE orders.orderInfoIdx = orderinfo.oiidx AND orders.orderItemOption = itemoptions.opidx AND items.itemIdx = itemoptions.op_i_idx\r\n" + 
+					"";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, Integer.parseInt(userId));
-			pstmt.setInt(2, Integer.parseInt(shoppingCartCount));
-			pstmt.setInt(3, Integer.parseInt(optionIdx));
-			pstmt.executeUpdate();
-			conn.close();
+			rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				
+			}
+			rs.close();
 			pstmt.close();
+			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return list;
 		}
-		return true;
+		return list;
 	}
 
 	public ArrayList<ShoppingCartDTO> selectShoppingCart(String userIdx) {
@@ -55,6 +61,23 @@ public class ShoppingCartAndOrderDAO extends Database {
 		return list;
 	}
 
+	public boolean insertShoppingCart(String userId, String shoppingCartCount, String optionIdx) {
+		try {
+			String sql = "INSERT INTO shoppingCart VALUES (?,NULL,?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(userId));
+			pstmt.setInt(2, Integer.parseInt(shoppingCartCount));
+			pstmt.setInt(3, Integer.parseInt(optionIdx));
+			pstmt.executeUpdate();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
 	public boolean insertShoppingCartToOrder(OrderDTO orderDTO, boolean type) throws SQLException {
 		try {
 			conn.setAutoCommit(false);
@@ -62,7 +85,7 @@ public class ShoppingCartAndOrderDAO extends Database {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, orderDTO.getOrderUserIdx());
 			pstmt.executeUpdate();
-			sql = "SELECT MAX(orderidx) FROM orders";
+			sql = "SELECT MAX(oiIdx) FROM orderinfo";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			rs.next();

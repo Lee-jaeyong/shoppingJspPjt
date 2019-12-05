@@ -4,16 +4,9 @@
 <body id="page-top">
 	<%@include file="./include/mainLogo.html"%>
 	<div id="wrapper">
-
 		<%@include file="./include/sideBar.jsp"%>
-
 		<div id="content-wrapper">
-
 			<div class="container-fluid">
-
-				<!-- 내용 시작 부분 -->
-
-				<!-- Breadcrumbs-->
 				<h5>주문 검색</h5>
 				<hr>
 				<table class="table table-bordered">
@@ -181,5 +174,19 @@
 	<!-- /#wrapper -->
 	<%@include file="./include/scrollTop.html"%>
 	<%@include file="./include/scriptArea.html"%>
+	<script>
+		function getOrderList(page){
+			$.ajax({
+				url : "./SelectOrderList.ajax",
+				data : {
+					pageNum : page
+				},
+				dataType:"json",
+				success:function(data){
+					alert(data);
+				}
+			});
+		}
+	</script>
 </body>
 </html>

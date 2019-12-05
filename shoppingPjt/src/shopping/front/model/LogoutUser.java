@@ -3,7 +3,6 @@ package shopping.front.model;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
 
 import shopping.action.Action;
 import shopping.action.ActionForward;

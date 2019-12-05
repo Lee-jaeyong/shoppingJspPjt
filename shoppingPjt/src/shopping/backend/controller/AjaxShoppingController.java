@@ -68,6 +68,8 @@ public class AjaxShoppingController extends HttpServlet {
 			new UpdateItemStatusImplAction().execute(request, response);
 		}else if(command.equals("UpdateStock.ajax")) {
 			new UpdateStockImplAction().execute(request, response);
+		}else if(command.equals("SelectOrderList.ajax")) {
+			new UpdateStockImplAction().execute(request, response);
 		}
 	}
 }

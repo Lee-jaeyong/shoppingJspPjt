@@ -15,18 +15,69 @@ public class ShoppingCartAndOrderDAO extends Database {
 		dbConnect();
 	}
 
-	public ArrayList<OrderDTO> selectOrderList(String pageNum, String sortType, String showType) {
+	public ArrayList<OrderDTO> selectOrderInfo(String orderInfoIdx) {
 		ArrayList<OrderDTO> list = new ArrayList<OrderDTO>();
 		try {
-			String sql = "SELECT oiIdx,orderCode, orderStatus, itemName,RelationOrder(orderInfoIdx),orderCount,orderCustomer,orderTotalSalePrice\r\n" + 
-					"FROM orders,orderInfo,itemoptions,items\r\n" + 
-					"WHERE orders.orderInfoIdx = orderinfo.oiidx AND orders.orderItemOption = itemoptions.opidx AND items.itemIdx = itemoptions.op_i_idx\r\n" + 
-					"";
+			String sql = "SELECT orderinfoIdx,orderCustomer, orderCustomerPhone,orderAddress,orderCustomerRequest,itemName,opColor,opSize,orderCount\r\n"
+					+ "FROM items,orders,itemoptions\r\n"
+					+ "WHERE items.itemIdx = itemoptions.op_i_idx AND orders.orderItemOption = itemoptions.opIdx\r\n"
+					+ "AND orderinfoIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, orderInfoIdx);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(new OrderDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getString(6), rs.getString(7), rs.getString(8), rs.getInt(9)));
+			}
+			conn.close();
+			rs.close();
+			pstmt.close();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public int selectOrderCount() {
+		int count = 0;
+		try {
+			String sql = "SELECT COUNT(oiIdx) FROM orderInfo";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			while(rs.next())
-			{
-				
+			rs.next();
+			count = rs.getInt(1);
+			pstmt.close();
+			conn.close();
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+		return count;
+	}
+
+	public ArrayList<OrderDTO> selectOrderList(String pageNum, String sortType, String showType, String searchType,
+			String search, String startDate, String endDate) {
+		ArrayList<OrderDTO> list = new ArrayList<OrderDTO>();
+		try {
+			String whereSql = "";
+			if (!search.equals(""))
+				whereSql += " AND " + searchType + " like ? ";
+			if (!startDate.equals(""))
+				whereSql += " AND orderDate between '" + startDate + "' AND '" + endDate + "' ";
+			String sql = "SELECT oiIdx,orderCode, orderStatus, itemName,RelationOrder(orderInfoIdx),orderCount,orderCustomer,orderTotalSalePrice,orderdate\r\n"
+					+ "FROM orders,orderInfo,itemoptions,items\r\n"
+					+ "WHERE orders.orderInfoIdx = orderinfo.oiidx AND orders.orderItemOption = itemoptions.opidx AND items.itemIdx = itemoptions.op_i_idx "
+					+ whereSql + " group by orderCode order by " + sortType + " limit "
+					+ (Integer.parseInt(pageNum) * Integer.parseInt(showType)) + "," + Integer.parseInt(showType);
+			pstmt = conn.prepareStatement(sql);
+			if (!search.equals(""))
+				pstmt.setString(1, "%" + search + "%");
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(new OrderDTO(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5),
+						rs.getInt(6), rs.getString(7), rs.getLong(8), rs.getString(9)));
 			}
 			rs.close();
 			pstmt.close();
@@ -142,6 +193,21 @@ public class ShoppingCartAndOrderDAO extends Database {
 		return true;
 	}
 
+	public boolean updateOrderStatus(String orderIdx) {
+		try {
+			String sql = "UPDATE orders SET orderStatus = 1 WHERE orderInfoIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, orderIdx);
+			pstmt.executeUpdate();
+			conn.close();
+			pstmt.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	public boolean deleteShoppingCart(String idx, String userIdx) {
 		try {
 			String sql = "DELETE FROM shoppingCart WHERE cartIdx = ? AND cartUserIdx = ?";
@@ -156,5 +222,38 @@ public class ShoppingCartAndOrderDAO extends Database {
 			return false;
 		}
 		return true;
+	}
+
+	public int deleteOrderInfo(String orderIdx) {
+		try {
+			conn.setAutoCommit(false);
+			String sql = "SELECT orderStatus FROM orders WHERE orderinfoIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, orderIdx);
+			rs = pstmt.executeQuery();
+			rs.next();
+			int status = rs.getInt(1);
+			if (status == 1) {
+				conn.close();
+				pstmt.close();
+				rs.close();
+				return -1;
+			}
+			sql = "DELETE FROM orders WHERE orderInfoIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, orderIdx);
+			pstmt.executeUpdate();
+			sql = "DELETE FROM orderInfo WHERE oiIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, orderIdx);
+			pstmt.executeUpdate();
+			conn.commit();
+			conn.close();
+			pstmt.close();
+			return 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 }

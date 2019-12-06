@@ -15,10 +15,43 @@ public class OrderDTO {
 	private int orderStatus;
 	private String orderDate;
 	private String[] shoppingCartList;
+	private String itemName;
+	private int relationOrderCount;
+	private int totalOrderCount;
+	private String itemColor;
+	private String itemSize;
 	
-	//주문 완료시 사용되는 생성자
-	public OrderDTO(int orderUserIdx, String[] orderItemOption, String[] orderCount, long orderTotalSalePrice, String address,
-			String name, String phone, String email, String notes,String[] shoppingCartList) {
+	// 주문 정보 확인시 사용되는 생성자
+	public OrderDTO(int orderIdx, String name, String phone, String address, String notes, String itemName,
+			String itemColor, String itemSize, int totalOrderCount) {
+		this.orderIdx = orderIdx;
+		this.itemColor = itemColor;
+		this.itemSize = itemSize;
+		this.name = name;
+		this.phone = phone;
+		this.address = address;
+		this.notes = notes;
+		this.itemName = itemName;
+		this.totalOrderCount = totalOrderCount;
+	}
+
+	// 주문 목록 확인시 사용되는 생성자
+	public OrderDTO(int orderIdx, String orderCode, int orderStatus, String itemName, int relationOrderCount,
+			int totalOrderCount, String name, long orderTotalSalePrice, String orderDate) {
+		this.orderIdx = orderIdx;
+		this.orderCode = orderCode;
+		this.orderStatus = orderStatus;
+		this.itemName = itemName;
+		this.relationOrderCount = relationOrderCount;
+		this.totalOrderCount = totalOrderCount;
+		this.name = name;
+		this.orderTotalSalePrice = orderTotalSalePrice;
+		this.orderDate = orderDate;
+	}
+
+	// 주문 완료시 사용되는 생성자
+	public OrderDTO(int orderUserIdx, String[] orderItemOption, String[] orderCount, long orderTotalSalePrice,
+			String address, String name, String phone, String email, String notes, String[] shoppingCartList) {
 		this.orderUserIdx = orderUserIdx;
 		this.orderItemOption = orderItemOption;
 		this.orderCount = orderCount;
@@ -30,11 +63,31 @@ public class OrderDTO {
 		this.notes = notes;
 		this.shoppingCartList = shoppingCartList;
 	}
-	
+
+	public String getItemSize() {
+		return itemSize;
+	}
+
+	public String getItemColor() {
+		return itemColor;
+	}
+
+	public String getItemName() {
+		return itemName;
+	}
+
+	public int getRelationOrderCount() {
+		return relationOrderCount;
+	}
+
+	public int getTotalOrderCount() {
+		return totalOrderCount;
+	}
+
 	public String[] getShoppingCartList() {
 		return shoppingCartList;
 	}
-	
+
 	public String getName() {
 		return name;
 	}

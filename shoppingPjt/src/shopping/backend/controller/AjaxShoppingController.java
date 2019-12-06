@@ -10,14 +10,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import shopping.backend.ajax.model.AddCategoryImplAction;
 import shopping.backend.ajax.model.DeleteItemImplAction;
+import shopping.backend.ajax.model.DeleteOrderInfo;
 import shopping.backend.ajax.model.SelectCategoryImplAction;
 import shopping.backend.ajax.model.SelectDeleteItemListImplAction;
 import shopping.backend.ajax.model.SelectItemImplAction;
 import shopping.backend.ajax.model.SelectItemOptionImplAction;
+import shopping.backend.ajax.model.SelectOrderInfo;
+import shopping.backend.ajax.model.SelectOrderList;
 import shopping.backend.ajax.model.UpdateCategoryImplAction;
 import shopping.backend.ajax.model.UpdateCategoryStatusImplAction;
 import shopping.backend.ajax.model.UpdateDeleteItemCencelImplAction;
 import shopping.backend.ajax.model.UpdateItemStatusImplAction;
+import shopping.backend.ajax.model.UpdateOrderStatus;
 import shopping.backend.ajax.model.UpdateStockImplAction;
 
 @WebServlet("/AjaxShoppingController")
@@ -46,30 +50,36 @@ public class AjaxShoppingController extends HttpServlet {
 
 		if (command.equals("AddCategory.ajax")) {
 			new AddCategoryImplAction().execute(request, response);
-		}else if(command.equals("DeleteItem.ajax")) {
+		} else if (command.equals("DeleteItem.ajax")) {
 			new DeleteItemImplAction().execute(request, response);
-		}else if(command.equals("SelectCategory.ajax")) {
+		} else if (command.equals("SelectCategory.ajax")) {
 			new SelectCategoryImplAction().execute(request, response);
-		}else if(command.equals("SelectDeleteItemList.ajax")) {
+		} else if (command.equals("SelectDeleteItemList.ajax")) {
 			new SelectDeleteItemListImplAction().execute(request, response);
-		}else if(command.equals("SelectItem.ajax")) {
+		} else if (command.equals("SelectItem.ajax")) {
 			new SelectItemImplAction().execute(request, response);
-		}else if(command.equals("SelectItemOption.ajax")) {
+		} else if (command.equals("SelectItemOption.ajax")) {
 			new SelectItemOptionImplAction().execute(request, response);
-		}else if(command.equals("UpdateCategoryStatus.ajax")) {
+		} else if (command.equals("UpdateCategoryStatus.ajax")) {
 			new UpdateCategoryStatusImplAction().execute(request, response);
-		}else if(command.equals("UpdateCategory.ajax")) {
+		} else if (command.equals("UpdateCategory.ajax")) {
 			new UpdateCategoryImplAction().execute(request, response);
-		}else if(command.equals("UpdateCategory.ajax")) {
+		} else if (command.equals("UpdateCategory.ajax")) {
 			new UpdateCategoryImplAction().execute(request, response);
-		}else if(command.equals("UpdateDeleteItemCencel.ajax")) {
+		} else if (command.equals("UpdateDeleteItemCencel.ajax")) {
 			new UpdateDeleteItemCencelImplAction().execute(request, response);
-		}else if(command.equals("UpdateItemStatus.ajax")) {
+		} else if (command.equals("UpdateItemStatus.ajax")) {
 			new UpdateItemStatusImplAction().execute(request, response);
-		}else if(command.equals("UpdateStock.ajax")) {
+		} else if (command.equals("UpdateStock.ajax")) {
 			new UpdateStockImplAction().execute(request, response);
-		}else if(command.equals("SelectOrderList.ajax")) {
-			new UpdateStockImplAction().execute(request, response);
+		} else if (command.equals("SelectOrderList.ajax")) {
+			new SelectOrderList().execute(request, response);
+		}else if (command.equals("SelectOrderInfo.ajax")) {
+			new SelectOrderInfo().execute(request, response);
+		}else if (command.equals("UpdateOrderStatus.ajax")) {
+			new UpdateOrderStatus().execute(request, response);
+		}else if (command.equals("DeleteOrderInfo.ajax")) {
+			new DeleteOrderInfo().execute(request, response);
 		}
 	}
 }

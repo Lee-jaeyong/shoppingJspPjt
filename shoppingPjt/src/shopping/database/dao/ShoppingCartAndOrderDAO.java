@@ -193,6 +193,34 @@ public class ShoppingCartAndOrderDAO extends Database {
 		return true;
 	}
 
+	public boolean updateOrderInfoSuccess(String orderIdx) {
+		try {
+			String sql = "SELECT orderStatus FROM orders WHERE orderInfoIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, orderIdx);
+			rs = pstmt.executeQuery();
+			rs.next();
+			if(rs.getInt(1) == 0)
+			{
+				conn.close();
+				pstmt.close();
+				rs.close();
+				return false;
+			}
+			
+			sql = "UPDATE orders SET orderStatus = 2 WHERE orderInfoIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, orderIdx);
+			pstmt.executeUpdate();
+			conn.close();
+			pstmt.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	public boolean updateOrderStatus(String orderIdx) {
 		try {
 			conn.setAutoCommit(false);

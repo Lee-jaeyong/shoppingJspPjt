@@ -160,6 +160,8 @@
 				<input type="hidden" id="orderInfoIdx" value=""/>
 				<!-- Modal footer -->
 				<div class="modal-footer">
+					<button type="button" id="deliverySuccess" class="btn btn-dark" data-dismiss="modal">배송
+						완료</button>
 					<button type="button" id="deliveryExecute" class="btn btn-success" data-dismiss="modal">배송
 						요청</button>
 					<button type="button" id="deliveryCencel" class="btn btn-warning" data-dismiss="modal">주문
@@ -173,6 +175,20 @@
 	</div>
 	<script>
 		$(document).ready(function() {
+			$("#deliverySuccess").click(function(){
+				if(confirm("배송 완료 처리하시겠습니까?"))
+					$.ajax({
+						url : "./UpdateOrderInfoSuccess.ajax",
+						data : {
+							orderIdx : $("#orderInfoIdx").val()
+						},
+						success : function(data){
+							alert(data);
+							getOrderList(0);
+						}
+					});
+			});
+			
 			$("#deliveryCencel").click(function(){
 				if(confirm("정말 주문을 취소하시겠습니까?"))
 					$.ajax({
@@ -272,7 +288,9 @@
 								if (orderList[i].orderStatus == 0)
 									orderStatus = '<label class="btn btn-danger">입금 완료</label>';
 								else if (orderList[i].orderStatus == 1)
-									orderStatus = '<label class="btn btn-primary">배송 대기</label>';
+									orderStatus = '<label class="btn btn-primary">배송 중</label>';
+								else if (orderList[i].orderStatus == 2)
+									orderStatus = '<label class="btn btn-dark">배송 완료</label>';
 								orderSection += '<td>' + orderStatus + '</td>';
 								var relationOrder = "";
 								if (orderList[i].relationOrder > 1)
@@ -280,20 +298,20 @@
 											+ orderList[i].relationOrder
 											+ ' 건)</strong></label>';
 								orderSection += '<td><label class="btn btn-warning mr-2"><strong>'
-										+ orderList[i].itemName
-										+ '</strong></label>'
+										+ orderList[i].itemName.substring(0,5)
+										+ '...</strong></label>'
 										+ relationOrder
 										+ '</td>';
 								orderSection += '<td><button type="button" data-toggle="modal" data-target="#myModal" onclick="getOrderInfo('
 										+ orderList[i].oiIdx
 										+ ');" class="btn btn-success">상세 보기</button></td>';
 								orderSection += '<td>'
-										+ orderList[i].orderCount + '</td>';
+										+ orderList[i].orderCount + '건</td>';
 								orderSection += '<td>'
 										+ orderList[i].orderCustomer + '</td>';
-								orderSection += '<td><strong>'
+								orderSection += '<td><label class="btn btn-info"><strong>'
 										+ numberWithCommas(orderList[i].orderTotalSalePrice)
-										+ '원</strong></td>';
+										+ '원</strong></label></td>';
 								orderSection += '<td>' + orderList[i].orderdate
 										+ '</td>';
 								orderSection += '</tr>';

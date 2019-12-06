@@ -95,7 +95,7 @@
 							</p>
 							<div class="mb-2 d-flex">
 								<select id="op_color" class="form-control"
-									name="shoppingCartItemList">
+									name="sendShoppingCartList">
 									<option value="">옵션을 선택해주세요</option>
 									<%
 										List<ItemDTO> list = (ArrayList<ItemDTO>) request.getAttribute("itemOption");

@@ -407,11 +407,11 @@
 							<td class="tdBody">
 								<div class="row">
 									<div class="col-sm-6 col-lg-3">
-										<input type="text" class="form-control" id="datepicker1">
+										<input type="text" class="form-control" readonly="readonly" id="datepicker1">
 									</div>
 									~
 									<div class="col-sm-6 col-lg-3">
-										<input type="text" class="form-control" id="datepicker2">
+										<input type="text" class="form-control" readonly="readonly" id="datepicker2">
 									</div>
 								</div>
 							</td>

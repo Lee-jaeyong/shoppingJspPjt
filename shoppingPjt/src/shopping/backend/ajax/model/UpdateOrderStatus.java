@@ -13,8 +13,10 @@ public class UpdateOrderStatus implements ShoppingService {
 		try {
 			ShoppingCartAndOrderDAO shoppingCartAndOrderDAO = new ShoppingCartAndOrderDAO();
 			String orderIdx = request.getParameter("orderIdx");
-			shoppingCartAndOrderDAO.updateOrderStatus(orderIdx);
-			response.getWriter().write("true");
+			if(shoppingCartAndOrderDAO.updateOrderStatus(orderIdx))
+				response.getWriter().write("true");
+			else
+				response.getWriter().write("false");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

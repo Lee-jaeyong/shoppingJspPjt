@@ -21,23 +21,25 @@ public class SelectOrderList implements ShoppingService {
 			String searchType = request.getParameter("searchType");
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
-			
+			String showOrderStatus = request.getParameter("showOrderStatus");
 			ShoppingCartAndOrderDAO shoppingCartAndOrderDAO = new ShoppingCartAndOrderDAO();
-			int totalCount = shoppingCartAndOrderDAO.selectOrderCount();
+			int totalCount = shoppingCartAndOrderDAO.selectOrderCount(showOrderStatus);
 			int startBlock = Integer.parseInt(pageNum) / 10 * 10;
 			int endBlock = startBlock + 10;
 			int totalBlock = (int) Math.ceil(totalCount / Integer.parseInt(showType));
 			if (endBlock > totalBlock)
 				endBlock = totalBlock;
 			shoppingCartAndOrderDAO = new ShoppingCartAndOrderDAO();
+			int todayOrderCount = shoppingCartAndOrderDAO.selectTodayOrderCount();
+			shoppingCartAndOrderDAO = new ShoppingCartAndOrderDAO();
 			response.getWriter().write(getJson(shoppingCartAndOrderDAO.selectOrderList(pageNum, sortType, showType,
-					searchType, search, startDate, endDate), startBlock, endBlock, totalBlock));
+					searchType, search, startDate, endDate,showOrderStatus), startBlock, endBlock, totalBlock,todayOrderCount));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public String getJson(ArrayList<OrderDTO> list, int startBlock, int endBlock, int totalBlock) {
+	public String getJson(ArrayList<OrderDTO> list, int startBlock, int endBlock, int totalBlock,int todayOrderCount) {
 		StringBuilder json = new StringBuilder();
 		json.append("{\"result\":[");
 
@@ -53,7 +55,7 @@ public class SelectOrderList implements ShoppingService {
 		}
 
 		json.append("],\"startBlock\":\"" + startBlock + "\",\"endBlock\":\"" + endBlock + "\",\"totalBlock\":\""
-				+ totalBlock + "\"}");
+				+ totalBlock + "\",\"todayOrderCount\":\""+todayOrderCount+"\"}");
 		return json.toString();
 	}
 }

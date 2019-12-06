@@ -18,21 +18,24 @@
 <body>
 	<%
 		String userIdx = "";
-		if(request.getParameter("userIdx") != null)
+		if (request.getParameter("userIdx") != null)
 			userIdx = request.getParameter("userIdx");
-		else if(request.getSession().getAttribute("userIdx") != null)
+		else if (request.getSession().getAttribute("userIdx") != null)
 			userIdx = request.getSession().getAttribute("userIdx").toString();
 		boolean type = true;
 		String totalList = "";
-		if (request.getParameter("sendShoppingCartList") != null)
-		{
+		if (request.getParameter("sendShoppingCartList") != null) {
 			totalList = request.getParameter("sendShoppingCartList");
-			type = false;			
 		}
 		String sendShoppingCartTotal = request.getParameter("sendShoppingCartSubTotal");
 		String sendShoppingCartSubTotal = request.getParameter("sendShoppingCartTotal");
 		String optionCount = request.getParameter("sendShoppingCartCount");
-		String shoppingCartList = request.getParameter("shoppingCartItemList");
+		String shoppingCartList = "";
+		if (request.getParameter("shoppingCartItemList") != null)
+		{
+			shoppingCartList = request.getParameter("shoppingCartItemList");
+			type = false;
+		}
 	%>
 	<div class="site-wrap">
 		<%@include file="./include/header.jsp"%>
@@ -52,12 +55,10 @@
 		<div class="site-section">
 			<div class="container">
 				<form id="orderForm">
-					<input type="hidden" name="orderType" value="<%=type%>"/>
-					<input type="hidden" id="myInfo" name="myInfo"
-						value="<%=userIdx%>"> <input
-						type="hidden" value="<%=optionCount%>" name="optionCount" /><input
-						type="hidden" value="<%=shoppingCartList%>"
-						name="shoppingCartItemList" />
+					<input type="hidden" name="orderType" value="<%=type%>" /> <input
+						type="hidden" id="myInfo" name="myInfo" value="<%=userIdx%>">
+					<input type="hidden" value="<%=optionCount%>" name="optionCount" /><input
+						type="hidden" value="<%=totalList%>" name="shoppingCartItemList" />
 					<div class="row">
 						<div class="col-md-6 mb-5 mb-md-0">
 							<h2 class="h3 mb-3 text-black">주문 정보</h2>
@@ -75,7 +76,7 @@
 									<div class="col-md-12">
 										<label for="c_fname" class="text-black">이름 <span
 											class="text-danger">*</span></label> <input type="text"
-											class="form-control" id="name" name="c_fname">
+											class="form-control" id="name" name="name">
 									</div>
 								</div>
 
@@ -301,7 +302,7 @@
 					});
 				});
 		function getMyInfo() {
-			if($("#myInfo").val() != '')
+			if ($("#myInfo").val() != '')
 				$.ajax({
 					url : "./selectUserInfo.aj",
 					data : {

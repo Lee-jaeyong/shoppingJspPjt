@@ -15,6 +15,24 @@ public class ShoppingCartAndOrderDAO extends Database {
 		dbConnect();
 	}
 
+	public int selectTodayOrderCount() {
+		int count = 0;
+		try {
+			String sql = "SELECT COUNT(DISTINCT(orderCode)) FROM orders WHERE LEFT(NOW(),10) = LEFT(orderDate,10)";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			rs.next();
+			count = rs.getInt(1);
+			rs.close();
+			pstmt.close();
+			conn.close();
+			return count;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
 	public ArrayList<OrderDTO> selectOrderInfo(String orderInfoIdx) {
 		ArrayList<OrderDTO> list = new ArrayList<OrderDTO>();
 		try {
@@ -39,10 +57,12 @@ public class ShoppingCartAndOrderDAO extends Database {
 		}
 	}
 
-	public int selectOrderCount() {
+	public int selectOrderCount(String showOrderStatus) {
 		int count = 0;
 		try {
-			String sql = "SELECT COUNT(oiIdx) FROM orderInfo";
+			String sql = "SELECT COUNT(DISTINCT(orderCode)) FROM orderInfo,orders WHERE orderInfo.oiIdx = orders.orderInfoIdx";
+			if(!showOrderStatus.equals(""))
+				sql += " AND orderStatus = " + showOrderStatus;
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			rs.next();
@@ -58,7 +78,7 @@ public class ShoppingCartAndOrderDAO extends Database {
 	}
 
 	public ArrayList<OrderDTO> selectOrderList(String pageNum, String sortType, String showType, String searchType,
-			String search, String startDate, String endDate) {
+			String search, String startDate, String endDate, String showOrderStatus) {
 		ArrayList<OrderDTO> list = new ArrayList<OrderDTO>();
 		try {
 			String whereSql = "";
@@ -66,6 +86,8 @@ public class ShoppingCartAndOrderDAO extends Database {
 				whereSql += " AND " + searchType + " like ? ";
 			if (!startDate.equals(""))
 				whereSql += " AND orderDate between '" + startDate + "' AND '" + endDate + "' ";
+			if(!showOrderStatus.equals(""))
+				whereSql += " AND orderStatus = " + showOrderStatus;
 			String sql = "SELECT oiIdx,orderCode, orderStatus, itemName,RelationOrder(orderInfoIdx),orderCount,orderCustomer,orderTotalSalePrice,orderdate\r\n"
 					+ "FROM orders,orderInfo,itemoptions,items\r\n"
 					+ "WHERE orders.orderInfoIdx = orderinfo.oiidx AND orders.orderItemOption = itemoptions.opidx AND items.itemIdx = itemoptions.op_i_idx "
@@ -200,14 +222,13 @@ public class ShoppingCartAndOrderDAO extends Database {
 			pstmt.setString(1, orderIdx);
 			rs = pstmt.executeQuery();
 			rs.next();
-			if(rs.getInt(1) == 0)
-			{
+			if (rs.getInt(1) == 0) {
 				conn.close();
 				pstmt.close();
 				rs.close();
 				return false;
 			}
-			
+
 			sql = "UPDATE orders SET orderStatus = 2 WHERE orderInfoIdx = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, orderIdx);
@@ -224,7 +245,19 @@ public class ShoppingCartAndOrderDAO extends Database {
 	public boolean updateOrderStatus(String orderIdx) {
 		try {
 			conn.setAutoCommit(false);
-			String sql = "SELECT orderItemOption,orderCount FROM orders WHERE orderinfoidx = ?";
+			String sql = "SELECT orderStatus FROM orders WHERE orderInfoIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, orderIdx);
+			rs = pstmt.executeQuery();
+			rs.next();
+			if (rs.getInt(1) == 1 || rs.getInt(1) == 2) {
+				conn.close();
+				rs.close();
+				pstmt.close();
+				return false;
+			}
+
+			sql = "SELECT orderItemOption,orderCount FROM orders WHERE orderinfoidx = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, orderIdx);
 			rs = pstmt.executeQuery();

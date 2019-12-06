@@ -7,7 +7,8 @@
 		<%@include file="./include/sideBar.jsp"%>
 		<div id="content-wrapper">
 			<div class="container-fluid">
-				<h5>주문 검색</h5>
+				<hr>
+				<strong>주문 검색</strong>
 				<hr>
 				<table class="table table-bordered">
 					<tbody>
@@ -59,7 +60,36 @@
 							보기</button>
 					</div>
 				</div>
-				<h5 style="margin-top: 100px;">주문 목록 리스트 (금일 주문 : 0건)</h5>
+				<br>
+				<hr />
+				<br>
+				<button id="btnExcelUpload" type="button"
+					class="btn btn-secondary ml-4 mr-5">엑 셀 다운로드</button>
+				<div class="btn-group-vertical mr-5">
+					<button id="btnAllChkTrue" type="button"
+						class="btn btn-outline-dark">전체 선택</button>
+					<button id="btnAllChkFalse" type="button"
+						class="btn btn-outline-dark">전체 해제</button>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label"> <input type="checkbox"
+						class="form-check-input" value="itemManufacturer" name="excelData"><span>제조사</span>
+					</label>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label"> <input type="checkbox"
+						class="form-check-input" value="itemOrigin" name="excelData"><span>원산지</span>
+					</label>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label"> <input type="checkbox"
+						class="form-check-input" value="itemDate" name="excelData"><span>등록일</span>
+					</label>
+				</div>
+				<hr />
+				<h5 style="margin-top: 100px;">
+					주문 목록 리스트 (금일 주문 : <span id="todayOrderCount"></span>건)
+				</h5>
 				<hr>
 				<div class="row">
 					<div class="col-sm-3">
@@ -76,6 +106,14 @@
 							<option selected="" value="10">10개씩 보기</option>
 							<option value="20">20개씩 보기</option>
 							<option value="30">30개씩 보기</option>
+						</select>
+					</div>
+					<div class="col-sm-3">
+						<select class="form-control" id="showOrderStatus">
+							<option selected="" value="">모두 보기</option>
+							<option value="0">입금 완료</option>
+							<option value="1">배송 중</option>
+							<option value="2">배송 완료</option>
 						</select>
 					</div>
 				</div>
@@ -137,35 +175,35 @@
 					<div class="row">
 						<div class="col-lg-6">
 							<div class="form-group">
-								<label for="email">주문자 명</label> <input readonly="readonly" type="text" id="orderName"
-									class="form-control">
+								<label for="email">주문자 명</label> <input readonly="readonly"
+									type="text" id="orderName" class="form-control">
 							</div>
 							<div class="form-group">
-								<label for="pwd">주문자 휴대폰 번호</label> <input readonly="readonly" type="text" id="orderPhone"
-									class="form-control">
+								<label for="pwd">주문자 휴대폰 번호</label> <input readonly="readonly"
+									type="text" id="orderPhone" class="form-control">
 							</div>
 							<div class="form-group">
-								<label for="pwd">주문자 주소</label> <input readonly="readonly" type="text" id="orderAddress"
-									class="form-control">
+								<label for="pwd">주문자 주소</label> <input readonly="readonly"
+									type="text" id="orderAddress" class="form-control">
 							</div>
 							<div class="form-group">
 								<label for="comment">배송 요청 사항</label>
-								<textarea readonly="readonly" class="form-control" rows="5" id="orderRequest"></textarea>
+								<textarea readonly="readonly" class="form-control" rows="5"
+									id="orderRequest"></textarea>
 							</div>
 						</div>
-						<div class="col-lg-6" id="orderInfo">
-						</div>
+						<div class="col-lg-6" id="orderInfo"></div>
 					</div>
 				</div>
-				<input type="hidden" id="orderInfoIdx" value=""/>
+				<input type="hidden" id="orderInfoIdx" value="" />
 				<!-- Modal footer -->
 				<div class="modal-footer">
-					<button type="button" id="deliverySuccess" class="btn btn-dark" data-dismiss="modal">배송
-						완료</button>
-					<button type="button" id="deliveryExecute" class="btn btn-success" data-dismiss="modal">배송
-						요청</button>
-					<button type="button" id="deliveryCencel" class="btn btn-warning" data-dismiss="modal">주문
-						취소</button>
+					<button type="button" id="deliverySuccess" class="btn btn-dark"
+						data-dismiss="modal">배송 완료</button>
+					<button type="button" id="deliveryExecute" class="btn btn-success"
+						data-dismiss="modal">배송 요청</button>
+					<button type="button" id="deliveryCencel" class="btn btn-warning"
+						data-dismiss="modal">주문 취소</button>
 					<button type="button" class="btn btn-danger" data-dismiss="modal">닫
 						기</button>
 				</div>
@@ -175,51 +213,51 @@
 	</div>
 	<script>
 		$(document).ready(function() {
-			$("#deliverySuccess").click(function(){
-				if(confirm("배송 완료 처리하시겠습니까?"))
+			$("#deliverySuccess").click(function() {
+				if (confirm("배송 완료 처리하시겠습니까?"))
 					$.ajax({
 						url : "./UpdateOrderInfoSuccess.ajax",
 						data : {
 							orderIdx : $("#orderInfoIdx").val()
 						},
-						success : function(data){
+						success : function(data) {
 							alert(data);
 							getOrderList(0);
 						}
 					});
 			});
-			
-			$("#deliveryCencel").click(function(){
-				if(confirm("정말 주문을 취소하시겠습니까?"))
+
+			$("#deliveryCencel").click(function() {
+				if (confirm("정말 주문을 취소하시겠습니까?"))
 					$.ajax({
 						url : "./DeleteOrderInfo.ajax",
 						data : {
 							orderIdx : $("#orderInfoIdx").val()
 						},
-						success : function(data){
+						success : function(data) {
 							alert(data);
 							getOrderList(0);
 						}
 					});
 			});
-			
-			$("#deliveryExecute").click(function(){
-				if(confirm("정말 배송상태를 변경하시겠습니까?"))
+
+			$("#deliveryExecute").click(function() {
+				if (confirm("정말 배송상태를 변경하시겠습니까?"))
 					$.ajax({
 						url : "./UpdateOrderStatus.ajax",
 						data : {
 							orderIdx : $("#orderInfoIdx").val()
 						},
-						success:function(data){
-							if(data === 'true')
-							{
+						success : function(data) {
+							if (data === 'true') {
 								alert("주문 상태 변경 완료");
 								getOrderList(0);
-							}
+							} else
+								alert("이미 배송 완료되었거나 준비된 주문입니다.");
 						}
 					});
 			});
-			
+
 			$("#getListAllBtn").click(function() {
 				$("#startDate").val("");
 				$("#endDate").val("");
@@ -247,7 +285,7 @@
 				getOrderList(0);
 			});
 
-			$("#sortType, #showType").change(function() {
+			$("#sortType, #showType, #showOrderStatus").change(function() {
 				getOrderList(0);
 			});
 
@@ -268,6 +306,7 @@
 							search : $("#search").val(),
 							startDate : $("#startDate").val(),
 							endDate : $("#endDate").val(),
+							showOrderStatus : $("#showOrderStatus").val()
 						},
 						dataType : "json",
 						success : function(data) {
@@ -298,10 +337,9 @@
 											+ orderList[i].relationOrder
 											+ ' 건)</strong></label>';
 								orderSection += '<td><label class="btn btn-warning mr-2"><strong>'
-										+ orderList[i].itemName.substring(0,5)
+										+ orderList[i].itemName.substring(0, 5)
 										+ '...</strong></label>'
-										+ relationOrder
-										+ '</td>';
+										+ relationOrder + '</td>';
 								orderSection += '<td><button type="button" data-toggle="modal" data-target="#myModal" onclick="getOrderInfo('
 										+ orderList[i].oiIdx
 										+ ');" class="btn btn-success">상세 보기</button></td>';
@@ -317,6 +355,10 @@
 								orderSection += '</tr>';
 							}
 							$("#orderSection").html(orderSection);
+							if (startBlock == 0)
+								blockBtnArea += '<button type="button" class="btn btn-info" disabled><</button>';
+							else
+								blockBtnArea += '<button type="button" class="btn btn-info"><</button>';
 							for (var i = startBlock; i < endBlock; i++) {
 								if ($("#nowPage").val() == i)
 									blockBtnArea += '<button type="button" class="btn btn-info" disabled>'
@@ -327,40 +369,46 @@
 											+ ')" type="button" class="btn btn-info">'
 											+ (i + 1) + '</button>';
 							}
+							if (endBlock == totalBlock)
+								blockBtnArea += '<button type="button" class="btn btn-info" disabled>></button>';
+							else
+								blockBtnArea += '<button type="button" class="btn btn-info">></button>';
 							$("#blockBtnArea").html(blockBtnArea);
+							$("#todayOrderCount").text(data.todayOrderCount);
 						}
 					});
 		}
 
 		function getOrderInfo(orderIdx) {
 			$("#orderInfoIdx").val(orderIdx);
-			$.ajax({
-				url : "./SelectOrderInfo.ajax",
-				data : {
-					orderIdx : orderIdx
-				},
-				dataType : "json",
-				success : function(data){
-					var order = data.result;
-					$("#orderName").val(order[0].orderCustomer);
-					$("#orderPhone").val(order[0].orderCustomerPhone);
-					$("#orderAddress").val(order[0].orderAddress);
-					$("#orderRequest").val(order[0].orderCustomerRequest);
-					var orderInfo = '';
-					for(var i=0;i<order.length;i++)
-					{
-						orderInfo += '<div class="input-group mb-3">';
-						orderInfo += '<input type="text" class="form-control" readonly="readonly" value="'+order[i].itemName+'">';
-						orderInfo += '<div class="input-group-append"><span class="input-group-text">상품명</span></div></div>';
-						orderInfo += '<div class="input-group mb-3">';
-						orderInfo += '<input type="text" class="form-control" readonly="readonly" value="'+order[i].opSize+'-'+order[i].opColor+'">';
-						orderInfo += '<div class="input-group-append"><span class="input-group-text">옵 션</span></div>';
-						orderInfo += '<input type="text" class="form-control" readonly="readonly" value="'+order[i].orderCount+'">';
-						orderInfo += '<div class="input-group-append"><span class="input-group-text">수 량</span></div></div><hr/>';
-					}
-					$("#orderInfo").html(orderInfo);
-				}
-			});
+			$
+					.ajax({
+						url : "./SelectOrderInfo.ajax",
+						data : {
+							orderIdx : orderIdx
+						},
+						dataType : "json",
+						success : function(data) {
+							var order = data.result;
+							$("#orderName").val(order[0].orderCustomer);
+							$("#orderPhone").val(order[0].orderCustomerPhone);
+							$("#orderAddress").val(order[0].orderAddress);
+							$("#orderRequest").val(
+									order[0].orderCustomerRequest);
+							var orderInfo = '';
+							for (var i = 0; i < order.length; i++) {
+								orderInfo += '<div class="input-group mb-3">';
+								orderInfo += '<input type="text" class="form-control" readonly="readonly" value="'+order[i].itemName+'">';
+								orderInfo += '<div class="input-group-append"><span class="input-group-text">상품명</span></div></div>';
+								orderInfo += '<div class="input-group mb-3">';
+								orderInfo += '<input type="text" class="form-control" readonly="readonly" value="'+order[i].opSize+'-'+order[i].opColor+'">';
+								orderInfo += '<div class="input-group-append"><span class="input-group-text">옵 션</span></div>';
+								orderInfo += '<input type="text" class="form-control" readonly="readonly" value="'+order[i].orderCount+'">';
+								orderInfo += '<div class="input-group-append"><span class="input-group-text">수 량</span></div></div><hr/>';
+							}
+							$("#orderInfo").html(orderInfo);
+						}
+					});
 		}
 
 		function numberWithCommas(x) {

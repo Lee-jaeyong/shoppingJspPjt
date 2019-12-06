@@ -195,11 +195,28 @@ public class ShoppingCartAndOrderDAO extends Database {
 
 	public boolean updateOrderStatus(String orderIdx) {
 		try {
-			String sql = "UPDATE orders SET orderStatus = 1 WHERE orderInfoIdx = ?";
+			conn.setAutoCommit(false);
+			String sql = "SELECT orderItemOption,orderCount FROM orders WHERE orderinfoidx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, orderIdx);
+			rs = pstmt.executeQuery();
+			ArrayList<String[]> list = new ArrayList<String[]>();
+			while (rs.next()) {
+				list.add(new String[] { rs.getString(1), rs.getString(2) });
+			}
+			for (int i = 0; i < list.size(); i++) {
+				sql = "UPDATE itemoptions SET opStock = opStock - " + Integer.parseInt(list.get(i)[1])
+						+ " WHERE opIdx = " + list.get(i)[0];
+				pstmt = conn.prepareStatement(sql);
+				pstmt.executeUpdate();
+			}
+			sql = "UPDATE orders SET orderStatus = 1 WHERE orderInfoIdx = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, orderIdx);
 			pstmt.executeUpdate();
+			conn.commit();
 			conn.close();
+			rs.close();
 			pstmt.close();
 			return true;
 		} catch (Exception e) {

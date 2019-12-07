@@ -154,7 +154,7 @@
 					<div class="modal-body">
 						<br> <input type="text" class="form-control" id="loginId"
 							name="loginId" placeholder="아이디"><br> <input
-							type="text" class="form-control" id="loginPw" name="loginPw"
+							type="password" class="form-control" id="loginPw" name="loginPw"
 							placeholder="비밀번호"> <br>
 					</div>
 

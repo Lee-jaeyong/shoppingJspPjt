@@ -5,53 +5,87 @@
 	pageEncoding="UTF-8"%>
 <%@include file="./include/head.jsp"%>
 <%
-	String userIdx = "";
-	if (session.getAttribute("userIdx") != null)
-		userIdx = session.getAttribute("userIdx").toString();
-%>
+ 	String userIdx = "";
+ 	if (session.getAttribute("userIdx") != null)
+ 		userIdx = session.getAttribute("userIdx").toString();
+ %>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
-	$(document).ready(function() {
-		$("#addNowOrder").click(function() {
-			if ($("#op_color").val() == '') {
-				alert("옵션을 선택해주세요.");
-				return;
-			}
-			$("input[name=sendShoppingCartTotal]").val($("input[name=sendShoppingCartTotal]").val() * $("input[name=sendShoppingCartCount]").val());
-			$("input[name=sendShoppingCartSubTotal]").val($("input[name=sendShoppingCartSubTotal]").val() * $("input[name=sendShoppingCartCount]").val());
-			$("#addOrderForm").attr("method","post").attr("action","./order.do").submit();
-		});
+	$(document)
+			.ready(
+					function() {
+						$("#addNowOrder")
+								.click(
+										function() {
+											if ($("#op_color").val() == '') {
+												alert("옵션을 선택해주세요.");
+												return;
+											}
+											$(
+													"input[name=sendShoppingCartTotal]")
+													.val(
+															$(
+																	"input[name=sendShoppingCartTotal]")
+																	.val()
+																	* $(
+																			"input[name=sendShoppingCartCount]")
+																			.val());
+											$(
+													"input[name=sendShoppingCartSubTotal]")
+													.val(
+															$(
+																	"input[name=sendShoppingCartSubTotal]")
+																	.val()
+																	* $(
+																			"input[name=sendShoppingCartCount]")
+																			.val());
+											$("#addOrderForm").attr("method",
+													"post").attr("action",
+													"./order.do").submit();
+										});
 
-		$("#addShoppingCart").click(function() {
-			if ($("#op_color").val() == '') {
-				alert("옵션을 선택해주세요.");
-				return;
-			} else {
-				if ($("#userloginChk").val() === '') {
-					alert("로그인이 필요한 기능입니다.");
-					return;
-				}
-				$("#shoppingCartCount").val($("#itemCount").val());
-				$("#optionIdx").val($("#op_color").val());
-				$.ajax({
-					url : "./InsertShoppingCart.aj",
-					data : {
-						userId : $("#userloginChk").val(),
-						shoppingCartCount : $("#shoppingCartCount").val(),
-						optionIdx : $("#optionIdx").val()
-					},
-					success : function(data) {
-						if (data === 'true') {
-							if (confirm("장바구니에 추가하였습니다. 장바구니로 이동하시겠습니까?"))
-								location.href = './cart.do';
-						} else
-							alert("장바구니 추가 실패");
-					}
-				});
-			}
-		});
-	});
+						$("#addShoppingCart")
+								.click(
+										function() {
+											if ($("#op_color").val() == '') {
+												alert("옵션을 선택해주세요.");
+												return;
+											} else {
+												if ($("#userloginChk").val() === '') {
+													alert("로그인이 필요한 기능입니다.");
+													return;
+												}
+												$("#shoppingCartCount").val(
+														$("#itemCount").val());
+												$("#optionIdx").val(
+														$("#op_color").val());
+												$
+														.ajax({
+															url : "./InsertShoppingCart.aj",
+															data : {
+																userId : $(
+																		"#userloginChk")
+																		.val(),
+																shoppingCartCount : $(
+																		"#shoppingCartCount")
+																		.val(),
+																optionIdx : $(
+																		"#optionIdx")
+																		.val()
+															},
+															success : function(
+																	data) {
+																if (data === 'true') {
+																	if (confirm("장바구니에 추가하였습니다. 장바구니로 이동하시겠습니까?"))
+																		location.href = './cart.do';
+																} else
+																	alert("장바구니 추가 실패");
+															}
+														});
+											}
+										});
+					});
 </script>
 <body>
 	<%
@@ -61,7 +95,7 @@
 	<div class="site-wrap">
 		<%@include file="./include/header.jsp"%>
 		<form id="addOrderForm">
-		<input type="hidden" value="<%=userIdx%>" name="userIdx"/>
+			<input type="hidden" value="<%=userIdx%>" name="userIdx" />
 			<div class="bg-light py-3">
 				<div class="container">
 					<div class="row">

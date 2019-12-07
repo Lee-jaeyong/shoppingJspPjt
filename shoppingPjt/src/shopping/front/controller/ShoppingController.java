@@ -86,7 +86,7 @@ public class ShoppingController extends HttpServlet {
 			action = new OrderInsert();
 			forward = action.execute(request, response);
 		} else if (command.equals("qna.do")) {
-			forward.setPath("WEB-INF/front/q-and-a.jsp");
+			forward.setPath("WEB-INF/front/qna.jsp");
 			forward.setRedirect(false);
 		} else if (command.equals("question.do")) {
 			forward.setPath("WEB-INF/front/question.jsp");

@@ -4,18 +4,16 @@
 <script type="text/javascript">
 	$(document).ready(
 			function() {
-				$("#btnLoginExecute").click(
-						function() {
-							if ($("#loginId").val().trim() === ''
-									|| $("#loginPw").val().trim() === '')
-								alert("아이디 혹은 비밀번호를 입력해주세요.");
-							else
-								$("#loginForm").attr("method", "post").attr(
-										"action", "./loginAction.do").submit();
-						});
-
-				$("#loginPw").keyup(function(e) {
-					if (e.keyCode == 13)
+				$("#btnLoginExecute").click(function() {
+					
+					if ($("#loginId").val().trim() === ''|| $("#loginPw").val().trim() === '')
+							alert("아이디 혹은 비밀번호를 입력해주세요.");
+					else
+							$("#loginForm").attr("method", "post").attr("action", "./loginAction.do").submit();
+				});
+				
+				$("#loginPw").keyup(function(e){
+					if(e.keyCode == 13)  
 						$("#btnLoginExecute").click();
 				});
 
@@ -66,6 +64,13 @@
 	window.onload = categoryLoad();
 </script>
 <header class="site-navbar" role="banner">
+<%
+	String url = request.getRequestURL().toString(); 
+	int lastIndexOf = url.lastIndexOf("/")+1;
+	int urlLength = url.lastIndexOf(".");
+	url = url.substring(lastIndexOf,urlLength);
+%>
+
 	<div class="site-navbar-top">
 		<div class="container">
 			<div class="row align-items-center">
@@ -91,17 +96,46 @@
 							<%
 								if (session.getAttribute("userId") == null) {
 							%>
+							
 							<li><a href="join.do">회원가입</a></li>
-							<li><a href="#" id="loginBtn" data-toggle="modal"
-								data-target="#myModal">로그인</a> <%
- 	} else {
- %>
-							<li><b><%=session.getAttribute("userName")%></b>님
-								&nbsp;&nbsp;</li>
+							<li><a href="#" id="loginBtn" data-toggle="modal" data-target="#myModal">로그인</a>
+								<%
+									} else {
+								%>
+								<li><b><%=session.getAttribute("userName")%></b>님 &nbsp;&nbsp; </li>
 							<li><a href="logoutAction.do">로그아웃</a></li>
 							<%
 								}
 							%>
+							<!-- The Modal -->
+							<div class="modal fade" id="myModal">
+								<div class="modal-dialog">
+									<div class="modal-content">
+
+										<!-- Modal Header -->
+										<div class="modal-header">
+											<h4 class="modal-title">로그인</h4>
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+										</div>
+										<form id="loginForm">
+											<!-- Modal body -->
+											<div class="modal-body">
+												<br> <input type="text" class="form-control"
+													id="loginId" name="loginId" placeholder="아이디"><br>
+												<input type="password" class="form-control" id="loginPw"
+													name="loginPw" placeholder="비밀번호"> <br>
+													<input type="hidden" value="<%=url %>" id="getNowPage" name="getNowPage"/>
+											</div>
+
+											<!-- Modal footer -->
+											<div class="modal-footer">
+												<button id="btnLoginExecute" type="button"
+													class="btn btn-primary">Login</button>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
 
 							<li style="display: none;"><a href="#">로그아웃</a></li>
 

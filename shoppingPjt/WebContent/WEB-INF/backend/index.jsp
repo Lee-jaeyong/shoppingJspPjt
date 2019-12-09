@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@include file="./include/head.html" %>
+<%@include file="./include/head.html"%>
 <body id="page-top">
 	<%@include file="./include/mainLogo.html"%>
 	<div id="wrapper">
@@ -18,11 +18,33 @@
 					</li>
 				</ol>
 
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="card-header">
+							<i class="fas fa-chart-area"></i> 지난 주 주문 현황
+						</div>
+						<div class="card-body">
+							<canvas id="myAreaChart" width="100%" height="30"></canvas>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="card-header">
+							<i class="fas fa-chart-area"></i> 지난 주 주문 현황
+						</div>
+						<div class="card-body">
+							<canvas id="myPieChart" width="100%" height="30"></canvas>
+						</div>
+					</div>
+				</div>
+
 				<!-- 주문 현황 차트 -->
 				<div class="row">
 					<div class="card mb-3 col-sm-12 col-lg-8">
 						<div class="card-header">
-							<i class="fas fa-chart-area"></i> 주문 현황
+							<i class="fas fa-chart-area"></i> 지난 주 주문 현황
 						</div>
 						<div class="card-body">
 							<canvas id="myBarChart" width="100%" height="30"></canvas>
@@ -210,6 +232,9 @@
 	<!-- /#wrapper -->
 	<%@include file="./include/scrollTop.html"%>
 	<%@include file="./include/scriptArea.html"%>
+	<script src="backend/js/demo/chart-bar-demo.js"></script>
+	<script src="backend/js/demo/chart-pie-demo.js"></script>
+	<script src="backend/js/demo/chart-area-demo.js"></script>
 </body>
 
 </html>

@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import shopping.backend.ajax.model.AddCategoryImplAction;
 import shopping.backend.ajax.model.DeleteItemImplAction;
 import shopping.backend.ajax.model.DeleteOrderInfo;
+import shopping.backend.ajax.model.SelectAreaChart;
+import shopping.backend.ajax.model.SelectBarChart;
 import shopping.backend.ajax.model.SelectCategoryImplAction;
 import shopping.backend.ajax.model.SelectDeleteItemListImplAction;
 import shopping.backend.ajax.model.SelectItemImplAction;
@@ -83,6 +85,10 @@ public class AjaxShoppingController extends HttpServlet {
 			new DeleteOrderInfo().execute(request, response);
 		}else if (command.equals("UpdateOrderInfoSuccess.ajax")) {
 			new UpdateOrderInfoSuccess().execute(request, response);
+		}else if (command.equals("SelectBarChart.ajax")) {
+			new SelectBarChart().execute(request, response);
+		}else if (command.equals("SelectAreaChart.ajax")) {
+			new SelectAreaChart().execute(request, response);
 		}
 	}
 }

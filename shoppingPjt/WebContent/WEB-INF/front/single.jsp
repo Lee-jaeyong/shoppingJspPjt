@@ -93,7 +93,7 @@ $(document).ready(function () {
 						<div class="col-md-6">
 							<img
 								src="${pageContext.request.contextPath}/uploadImage/<%=item.getItemMainImg() %>"
-								alt="Image" class="img-fluid">
+								alt="Image" class="img-fluid" style="width: 500px; height: 500px;">
 						</div>
 						<div class="col-md-6">
 							<h2 class="text-black"><%=categoryInfo[2]%></h2>

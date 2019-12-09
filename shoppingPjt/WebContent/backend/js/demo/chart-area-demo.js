@@ -74,4 +74,3 @@ function selectAreaChart(date){
 		}
 	});
 }
-window.onload = selectAreaChart('');

@@ -6,7 +6,17 @@ public class ItemOptionDTO {
 	private String opSize;
 	private String opColor;
 	private int opStock;
-
+	private String itemName;
+	
+	//부족한 옵션 확인시 필요한 생성자
+	public ItemOptionDTO(int opIdx,String itemName, String opSize, String opColor, int opStock) {
+		this.itemName = itemName;
+		this.opIdx = opIdx;
+		this.opSize = opSize;
+		this.opColor = opColor;
+		this.opStock = opStock;
+	}
+	
 	public ItemOptionDTO(int opIdx, int op_i_idx, String opSize, String opColor, int opStock) {
 		super();
 		this.opIdx = opIdx;
@@ -16,6 +26,10 @@ public class ItemOptionDTO {
 		this.opStock = opStock;
 	}
 
+	public String getItemName() {
+		return itemName;
+	}
+	
 	public int getOpIdx() {
 		return opIdx;
 	}

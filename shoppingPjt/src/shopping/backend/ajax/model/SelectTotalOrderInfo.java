@@ -6,33 +6,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import shopping.action.ShoppingService;
-import shopping.database.dao.ChartDAO;
-import shopping.database.dto.ChartDTO;
+import shopping.database.dao.ShoppingCartAndOrderDAO;
 
-public class SelectAreaChart implements ShoppingService {
+public class SelectTotalOrderInfo implements ShoppingService {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			ChartDAO chartDAO = new ChartDAO();
-			String date = request.getParameter("date");
-			ArrayList<ChartDTO> list = chartDAO.selectAreaChart(date);
+			ShoppingCartAndOrderDAO shoppingCartAndOrderDAO = new ShoppingCartAndOrderDAO();
+			ArrayList<String[]> list = shoppingCartAndOrderDAO.selectTotalOrderInfo();
 			response.getWriter().write(getJson(list));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private String getJson(ArrayList<ChartDTO> list) {
+	private String getJson(ArrayList<String[]> list) {
 		StringBuilder json = new StringBuilder();
 		json.append("{\"result\":[");
 		for (int i = 0; i < list.size(); i++) {
-			json.append("{\"count\":\"" + list.get(i).getCount() + "\"}");
+			json.append("{\"count\":\"" + list.get(i)[0] + "\",\"total\":\"" + list.get(i)[1] + "\"}");
 			if (i != list.size() - 1)
 				json.append(",");
 		}
 		json.append("]}");
 		return json.toString();
 	}
-
 }

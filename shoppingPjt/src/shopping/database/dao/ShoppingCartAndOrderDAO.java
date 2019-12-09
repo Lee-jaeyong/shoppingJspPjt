@@ -15,6 +15,42 @@ public class ShoppingCartAndOrderDAO extends Database {
 		dbConnect();
 	}
 
+	public int selectLackStockInfo() {
+		int count = 0;
+		try {
+			String sql = "SELECT COUNT(opidx) FROM itemoptions WHERE opStock < 5";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			rs.next();
+			count = rs.getInt(1);
+			rs.close();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	public ArrayList<String[]> selectTotalOrderInfo() {
+		ArrayList<String[]> list = new ArrayList<String[]>();
+		try {
+			for (int i = 0; i < 3; i++) {
+				String sql = "SELECT COUNT(orderIdx),SUM(orderTotalSalePrice) FROM orders WHERE orderStatus = " + i;
+				pstmt = conn.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+				rs.next();
+				list.add(new String[] { Integer.toString(rs.getInt(1)), Integer.toString(rs.getInt(2)) });
+			}
+			conn.close();
+			pstmt.close();
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 	public int selectTodayOrderCount() {
 		int count = 0;
 		try {
@@ -53,6 +89,9 @@ public class ShoppingCartAndOrderDAO extends Database {
 					list.add(new String[] { rs.getString(1), rs.getString(2), Integer.toString(rs.getInt(4)),
 							rs.getString(5), rs.getString(6) });
 			}
+			conn.close();
+			rs.close();
+			pstmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

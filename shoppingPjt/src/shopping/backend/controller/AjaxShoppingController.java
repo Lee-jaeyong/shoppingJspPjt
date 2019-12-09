@@ -17,9 +17,12 @@ import shopping.backend.ajax.model.SelectCategoryImplAction;
 import shopping.backend.ajax.model.SelectDeleteItemListImplAction;
 import shopping.backend.ajax.model.SelectItemImplAction;
 import shopping.backend.ajax.model.SelectItemOptionImplAction;
+import shopping.backend.ajax.model.SelectLackStockInfo;
 import shopping.backend.ajax.model.SelectOrderInfo;
 import shopping.backend.ajax.model.SelectOrderList;
 import shopping.backend.ajax.model.SelectPieChart;
+import shopping.backend.ajax.model.SelectShowLackOptions;
+import shopping.backend.ajax.model.SelectTotalOrderInfo;
 import shopping.backend.ajax.model.UpdateCategoryImplAction;
 import shopping.backend.ajax.model.UpdateCategoryStatusImplAction;
 import shopping.backend.ajax.model.UpdateDeleteItemCencelImplAction;
@@ -92,6 +95,12 @@ public class AjaxShoppingController extends HttpServlet {
 			new SelectAreaChart().execute(request, response);
 		}else if (command.equals("SelectPieChart.ajax")) {
 			new SelectPieChart().execute(request, response);
+		}else if (command.equals("SelectTotalOrderInfo.ajax")) {
+			new SelectTotalOrderInfo().execute(request, response);
+		}else if (command.equals("LackStockInfo.ajax")) {
+			new SelectLackStockInfo().execute(request, response);
+		}else if (command.equals("SelectLackOptionss.ajax")) {
+			new SelectShowLackOptions().execute(request, response);
 		}
 	}
 }

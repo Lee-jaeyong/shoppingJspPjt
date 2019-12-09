@@ -18,13 +18,13 @@ public class ChartDAO extends Database {
 			for (int i = 1; i <= 6; i++) {
 				String sql = "SELECT COUNT(*), IFNULL(LEFT((YEAR(CURDATE())-YEAR(userBirth)),1),0) AS AGE\r\n"
 						+ "FROM USER,orders\r\n" + "WHERE orders.orderUserIdx = user.userIdx";
-				if(i != 6)
+				if (i != 6)
 					sql += " AND LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = " + i + "";
 				else
-					sql += " AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '2'\r\n" + 
-							" AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '3'\r\n" + 
-							" AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '4'\r\n" + 
-							" AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '5'";
+					sql += " AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '2'\r\n"
+							+ " AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '3'\r\n"
+							+ " AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '4'\r\n"
+							+ " AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '5'";
 				pstmt = conn.prepareStatement(sql);
 				rs = pstmt.executeQuery();
 				rs.next();
@@ -39,12 +39,16 @@ public class ChartDAO extends Database {
 		return list;
 	}
 
-	public ArrayList<ChartDTO> selectAreaChart() {
+	public ArrayList<ChartDTO> selectAreaChart(String date) {
 		ArrayList<ChartDTO> list = new ArrayList<ChartDTO>();
 		try {
 			for (int i = 1; i <= 24; i++) {
-				String sql = "SELECT COUNT(*) FROM orders\r\n"
-						+ "WHERE LEFT(orderdate,10) = LEFT(NOW(),10) AND RIGHT(LEFT(orderdate,13),2) = '" + i + "'";
+				String sql = "SELECT COUNT(*) FROM orders ";
+				if (!date.equals(""))
+					sql += "WHERE LEFT(orderdate,10) = LEFT('" + date + "',10) AND RIGHT(LEFT(orderdate,13),2) = '" + i
+							+ "'";
+				else
+					sql += "WHERE LEFT(orderdate,10) = LEFT(NOW(),10) AND RIGHT(LEFT(orderdate,13),2) = '" + i + "'";
 				pstmt = conn.prepareStatement(sql);
 				rs = pstmt.executeQuery();
 				rs.next();

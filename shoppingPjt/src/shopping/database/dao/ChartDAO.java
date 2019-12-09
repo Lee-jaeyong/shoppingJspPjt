@@ -45,10 +45,9 @@ public class ChartDAO extends Database {
 			for (int i = 1; i <= 24; i++) {
 				String sql = "SELECT COUNT(*) FROM orders ";
 				if (!date.equals(""))
-					sql += "WHERE LEFT(orderdate,10) = LEFT('" + date + "',10) AND RIGHT(LEFT(orderdate,13),2) = '" + i
-							+ "'";
+					sql += "WHERE LEFT(orderdate,10) = LEFT('" + date + "',10) AND RIGHT(LEFT(orderdate,13),2) = " + i;
 				else
-					sql += "WHERE LEFT(orderdate,10) = LEFT(NOW(),10) AND RIGHT(LEFT(orderdate,13),2) = '" + i + "'";
+					sql += "WHERE LEFT(orderdate,10) = LEFT(NOW(),10) AND RIGHT(LEFT(orderdate,13),2) = " + i;
 				pstmt = conn.prepareStatement(sql);
 				rs = pstmt.executeQuery();
 				rs.next();

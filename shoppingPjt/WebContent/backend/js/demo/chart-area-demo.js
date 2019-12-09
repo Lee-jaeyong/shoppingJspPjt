@@ -2,7 +2,6 @@
 Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#292b2c';
 function selectAreaChart(date){
-	var arrays = new Array();
 	$.ajax({
 		url : "./SelectAreaChart.ajax",
 		data : {
@@ -10,6 +9,9 @@ function selectAreaChart(date){
 		},
 		dataType : "json",
 		success : function(data) {
+			$("#areaChart").children().remove();
+			$("#areaChart").append('<canvas id="myAreaChart" width="100%" height="30"></canvas>');
+			var arrays = new Array();
 			var max = data.result[0].count
 			for(var i= 0;i<data.result.length;i++)
 			{
@@ -28,7 +30,7 @@ function selectAreaChart(date){
 						"15시", "16시", "17시", "18시", "19시", "20시",
 						"21시", "22시", "23시", "24시" ],
 						datasets : [ {
-							label : "Sessions",
+							label : "",
 							lineTension : 0.3,
 							backgroundColor : "rgba(2,117,216,0.2)",
 							borderColor : "rgba(2,117,216,1)",
@@ -70,7 +72,7 @@ function selectAreaChart(date){
 						display : false
 					}
 				}
-					});
+			});
 		}
 	});
 }

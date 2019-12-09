@@ -1,7 +1,7 @@
 // Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#292b2c';
-var array = new Array();
+var arrays = new Array();
 $.ajax({
 	url : "./SelectAreaChart.ajax",
 	dataType : "json",
@@ -9,7 +9,7 @@ $.ajax({
 		var max = data.result[0].count
 		for(var i= 0;i<data.result.length;i++)
 		{
-			array.push(data.result[i].count);
+			arrays.push(data.result[i].count);
 			if(max < parseInt(data.result[i].count))
 				max = data.result[i].count;
 		}
@@ -35,7 +35,7 @@ $.ajax({
 							pointHoverBackgroundColor : "rgba(2,117,216,1)",
 							pointHitRadius : 50,
 							pointBorderWidth : 2,
-							data : array,
+							data : arrays,
 						} ],
 					},
 					options : {

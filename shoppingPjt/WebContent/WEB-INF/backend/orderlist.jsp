@@ -63,29 +63,6 @@
 				<br>
 				<hr />
 				<br>
-				<button id="btnExcelUpload" type="button"
-					class="btn btn-secondary ml-4 mr-5">엑 셀 다운로드</button>
-				<div class="btn-group-vertical mr-5">
-					<button id="btnAllChkTrue" type="button"
-						class="btn btn-outline-dark">전체 선택</button>
-					<button id="btnAllChkFalse" type="button"
-						class="btn btn-outline-dark">전체 해제</button>
-				</div>
-				<div class="form-check-inline">
-					<label class="form-check-label"> <input type="checkbox"
-						class="form-check-input" value="itemManufacturer" name="excelData"><span>제조사</span>
-					</label>
-				</div>
-				<div class="form-check-inline">
-					<label class="form-check-label"> <input type="checkbox"
-						class="form-check-input" value="itemOrigin" name="excelData"><span>원산지</span>
-					</label>
-				</div>
-				<div class="form-check-inline">
-					<label class="form-check-label"> <input type="checkbox"
-						class="form-check-input" value="itemDate" name="excelData"><span>등록일</span>
-					</label>
-				</div>
 				<hr />
 				<h5 style="margin-top: 100px;">
 					주문 목록 리스트 (금일 주문 : <span id="todayOrderCount"></span>건)
@@ -101,16 +78,26 @@
 							<option value="oiIdx">주문 번호 순</option>
 						</select>
 					</div>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<select class="form-control" id="showType">
 							<option selected="" value="10">10개씩 보기</option>
 							<option value="20">20개씩 보기</option>
 							<option value="30">30개씩 보기</option>
 						</select>
 					</div>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<select class="form-control" id="showOrderStatus">
-							<option selected="" value="">모두 보기</option>
+							<option value="0">입금 완료</option>
+							<option value="1">배송 중</option>
+							<option value="2">배송 완료</option>
+						</select>
+					</div>
+					<div class="col-sm-2">
+						<button id="btnOrderExcelUpload" type="button"
+							class="btn btn-secondary ml-4 mr-5">엑 셀 다운로드</button>
+					</div>
+					<div class="col-sm-2">
+						<select class="form-control" id="excelUploadSelect">
 							<option value="0">입금 완료</option>
 							<option value="1">배송 중</option>
 							<option value="2">배송 완료</option>
@@ -213,6 +200,10 @@
 	</div>
 	<script>
 		$(document).ready(function() {
+			$("#btnOrderExcelUpload").click(function(){
+				location.href="./adminOrderListExcelUpload.admin?status="+$("#excelUploadSelect").val();
+			});
+			
 			$("#deliverySuccess").click(function() {
 				if (confirm("배송 완료 처리하시겠습니까?"))
 					$.ajax({

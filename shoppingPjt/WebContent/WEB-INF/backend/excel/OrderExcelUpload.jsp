@@ -58,7 +58,7 @@
 		ArrayList<String[]> list = (ArrayList<String[]>) request.getAttribute("list");
 
 		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet = workbook.createSheet("상품 목록");
+		HSSFSheet sheet = workbook.createSheet("주문 목록");
 		//Sheet명 설정
 		sheet.addMergedRegion(new CellRangeAddress(0, (short) 0, 0, (short) list.get(0).length - 1));
 		CellStyle topStyle = workbook.createCellStyle();
@@ -98,7 +98,7 @@
 		row = sheet.createRow(0);
 		cell = row.createCell(0);
 		cell.setCellStyle(topStyle);
-		cell.setCellValue("상품 리스트");
+		cell.setCellValue("주문 리스트");
 		row.setHeight((short) 600);
 		row = sheet.createRow(1);
 		for (int i = 0; i < list.get(0).length; i++) {

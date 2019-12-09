@@ -20,7 +20,18 @@ public class OrderDTO {
 	private int totalOrderCount;
 	private String itemColor;
 	private String itemSize;
-	
+
+	// 주문 엑셀 출력시 사용되는 생성자
+	public OrderDTO(String name, String itemName, int relationOrderCount, int totalOrderCount, String address,
+			String orderDate) {
+		this.name = name;
+		this.itemName = itemName;
+		this.relationOrderCount = relationOrderCount;
+		this.totalOrderCount = totalOrderCount;
+		this.address = address;
+		this.orderDate = orderDate;
+	}
+
 	// 주문 정보 확인시 사용되는 생성자
 	public OrderDTO(int orderIdx, String name, String phone, String address, String notes, String itemName,
 			String itemColor, String itemSize, int totalOrderCount) {

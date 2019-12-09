@@ -21,7 +21,7 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<div class="card-header">
-							<i class="fas fa-chart-area"></i> 지난 주 주문 현황
+							<i class="fas fa-chart-area"></i> 실시간 주문 건 수
 						</div>
 						<div class="card-body">
 							<canvas id="myAreaChart" width="100%" height="30"></canvas>
@@ -32,7 +32,7 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<div class="card-header">
-							<i class="fas fa-chart-area"></i> 지난 주 주문 현황
+							<i class="fas fa-chart-area"></i> 연령대 매출 현황
 						</div>
 						<div class="card-body">
 							<canvas id="myPieChart" width="100%" height="30"></canvas>

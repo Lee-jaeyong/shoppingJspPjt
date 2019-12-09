@@ -18,6 +18,7 @@ import shopping.backend.model.ExcelFileUpload;
 import shopping.backend.model.SelectItemInfo;
 import shopping.backend.model.UpdateItem;
 import shopping.backend.model.UpdateItemMainImg;
+import shopping.backend.model.adminOrderListExcelUpload;
 import shopping.database.dao.ItemDAO;
 
 @WebServlet("/ShoppingAdminController")
@@ -85,6 +86,9 @@ public class ShoppingAdminController extends HttpServlet {
 			forward.setRedirect(false);
 		} else if (command.equals("adminExcelUpload.admin")) {
 			action = new ExcelFileUpload();
+			forward = action.execute(request, response);
+		}else if (command.equals("adminOrderListExcelUpload.admin")) {
+			action = new adminOrderListExcelUpload();
 			forward = action.execute(request, response);
 		} else if (command.equals("adminUpdateItemExecute.admin")) {
 			action = new UpdateItem();

@@ -33,6 +33,32 @@ public class ShoppingCartAndOrderDAO extends Database {
 		}
 	}
 
+	public ArrayList<String[]> selectOrderExcelUpload(String[] header, String status) {
+		ArrayList<String[]> list = new ArrayList<String[]>();
+		try {
+			String sql = "\r\n"
+					+ "SELECT orderCustomer, itemName, relationOrder(orderIdx),orderCount, orderAddress,orderDate\r\n"
+					+ "FROM orders,items,itemoptions\r\n"
+					+ "WHERE orders.orderItemOption = itemOptions.opidx AND itemOptions.op_i_idx = items.itemIdx\r\n"
+					+ " AND orderStatus=" + status;
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			list.add(header);
+			while (rs.next()) {
+				if (rs.getInt(3) != 0) {
+					list.add(new String[] { rs.getString(1),
+							rs.getString(2) + " [외 : " + Integer.toString(rs.getInt(3)) + "개 ]",
+							Integer.toString(rs.getInt(4)), rs.getString(5), rs.getString(6) });
+				} else
+					list.add(new String[] { rs.getString(1), rs.getString(2), Integer.toString(rs.getInt(4)),
+							rs.getString(5), rs.getString(6) });
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 	public ArrayList<OrderDTO> selectOrderInfo(String orderInfoIdx) {
 		ArrayList<OrderDTO> list = new ArrayList<OrderDTO>();
 		try {
@@ -61,7 +87,7 @@ public class ShoppingCartAndOrderDAO extends Database {
 		int count = 0;
 		try {
 			String sql = "SELECT COUNT(DISTINCT(orderCode)) FROM orderInfo,orders WHERE orderInfo.oiIdx = orders.orderInfoIdx";
-			if(!showOrderStatus.equals(""))
+			if (!showOrderStatus.equals(""))
 				sql += " AND orderStatus = " + showOrderStatus;
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
@@ -86,7 +112,7 @@ public class ShoppingCartAndOrderDAO extends Database {
 				whereSql += " AND " + searchType + " like ? ";
 			if (!startDate.equals(""))
 				whereSql += " AND orderDate between '" + startDate + "' AND '" + endDate + "' ";
-			if(!showOrderStatus.equals(""))
+			if (!showOrderStatus.equals(""))
 				whereSql += " AND orderStatus = " + showOrderStatus;
 			String sql = "SELECT oiIdx,orderCode, orderStatus, itemName,RelationOrder(orderInfoIdx),orderCount,orderCustomer,orderTotalSalePrice,orderdate\r\n"
 					+ "FROM orders,orderInfo,itemoptions,items\r\n"

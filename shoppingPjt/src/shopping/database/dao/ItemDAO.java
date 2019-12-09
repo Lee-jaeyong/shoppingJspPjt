@@ -311,6 +311,20 @@ public class ItemDAO extends Database {
 		return true;
 	}
 
+	public boolean updateStockFromIndex(String idx, String stock) {
+		try {
+			String sql = "UPDATE itemoptions SET opStock = ? WHERE opIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(stock));
+			pstmt.setString(2, idx);
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
 	public boolean updateStock(String[] stockIdx, String[] stock) throws SQLException {
 		try {
 			conn.setAutoCommit(false);

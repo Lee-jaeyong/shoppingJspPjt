@@ -30,6 +30,7 @@ import shopping.backend.ajax.model.UpdateItemStatusImplAction;
 import shopping.backend.ajax.model.UpdateOrderInfoSuccess;
 import shopping.backend.ajax.model.UpdateOrderStatus;
 import shopping.backend.ajax.model.UpdateStockImplAction;
+import shopping.backend.ajax.model.UpdateStockfromIndex;
 
 @WebServlet("/AjaxShoppingController")
 public class AjaxShoppingController extends HttpServlet {
@@ -101,6 +102,8 @@ public class AjaxShoppingController extends HttpServlet {
 			new SelectLackStockInfo().execute(request, response);
 		}else if (command.equals("SelectLackOptionss.ajax")) {
 			new SelectShowLackOptions().execute(request, response);
+		}else if (command.equals("UpdateStockfromIndex.ajax")) {
+			new UpdateStockfromIndex().execute(request, response);
 		}
 	}
 }

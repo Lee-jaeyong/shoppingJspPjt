@@ -277,15 +277,39 @@
 
 				<!-- Modal body -->
 				<div class="modal-body">
+					<div class="input-group mb-3">
+					    <div class="input-group-prepend">
+					      <span class="input-group-text">상품명</span>
+					    </div>
+					    <input type="text" class="form-control" readonly="readonly" id="updateStockItemName">
+				  	</div>
+					<div class="input-group mb-3">
+					    <div class="input-group-prepend">
+					      <span class="input-group-text">옵 션</span>
+					    </div>
+					    <input type="text" class="form-control" readonly="readonly" id="updateStockItemOption">
+				  	</div>
+					<div class="input-group mb-3">
+					    <div class="input-group-prepend">
+					      <span class="input-group-text">수정 전 재고</span>
+					    </div>
+					    <input type="text" class="form-control" readonly="readonly" id="updateStockBefore">
+				  	</div>
+					<div class="input-group mb-3">
+					    <div class="input-group-prepend">
+					      <span class="input-group-text">수정 후 재고</span>
+					    </div>
+					    <input type="text" class="form-control" id="updateStockAfter">
+				  	</div>
 				</div>
 
 				<!-- Modal footer -->
 				<div class="modal-footer">
-					<button type="button" class="btn btn-danger" data-dismiss="modal">수 정</button>
+					<button id="btnUpdateStockExecute" type="button" class="btn btn-danger" data-dismiss="modal">수 정</button>
 					<button type="button" class="btn btn-danger" data-dismiss="modal">취 소</button>
 				</div>
-
 			</div>
+			<input type="hidden" value="" id="updateStockIdx"/>
 		</div>
 	</div>
 
@@ -297,26 +321,27 @@
 	<script src="backend/js/demo/chart-area-demo.js"></script>
 	<script>
 		$(document).ready(function() {
-			$("#btnShowLackOptions").click(function(){
+			$("#btnUpdateStockExecute").click(function(){
+				if($("#updateStockIdx").val() === '' || $("#updateStockAfter").val() === '')
+				{
+					alert("재고를 입력해주세요.");
+					return;
+				}
 				$.ajax({
-					url : "./SelectLackOptionss.ajax",
-					dataType : "json",
+					url : "./UpdateStockfromIndex.ajax",
+					data : {
+						opIdx : $("#updateStockIdx").val(),
+						stock : $("#updateStockAfter").val()
+					},
 					success : function(data){
-						var lackOptionSection = '';
-						var lackOption = data.result;
-						for(var i= 0;i<lackOption.length;i++)
-						{
-							lackOptionSection += "<tr>";
-							lackOptionSection += "<td>"+lackOption[i].opIdx+"</td>";
-							lackOptionSection += "<td>"+lackOption[i].itemName+"</td>";
-							lackOptionSection += "<td>"+lackOption[i].opSize+" - "+lackOption[i].opColor+"</td>";
-							lackOptionSection += "<td>"+lackOption[i].opStock+"</td>";
-							lackOptionSection += '<td><button type="button" data-toggle="modal" data-target="#optionModal" class="btn btn-primary">수정</button></td>';
-							lackOptionSection += "</tr>";
-						}
-						$("#lackOptionList").html(lackOptionSection);
+						alert(data);
+						showlackOptionList();
 					}
 				});
+			});
+			
+			$("#btnShowLackOptions").click(function(){
+				showlackOptionList();
 			});
 			
 			$("#datepicker1").datepicker({
@@ -336,6 +361,28 @@
 			});
 		});
 
+		function showlackOptionList(){
+			$.ajax({
+				url : "./SelectLackOptionss.ajax",
+				dataType : "json",
+				success : function(data){
+					var lackOptionSection = '';
+					var lackOption = data.result;
+					for(var i= 0;i<lackOption.length;i++)
+					{
+						lackOptionSection += "<tr>";
+						lackOptionSection += "<td>"+lackOption[i].opIdx+"</td>";
+						lackOptionSection += "<td>"+lackOption[i].itemName+"</td>";
+						lackOptionSection += "<td>"+lackOption[i].opSize+" - "+lackOption[i].opColor+"</td>";
+						lackOptionSection += "<td>"+lackOption[i].opStock+"</td>";
+						lackOptionSection += '<td><button type="button" onclick="updateStock('+lackOption[i].opIdx+',\''+lackOption[i].itemName+'\',\''+lackOption[i].opSize+'\',\''+lackOption[i].opColor+'\',\''+lackOption[i].opStock+'\')" data-toggle="modal" data-target="#optionModal" class="btn btn-primary">수정</button></td>';
+						lackOptionSection += "</tr>";
+					}
+					$("#lackOptionList").html(lackOptionSection);
+				}
+			});
+		}
+		
 		function lackStockInfo() {
 			$.ajax({
 				url : "./LackStockInfo.ajax",
@@ -344,7 +391,14 @@
 				}
 			});
 		}
-
+		
+		function updateStock(opIdx,itemName,opSize,opColor,stock){
+			$("#updateStockIdx").val(opIdx);
+			$("#updateStockItemName").val(itemName);
+			$("#updateStockItemOption").val(opSize + " - " + opColor);
+			$("#updateStockBefore").val(stock);
+		}
+		
 		function loadStatus() {
 			$.ajax({
 				url : "SelectTotalOrderInfo.ajax",

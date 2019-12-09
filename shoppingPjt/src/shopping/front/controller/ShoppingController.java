@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import shopping.action.Action;
 import shopping.action.ActionForward;
 import shopping.front.model.AddUser;
+import shopping.front.model.EnterQuestion;
 import shopping.front.model.LoginUser;
 import shopping.front.model.LogoutUser;
 import shopping.front.model.OrderInsert;
@@ -91,6 +92,9 @@ public class ShoppingController extends HttpServlet {
 		} else if (command.equals("question.do")) {
 			forward.setPath("WEB-INF/front/question.jsp");
 			forward.setRedirect(false);
+		} else if(command.equals("enterQuestion.do")) {
+			action = new EnterQuestion();
+			forward = action.execute(request, response);
 		} else if (command.equals("userAddress.do")) {
 			forward.setPath("WEB-INF/front/address/jusoPopup.jsp");
 			forward.setRedirect(false);

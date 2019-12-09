@@ -201,9 +201,23 @@
 		</div>
 	</div>
 </header>
+
+
+<%
+		if (session.getAttribute("userIdx") == null && request.getQueryString() != null
+				&& request.getQueryString().equals("error")) {
+	%>
+	<script>
+		alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
+	</script>
+	<%
+		}%>
+
 <%
 	String userName = "";
 	if (session.getAttribute("userIdx") != null)
 		userName = session.getAttribute("userIdx").toString();
+	
+	
 %>
 <input type="hidden" id="userloginChk" value="<%=userName%>" />

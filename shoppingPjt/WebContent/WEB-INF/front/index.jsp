@@ -8,24 +8,7 @@
 }
 </style>
 <body>
-	<%
-		if (session.getAttribute("userIdx") == null && request.getQueryString() != null
-				&& request.getQueryString().equals("error")) {
-	%>
-	<script>
-		alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
-	</script>
-	<%
-		} if (session.getAttribute("userIdx") == null && request.getQueryString() != null
-				&& request.getQueryString().equals("login")) {
-	%>
-	<script>
-		alert("로그인이 필요한 기능입니다.");
-		$("#loginBtn").click();
-	</script>
-	<%
-		}
-	%>
+	
 	<div class="site-wrap">
 		<%@include file="./include/header.jsp"%>
 		<div class="row" style="margin-bottom: 70px;">

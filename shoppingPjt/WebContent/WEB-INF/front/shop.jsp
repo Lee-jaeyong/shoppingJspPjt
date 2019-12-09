@@ -163,8 +163,7 @@
 		}
 
 		function pageLoad(pageNum) {
-			$
-					.ajax({
+			$.ajax({
 						url : "./SelectItemList.aj",
 						data : {
 							pageNum : pageNum,

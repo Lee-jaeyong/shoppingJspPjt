@@ -93,269 +93,246 @@
 			name="sendShoppingCartList" value="" /> <input type="hidden"
 			id="sendShoppingCartTotal" name="sendShoppingCartTotal" value="" />
 		<input type="hidden" id="sendShoppingCartSubTotal"
-			name="sendShoppingCartSubTotal" value="" />
-		<input type="hidden" id="sendShoppingCartCount"
-			name="sendShoppingCartCount" value="" />
+			name="sendShoppingCartSubTotal" value="" /> <input type="hidden"
+			id="sendShoppingCartCount" name="sendShoppingCartCount" value="" />
 		<input type="hidden" id="shoppingCartItemList"
 			name="shoppingCartItemList" value="" />
 	</form>
 	<%@include file="./include/scriptArea.html"%>
 	<script>
-	var resultTotal = 0;
-	var resultSubTotal = 0;
-	var checkBoxChk = false;
-	const ctx = window
-	    .location
-	    .pathname
-	    .substring(0, window
-	        .location
-	        .pathname
-	        .indexOf("/", 2));
-	$(document).ready(function () {
-	    $("#shoppingCartToOrder").click(function () {
-	        var shoppingCartSelectInfo = "";
-	        var sendShoppingCartSubTotal = 0;
-	        var sendShoppingCartTotal = 0;
-	       	var sendShoppingCartCount = "";
-	       	var shoppingCartList = "";
-	        $("input[name=shoppingCartList]:checked").each(function () {
-	            shoppingCartSelectInfo += $(this).val() + ",";
-				sendShoppingCartCount += $(this).parents().next().next().next().next().next().children().children("input").val() + ",";
-				shoppingCartList += $(this).parents("tr").children().children("input[name=cartIdx]").val() + ",";
-	        });
-	        if (shoppingCartSelectInfo === '') {
-	            alert("주문할 상품을 선택해주세요.");
-	            return;
-	        }
-	        $("#shoppingCartItemList").val(shoppingCartList);
-	        $("#sendShoppingCartList").val(shoppingCartSelectInfo);
-	        $("#sendShoppingCartTotal").val(resultTotal);
-	        $("#sendShoppingCartSubTotal").val(resultSubTotal);
-	        $("#sendShoppingCartCount").val(sendShoppingCartCount);
-	        $("#shoppingCartToOrderForm")
-	            .attr("method", "post")
-	            .attr("action", "./order.do")
-	            .submit(); 
-	    });
-	});
-	function getShoppingCartList() {
-	    $.ajax({
-	        url: "./SelectShoppingCart.aj",
-	        data: {
-	            userIdx: $("#userIdx").val()
-	        },
-	        dataType: "json",
-	        success: function (data) {
-	            var shoppingCart = data.result;
-	            var totalSalePrice = 0;
-	            var _totalPrice = 0;
-	            html = '';
-	            for (var i = 0; i < shoppingCart.length; i++) {
-	                html += '<tr><td class="product-name"><input type="hidden" name="cartIdx" value="'+shoppingCart[i].cartIdx+'"><input type="checkbox" onchange="chanageTotalPrice(this);" name="shoppingCartList" style="width:25px; height:25px;" value="' + shoppingCart[i].cartItemOpidx + '"></td>';
-	                html += '<td class="product-thumbnail"><img src="' + ctx + '/uploadImage/' + shoppingCart[i].itemMainImg + '" style="height:150px; width:330px;" class="img-fluid">';
-	                html += '</td><td class="product-name"><h2 class="h5 text-black">' + shoppingCart[i].itemName + '</h2><br>' + '[' + shoppingCart[i].optionSize + '-' + shoppingCart[i].optionColor + ']' + '</td>';
-	                html += '<td>' + shoppingCart[i].itemSalePrice + '</td><td>' + shoppingCart[i].itemPrice + '</td><td><div class="input-group mb-3" style="max-width: 120px;">';
-	                html += '<div class="input-group-prepend"><button type="button" class="btn btn-outline-primary" onclick="plusAndMinusCount(' + shoppingCart[i].cartIdx + ',false,this)">&minus;</button></div>';
-	                html += '<input type="text" name="shoppingCartCount" class="form-control text-center" readonly value="' + shoppingCart[i].cartCount + '">';
-	                html += '<div class="input-group-append">';
-	                html += '<button type="button" class="btn btn-outline-primary" onclick="plusAndMinusCount(' + shoppingCart[i].cartIdx + ',true,this)">&plus;</button></div></div></td>';
-	                var totalPrice = (shoppingCart[i].cartCount * shoppingCart[i].itemSalePrice);
-	                totalSalePrice += parseInt(shoppingCart[i].itemSalePrice);
-	                _totalPrice += parseInt(shoppingCart[i].itemPrice);
-	                html += '<td id="tdTotalPrice">' + numberWithCommas(totalPrice) + '원</td><td><button type="button" onclick="deleteShoppingCart(' + shoppingCart[i].cartIdx + ',this)" class="btn btn-primary btn-sm">X</button></td></tr>';
-	            }
-	            $("#shoppingCartList").html(html);
-	            $("#total").text(resultTotal + "원");
-	            $("#subTotal").text(resultSubTotal + "원");
-	        }
-	    });
-	}
-	function numberWithCommas(x) {
-	    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-	}
-	function plusAndMinusCount(idx, type, button, count) {
-	    if (type == false) 
-	        if ($(button)
-	                .parents()
-	                .next()
-	                .val() === "1") 
-	            return;
-	        
-	    
-	    $.ajax({
-	        url: "./UpdateCartCount.aj",
-	        data: {
-	            cartIdx: idx,
-	            type: type
-	        },
-	        success: function (data) {
-	            changeCountExecute(button, type);
-	        }
-	    });
-	}
-	function changeCountExecute(button, type) {
-	    if (type == false) {
-	        $(button)
-	            .parents()
-	            .next()
-	            .val(parseInt($(button)
-	                .parents()
-	                .next()
-	                .val()) - 1);
-	        $(button)
-	            .parents("td")
-	            .next()
-	            .text(($(button)
-	                .parents("td")
-	                .prev()
-	                .prev()
-	                .text() * $(button)
-	                .parents()
-	                .next()
-	                .val()) + "원");
-	        if ($(button)
-	                .parents("tr")
-	                .children()
-	                .children()
-	                    .is(":checked")) {
-	            resultSubTotal -= parseInt($(button)
-	                .parents("td")
-	                .prev()
-	                .text());
-	            resultTotal -= parseInt($(button)
-	                .parents("td")
-	                .prev()
-	                .prev()
-	                .text());
-	            $("#total").text(resultTotal + "원");
-	            $("#subTotal").text(resultSubTotal + "원");
-	        }
-	    } else {
-	        $(button)
-	            .parents()
-	            .prev()
-	            .val(parseInt($(button)
-	                .parents()
-	                .prev()
-	                .val()) + 1);
-	        $(button)
-	            .parents("td")
-	            .next()
-	            .text(($(button)
-	                .parents("td")
-	                .prev()
-	                .prev()
-	                .text() * $(button)
-	                .parents()
-	                .prev()
-	                .val()) + "원");
-	        if ($(button)
-	                .parents("tr")
-	                .children()
-	                .children()
-	                    .is(":checked")) {
-	            resultSubTotal += parseInt($(button)
-	                .parents("td")
-	                .prev()
-	                .text());
-	            resultTotal += parseInt($(button)
-	                .parents("td")
-	                .prev()
-	                .prev()
-	                .text());
-	            $("#total").text(resultTotal + "원");
-	            $("#subTotal").text(resultSubTotal + "원");
-	        }
-	    }
-	}
-	function changeExecute(button, type) {
-	    var price = $(button)
-	        .parents("tr")
-	        .children()
-	        .last()
-	        .prev()
-	        .text();
-	    var originprice = $(button)
-	        .parents("tr")
-	        .children()
-	        .last()
-	        .prev()
-	        .prev()
-	        .prev()
-	        .text() * $(button)
-	        .parents("tr")
-	        .children()
-	        .last()
-	        .prev()
-	        .prev()
-	        .children()
-	        .children("input")
-	        .val();
-	    price = price.substring(0, price.length - 1);
-	    if (type == true) {
-	        resultTotal += parseInt(price);
-	        resultSubTotal += parseInt(originprice);
-	    } else {
-	        resultTotal -= parseInt(price);
-	        resultSubTotal -= parseInt(originprice);
-	    }
-	}
-	function chanageTotalPrice(button) {
-	    if ($(button).is(":checked")) {
-	        changeExecute(button, true);
-	        checkBoxChk = true;
-	    } else {
-	        checkBoxChk = true;
-	        if ($('input:checkbox[name=shoppingCartList]:checked').length == 0) {
-	            checkBoxChk = false;
-	            $("#total").text(0 + "원");
-	            $("#subTotal").text(0 + "원");
-	        }
-	        changeExecute(button, false);
-	    }
-	    $("#total").text(resultTotal + "원");
-	    $("#subTotal").text(resultSubTotal + "원");
-	}
-	function deleteShoppingCart(idx, button) {
-	    var _originPrice = $(button)
-	        .parents("td")
-	        .prev()
-	        .prev()
-	        .prev()
-	        .text();
-	    var _price = $(button)
-	        .parents("td")
-	        .prev()
-	        .prev()
-	        .prev()
-	        .prev()
-	        .text();
-	    var _count = $(button)
-	        .parents("tr")
-	        .children()
-	        .last()
-	        .prev()
-	        .prev()
-	        .children()
-	        .children("input")
-	        .val();
-	    $.ajax({
-	        url: "./deleteShoppingCart.aj",
-	        data: {
-	            cartIdx: idx
-	        },
-	        success: function (data) {
-	            getShoppingCartList();
-	            resultTotal = 0;
-	            resultSubTotal = 0;
-	            $("#total").text(0 + "원");
-	            $("#subTotal").text(0 + "원");
-	        }
-	    });
-	}
-	window.onload = function () {
-	    getShoppingCartList();
-	}
+		var resultTotal = 0;
+		var resultSubTotal = 0;
+		var checkBoxChk = false;
+		const ctx = window.location.pathname.substring(0,
+				window.location.pathname.indexOf("/", 2));
+		$(document)
+				.ready(
+						function() {
+							$("#shoppingCartToOrder")
+									.click(
+											function() {
+												var shoppingCartSelectInfo = "";
+												var sendShoppingCartSubTotal = 0;
+												var sendShoppingCartTotal = 0;
+												var sendShoppingCartCount = "";
+												var shoppingCartList = "";
+												$(
+														"input[name=shoppingCartList]:checked")
+														.each(
+																function() {
+																	shoppingCartSelectInfo += $(
+																			this)
+																			.val()
+																			+ ",";
+																	sendShoppingCartCount += $(
+																			this)
+																			.parents()
+																			.next()
+																			.next()
+																			.next()
+																			.next()
+																			.next()
+																			.children()
+																			.children(
+																					"input")
+																			.val()
+																			+ ",";
+																	shoppingCartList += $(
+																			this)
+																			.parents(
+																					"tr")
+																			.children()
+																			.children(
+																					"input[name=cartIdx]")
+																			.val()
+																			+ ",";
+																});
+												if (shoppingCartSelectInfo === '') {
+													alert("주문할 상품을 선택해주세요.");
+													return;
+												}
+												$("#shoppingCartItemList").val(
+														shoppingCartList);
+												$("#sendShoppingCartList").val(
+														shoppingCartSelectInfo);
+												$("#sendShoppingCartTotal")
+														.val(resultTotal);
+												$("#sendShoppingCartSubTotal")
+														.val(resultSubTotal);
+												$("#sendShoppingCartCount")
+														.val(
+																sendShoppingCartCount);
+												$("#shoppingCartToOrderForm")
+														.attr("method", "post")
+														.attr("action",
+																"./order.do")
+														.submit();
+											});
+						});
+		function getShoppingCartList() {
+			$
+					.ajax({
+						url : "./SelectShoppingCart.aj",
+						data : {
+							userIdx : $("#userIdx").val()
+						},
+						dataType : "json",
+						success : function(data) {
+							var shoppingCart = data.result;
+							var totalSalePrice = 0;
+							var _totalPrice = 0;
+							html = '';
+							for (var i = 0; i < shoppingCart.length; i++) {
+								html += '<tr><td class="product-name"><input type="hidden" name="cartIdx" value="'+shoppingCart[i].cartIdx+'"><input type="checkbox" onchange="chanageTotalPrice(this);" name="shoppingCartList" style="width:25px; height:25px;" value="'
+										+ shoppingCart[i].cartItemOpidx
+										+ '"></td>';
+								html += '<td class="product-thumbnail"><img src="' + ctx + '/uploadImage/' + shoppingCart[i].itemMainImg + '" style="height:150px; width:330px;" class="img-fluid">';
+								html += '</td><td class="product-name"><h2 class="h5 text-black">'
+										+ shoppingCart[i].itemName
+										+ '</h2><br>'
+										+ '['
+										+ shoppingCart[i].optionSize
+										+ '-'
+										+ shoppingCart[i].optionColor
+										+ ']'
+										+ '</td>';
+								html += '<td>'
+										+ shoppingCart[i].itemSalePrice
+										+ '</td><td>'
+										+ shoppingCart[i].itemPrice
+										+ '</td><td><div class="input-group mb-3 row" style="max-width: 120px;">';
+								html += '<div class="input-group-prepend col-sm-6"><button type="button" class="btn btn-outline-primary" onclick="plusAndMinusCount('
+										+ shoppingCart[i].cartIdx
+										+ ',false,this)">&minus;</button></div>';
+								html += '<input type="text" name="shoppingCartCount" class="form-control col-sm-5 text-center" readonly value="' + shoppingCart[i].cartCount + '">';
+								html += '<div class="input-group-append">';
+								html += '<button type="button" class="btn btn-outline-primary ml-3" onclick="plusAndMinusCount('
+										+ shoppingCart[i].cartIdx
+										+ ',true,this)">&plus;</button></div></div></td>';
+								var totalPrice = (shoppingCart[i].cartCount * shoppingCart[i].itemSalePrice);
+								totalSalePrice += parseInt(shoppingCart[i].itemSalePrice);
+								_totalPrice += parseInt(shoppingCart[i].itemPrice);
+								html += '<td id="tdTotalPrice">'
+										+ numberWithCommas(totalPrice)
+										+ '원</td><td><button type="button" onclick="deleteShoppingCart('
+										+ shoppingCart[i].cartIdx
+										+ ',this)" class="btn btn-primary btn-sm">X</button></td></tr>';
+							}
+							$("#shoppingCartList").html(html);
+							$("#total").text(resultTotal + "원");
+							$("#subTotal").text(resultSubTotal + "원");
+						}
+					});
+		}
+		function numberWithCommas(x) {
+			return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		}
+		function plusAndMinusCount(idx, type, button, count) {
+			if (type == false)
+				if ($(button).parents().next().val() === "1")
+					return;
+
+			$.ajax({
+				url : "./UpdateCartCount.aj",
+				data : {
+					cartIdx : idx,
+					type : type
+				},
+				success : function(data) {
+					changeCountExecute(button, type);
+				}
+			});
+		}
+		function changeCountExecute(button, type) {
+			if (type == false) {
+				$(button).parents().next().val(
+						parseInt($(button).parents().next().val()) - 1);
+				$(button).parents("td").next().text(
+						($(button).parents("td").prev().prev().text() * $(
+								button).parents().next().val())
+								+ "원");
+				if ($(button).parents("tr").children().children()
+						.is(":checked")) {
+					resultSubTotal -= parseInt($(button).parents("td").prev()
+							.text());
+					resultTotal -= parseInt($(button).parents("td").prev()
+							.prev().text());
+					$("#total").text(resultTotal + "원");
+					$("#subTotal").text(resultSubTotal + "원");
+				}
+			} else {
+				$(button).parents().prev().val(
+						parseInt($(button).parents().prev().val()) + 1);
+				$(button).parents("td").next().text(
+						($(button).parents("td").prev().prev().text() * $(
+								button).parents().prev().val())
+								+ "원");
+				if ($(button).parents("tr").children().children()
+						.is(":checked")) {
+					resultSubTotal += parseInt($(button).parents("td").prev()
+							.text());
+					resultTotal += parseInt($(button).parents("td").prev()
+							.prev().text());
+					$("#total").text(resultTotal + "원");
+					$("#subTotal").text(resultSubTotal + "원");
+				}
+			}
+		}
+		function changeExecute(button, type) {
+			var price = $(button).parents("tr").children().last().prev().text();
+			var originprice = $(button).parents("tr").children().last().prev()
+					.prev().prev().text()
+					* $(button).parents("tr").children().last().prev().prev()
+							.children().children("input").val();
+			price = price.substring(0, price.length - 1);
+			if (type == true) {
+				resultTotal += parseInt(price);
+				resultSubTotal += parseInt(originprice);
+			} else {
+				resultTotal -= parseInt(price);
+				resultSubTotal -= parseInt(originprice);
+			}
+		}
+		function chanageTotalPrice(button) {
+			if ($(button).is(":checked")) {
+				changeExecute(button, true);
+				checkBoxChk = true;
+			} else {
+				checkBoxChk = true;
+				if ($('input:checkbox[name=shoppingCartList]:checked').length == 0) {
+					checkBoxChk = false;
+					$("#total").text(0 + "원");
+					$("#subTotal").text(0 + "원");
+				}
+				changeExecute(button, false);
+			}
+			$("#total").text(resultTotal + "원");
+			$("#subTotal").text(resultSubTotal + "원");
+		}
+		function deleteShoppingCart(idx, button) {
+			var _originPrice = $(button).parents("td").prev().prev().prev()
+					.text();
+			var _price = $(button).parents("td").prev().prev().prev().prev()
+					.text();
+			var _count = $(button).parents("tr").children().last().prev()
+					.prev().children().children("input").val();
+			$.ajax({
+				url : "./deleteShoppingCart.aj",
+				data : {
+					cartIdx : idx
+				},
+				success : function(data) {
+					getShoppingCartList();
+					resultTotal = 0;
+					resultSubTotal = 0;
+					$("#total").text(0 + "원");
+					$("#subTotal").text(0 + "원");
+				}
+			});
+		}
+		window.onload = function() {
+			getShoppingCartList();
+		}
 	</script>
 </body>
 </html>

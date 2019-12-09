@@ -318,6 +318,8 @@ public class ItemDAO extends Database {
 			pstmt.setInt(1, Integer.parseInt(stock));
 			pstmt.setString(2, idx);
 			pstmt.executeUpdate();
+			conn.close();
+			pstmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

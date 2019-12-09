@@ -24,7 +24,7 @@ public class AddItem implements Action {
 		forward.setPath("./adminItemList.admin");
 		File file = null;
 		String savePath = request.getRealPath("uploadImage");
-		int maxSize = 5 * 1024 * 1024;
+		int maxSize = 20 * 1024 * 1024;
 		try {
 			SecureString sqString = new SecureString();
 			MultipartRequest multi = new MultipartRequest(request, savePath, maxSize, "utf-8",

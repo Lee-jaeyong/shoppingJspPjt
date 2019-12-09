@@ -20,7 +20,7 @@ public class EnterQuestion implements Action{
 			
 			String userIdx = secure.cleanXSS(request.getParameter("userIdx"));
 			String title = secure.cleanXSS(request.getParameter("title"));
-			String mainTxt = secure.cleanXSS(request.getParameter("mainTxt"));
+			String mainTxt = request.getParameter("mainTxt");
 			if(dao.insertQuestion(userIdx, title, mainTxt)) {
 				//질문등록 완료
 				forward.setRedirect(true);

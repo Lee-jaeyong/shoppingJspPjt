@@ -1,19 +1,44 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script type="text/javascript">
 	$(document).ready(
 			function() {
-				$("#btnLoginExecute").click(function() {
-					
-					if ($("#loginId").val().trim() === ''|| $("#loginPw").val().trim() === '')
-							alert("아이디 혹은 비밀번호를 입력해주세요.");
-					else
-							$("#loginForm").attr("method", "post").attr("action", "./loginAction.do").submit();
+				$('#summernote').summernote({
+					placeholder : '질문 내용을 입력해주세요.',
+					minHeight : 370,
+					maxHeight : null,
+					focus : true,
+					lang : 'ko-KR',
+					toolbar: [
+					    ['style', ['style']],
+					    ['font', ['bold', 'italic', 'underline', 'clear']],
+					    ['fontname', ['fontname']],
+					    ['color', ['color']],
+					    ['para', ['ul', 'ol', 'paragraph']],
+					    ['height', ['height']],
+					    ['table', ['table']],
+					    ['insert', ['link', 'hr']],
+					    ['view', ['fullscreen']],
+					    ['help', []]
+					  ],
 				});
-				
-				$("#loginPw").keyup(function(e){
-					if(e.keyCode == 13)  
+
+				$("#btnLoginExecute").click(
+						function() {
+
+							if ($("#loginId").val().trim() === ''
+									|| $("#loginPw").val().trim() === '')
+								alert("아이디 혹은 비밀번호를 입력해주세요.");
+							else
+								$("#loginForm").attr("method", "post").attr(
+										"action", "./loginAction.do").submit();
+						});
+
+				$("#loginPw").keyup(function(e) {
+					if (e.keyCode == 13)
 						$("#btnLoginExecute").click();
 				});
 
@@ -25,51 +50,50 @@
 
 	function categoryLoad() {
 		$
-		.ajax({
-			url : "./SelectCategory.ajax",
-			dataType : "json",
-			success : function(data) {
-				var category = data.category;
-				var smallCategory = data.smallCategory;
-				var html = '';
-				for (var i = 0; i < category.length; i++) {
-					html += '<li class="has-children"><a href="#">'
-							+ category[i].categoryName
-							+ '</a><ul class="dropdown">';
-					for (var j = 0; j < smallCategory.length; j++) {
-						if (category[i].categoryChkIdx == smallCategory[j].categoryHighIdx) {
-							html += '<li><a href="./shop.do?category='
-									+ smallCategory[j].categoryChkIdx
-									+ '">'
-									+ smallCategory[j].categoryName
-									+ '</a></li>';
+				.ajax({
+					url : "./SelectCategory.ajax",
+					dataType : "json",
+					success : function(data) {
+						var category = data.category;
+						var smallCategory = data.smallCategory;
+						var html = '';
+						for (var i = 0; i < category.length; i++) {
+							html += '<li class="has-children"><a href="#">'
+									+ category[i].categoryName
+									+ '</a><ul class="dropdown">';
+							for (var j = 0; j < smallCategory.length; j++) {
+								if (category[i].categoryChkIdx == smallCategory[j].categoryHighIdx) {
+									html += '<li><a href="./shop.do?category='
+											+ smallCategory[j].categoryChkIdx
+											+ '">'
+											+ smallCategory[j].categoryName
+											+ '</a></li>';
+								}
+							}
+							html += '</ul></li>';
 						}
+						$("#categoryArea").html(html);
 					}
-					html += '</ul></li>';
-				}
-				$("#categoryArea").html(html);
-			}
-		});
+				});
 	}
 
 	function checkLogin() {
 		if ($("#userloginChk").val() === '') {
 			alert("로그인이 필요한 기능입니다.");
 			$("#loginBtn").click();
-		}
-		else
-			location.href='./cart.do';
+		} else
+			location.href = './cart.do';
 	}
 
 	window.onload = categoryLoad();
 </script>
 <header class="site-navbar" role="banner">
-<%
-	String url = request.getRequestURL().toString(); 
-	int lastIndexOf = url.lastIndexOf("/")+1;
-	int urlLength = url.lastIndexOf(".");
-	url = url.substring(lastIndexOf,urlLength);
-%>
+	<%
+		String url = request.getRequestURL().toString();
+		int lastIndexOf = url.lastIndexOf("/") + 1;
+		int urlLength = url.lastIndexOf(".");
+		url = url.substring(lastIndexOf, urlLength);
+	%>
 
 	<div class="site-navbar-top">
 		<div class="container">
@@ -96,13 +120,14 @@
 							<%
 								if (session.getAttribute("userId") == null) {
 							%>
-							
+
 							<li><a href="join.do">회원가입</a></li>
-							<li><a href="#" id="loginBtn" data-toggle="modal" data-target="#myModal">로그인</a>
-								<%
-									} else {
-								%>
-								<li><b><%=session.getAttribute("userName")%></b>님 &nbsp;&nbsp; </li>
+							<li><a href="#" id="loginBtn" data-toggle="modal"
+								data-target="#myModal">로그인</a> <%
+ 	} else {
+ %>
+							<li><b><%=session.getAttribute("userName")%></b>님
+								&nbsp;&nbsp;</li>
 							<li><a href="logoutAction.do">로그아웃</a></li>
 							<%
 								}
@@ -123,8 +148,9 @@
 												<br> <input type="text" class="form-control"
 													id="loginId" name="loginId" placeholder="아이디"><br>
 												<input type="password" class="form-control" id="loginPw"
-													name="loginPw" placeholder="비밀번호"> <br>
-													<input type="hidden" value="<%=url %>" id="getNowPage" name="getNowPage"/>
+													name="loginPw" placeholder="비밀번호"> <br> <input
+													type="hidden" value="<%=url%>" id="getNowPage"
+													name="getNowPage" />
 											</div>
 
 											<!-- Modal footer -->
@@ -204,20 +230,19 @@
 
 
 <%
-		if (session.getAttribute("userIdx") == null && request.getQueryString() != null
-				&& request.getQueryString().equals("error")) {
-	%>
-	<script>
-		alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
-	</script>
-	<%
-		}%>
+	if (session.getAttribute("userIdx") == null && request.getQueryString() != null
+			&& request.getQueryString().equals("error")) {
+%>
+<script>
+	alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
+</script>
+<%
+	}
+%>
 
 <%
 	String userName = "";
 	if (session.getAttribute("userIdx") != null)
 		userName = session.getAttribute("userIdx").toString();
-	
-	
 %>
 <input type="hidden" id="userloginChk" value="<%=userName%>" />

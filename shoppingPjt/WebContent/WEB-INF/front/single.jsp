@@ -98,7 +98,6 @@ $(document).ready(function () {
 						<div class="col-md-6">
 							<h2 class="text-black"><%=categoryInfo[2]%></h2>
 							<p><%=item.getItemContent()%></p>
-
 							<p>
 								<input type="hidden" name="sendShoppingCartTotal"
 									value="<%=item.getItemSalePrice()%>"> <input

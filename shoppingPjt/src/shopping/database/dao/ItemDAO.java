@@ -91,6 +91,28 @@ public class ItemDAO extends Database {
 		return list;
 	}
 
+	public ArrayList<ItemDTO> selectSearchItem(String searchItemTitle) {
+		ArrayList<ItemDTO> list = new ArrayList<ItemDTO>();
+		try {
+			String sql = "SELECT itemIdx,itemCode,itemMainImg,itemName,itemStatus,itemPrice,itemSalePrice,itemContent\r\n"
+					+ "FROM items,category WHERE items.itemIdx = category.ca_itemIdx AND itemName like ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%" + searchItemTitle + "%");
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(new ItemDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
+						rs.getInt(6), rs.getInt(7), rs.getString(8)));
+			}
+			conn.close();
+			pstmt.close();
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return list;
+	}
+
 	public ArrayList<ItemDTO> selectItem(int pageNum, String sortType, int showType, String searchItemType,
 			String searchItemTitle, String searchItemSmallCategory, String searchItemBefore, String searchItemAfter,
 			String searchItemStatus) {

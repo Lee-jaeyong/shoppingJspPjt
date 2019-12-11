@@ -180,13 +180,13 @@
 										</thead>
 										<tbody>
 											<tr>
-												<td>John</td>
+												<td></td>
 											</tr>
 											<tr>
-												<td>Mary</td>
+												<td></td>
 											</tr>
 											<tr>
-												<td>July</td>
+												<td></td>
 											</tr>
 										</tbody>
 									</table>
@@ -201,16 +201,16 @@
 										</thead>
 										<tbody>
 											<tr>
-												<td>John</td>
-												<td>John</td>
+												<td></td>
+												<td></td>
 											</tr>
 											<tr>
-												<td>John</td>
-												<td>John</td>
+												<td></td>
+												<td></td>
 											</tr>
 											<tr>
-												<td>July</td>
-												<td>John</td>
+												<td></td>
+												<td></td>
 											</tr>
 										</tbody>
 									</table>
@@ -327,6 +327,11 @@
 					alert("재고를 입력해주세요.");
 					return;
 				}
+				if(isNaN($("#updateStockAfter").val()))
+				{
+					alert("재고는 숫자만 입력해주세요.");
+					return;
+				}
 				$.ajax({
 					url : "./UpdateStockfromIndex.ajax",
 					data : {
@@ -349,6 +354,7 @@
 			});
 
 			$("#btnTodayChart").click(function() {
+				$("#datepicker1").val("날짜를 선택하세요");
 				selectAreaChart('');
 			});
 

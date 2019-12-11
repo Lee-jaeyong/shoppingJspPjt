@@ -4,8 +4,38 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script type="text/javascript">
+	const pjt = window.location.pathname.substring(0,
+			window.location.pathname.indexOf("/", 2));
 	$(document).ready(
 			function() {
+				 $("#headerInputSearch").keyup(function(){
+					if($("#headerInputSearch").val().trim() === '')
+					{
+						$("#searchArea").html("");
+						return;
+					}
+					$.ajax({
+						url : "./SelectSearchItem.aj",
+						data : {
+							item : $(this).val()
+						},
+						dataType : "json",
+						success : function(data){
+							var itemList = data.result;
+							var searchSection = '';
+							for(var i= 0;i<itemList.length;i++)
+							{
+								searchSection += '<tr>';
+								searchSection += '<td><a href="./single.do?itemNumber='+itemList[i].itemIdx+'"><img src="'+pjt+'/uploadImage/'+itemList[i].itemMainImg+'" style="height:120px; width:120px;" class="img-fluid"></a></td>';
+								searchSection += '<td><a href="./single.do?itemNumber='+itemList[i].itemIdx+'">'+itemList[i].itemName+'</a></td>';
+								searchSection += '<td><a href="./single.do?itemNumber='+itemList[i].itemIdx+'">'+itemList[i].itemPrice+'원</a></td>';
+								searchSection += '</tr>';
+							}
+							$("#searchArea").html(searchSection);
+						}
+					});
+				}); 
+				
 				$('#summernote').summernote({
 					placeholder : '질문 내용을 입력해주세요.',
 					minHeight : 370,
@@ -87,6 +117,13 @@
 
 	window.onload = categoryLoad();
 </script>
+<style>
+	#searchArea{
+		position: absolute;
+		top: 30px;
+		background: white;
+	}
+</style>
 <header class="site-navbar" role="banner">
 	<%
 		String url = request.getRequestURL().toString();
@@ -103,7 +140,14 @@
 					class="col-6 col-md-4 order-2 order-md-1 site-search-icon text-left">
 					<form action="" class="site-block-top-search">
 						<span class="icon icon-search2"></span> <input type="text"
-							class="form-control border-0" placeholder="Search">
+							class="form-control border-0" placeholder="Search" id="headerInputSearch">
+					<div>
+						<table class="table">
+							<tbody id="searchArea" style="height:400px; overflow:auto;">
+								
+							</tbody>
+						</table>
+					</div>
 					</form>
 				</div>
 

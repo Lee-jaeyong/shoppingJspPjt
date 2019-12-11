@@ -68,7 +68,8 @@ public class ReviewDAO extends Database {
 		return count;
 	}
 
-	public ArrayList<ReviewDTO> selectReviewAll(int pageNum, int smallCategory) {
+	public ArrayList<ReviewDTO> selectReviewAll(int pageNum, int smallCategory, String searchInput, String searchType,
+			String sortType) {
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
 		try {
 			String whereSql = "";
@@ -80,10 +81,11 @@ public class ReviewDAO extends Database {
 			}
 			String sql = "SELECT itemName,reviewTitle,reviewContent,userName,userIdenty,reviewDate,reviewStar,reviewIdx\r\n"
 					+ " FROM itemreview,items,USER" + fromSql
-					+ " WHERE user.userIdx = itemReview.reviewUserIdx AND items.itemIdx = reviewItemIdx\r\n" + whereSql
-					+ " LIMIT ?,10";
+					+ " WHERE user.userIdx = itemReview.reviewUserIdx AND items.itemIdx = reviewItemIdx AND "
+					+ searchType + " like ? " + whereSql + " ORDER BY " + sortType + " LIMIT ?,10";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, pageNum * 10);
+			pstmt.setString(1, "%" + searchInput + "%");
+			pstmt.setInt(2, pageNum * 10);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				list.add(new ReviewDTO(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),

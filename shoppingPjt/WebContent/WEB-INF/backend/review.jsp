@@ -23,28 +23,25 @@
 							검색 :</label>
 					</div>
 					<div class="col-sm-2" id="categoryArea">
-						<select class="form-control" id="sel1" name="sellist1">
-							<option >대분류</option>
-						</select>
 					</div>
 					<div class="col-sm-2" id="smallCategoryArea">
-						<select class="form-control" id="sel1" name="sellist1">
+						<select class="form-control">
 							<option>소분류</option>
 						</select>
 					</div>
 					<div class="col-sm-2"></div>
 					<div class="col-sm-1">
-						<select class="form-control" id="sel1" name="sellist1">
-							<option>상품명</option>
-							<option>작성자 명</option>
-							<option>아이디 명</option>
+						<select class="form-control" id="searchType">
+							<option value="itemName">상품명</option>
+							<option value="userName">작성자 명</option>
+							<option value="userIdenty">아이디 명</option>
 						</select>
 					</div>
 					<div class="col-sm-3">
 						<div class="input-group mb-3">
-							<input type="text" class="form-control">
+							<input type="text" id="searchAdminInput" class="form-control">
 							<div class="input-group-append">
-								<button type="button" class="btn btn-success">검 색</button>
+								<button id="btnSearchReview" type="button" class="btn btn-success">검 색</button>
 							</div>
 						</div>
 					</div>
@@ -56,9 +53,9 @@
 							제</button>
 					</div>
 					<div class="col-sm-2">
-						<select class="form-control" id="sel1" name="sellist1">
-							<option>등록일 순</option>
-							<option>별점 높은 순</option>
+						<select class="form-control" id="sortType">
+							<option value="reviewIdx" selected="selected">등록일 순</option>
+							<option value="reviewStar">별점 높은 순</option>
 						</select>
 					</div>
 				</div>
@@ -95,6 +92,8 @@
 				</div>
 			</div>
 		</div>
+		<input type="hidden" value="reviewIdx" id="searchTypeSend"/>
+		<input type="hidden" value="" id="searchInputSend"/>
 		<input type="hidden" value="0" id="categorySearch"/>
 		<%@include file="./include/footer.jsp"%>
 	</div>
@@ -102,7 +101,15 @@
 	<%@include file="./include/scriptArea.html"%>
 	<script>
 		$(document).ready(function() {
-
+			$("#btnSearchReview").click(function(){
+				$("#searchInputSend").val($("#searchAdminInput").val());
+				$("#searchTypeSend").val($("#searchType").val());
+				loadReview(0);
+			});
+			
+			$("#sortType").change(function(){
+				loadReview(0);
+			});
 		});
 
 		function loadReview(page) {
@@ -110,7 +117,10 @@
 						url : "./SelectReviewAll.ajax",
 						data : {
 							pageNum : page,
-							searchCategory : $("#categorySearch").val()
+							searchCategory : $("#categorySearch").val(),
+							searchInputSend : $("#searchInputSend").val(),
+							searchTypeSend : $("#searchTypeSend").val(),
+							sortType : $("#sortType").val()
 						},
 						dataType : "json",
 						success : function(data) {

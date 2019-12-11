@@ -19,8 +19,12 @@ public class SelectReviewAll implements ShoppingService {
 			int categorySearch = 0;
 			if (request.getParameter("searchCategory") != null && !request.getParameter("searchCategory").equals("0"))
 				categorySearch = Integer.parseInt(request.getParameter("searchCategory"));
+			String searchInput = request.getParameter("searchInputSend");
+			String searchType = request.getParameter("searchTypeSend");
+			String sortType = request.getParameter("sortType");
 			ReviewDAO reviewDAO = new ReviewDAO();
-			ArrayList<ReviewDTO> list = reviewDAO.selectReviewAll(Integer.parseInt(pageNum), categorySearch);
+			ArrayList<ReviewDTO> list = reviewDAO.selectReviewAll(Integer.parseInt(pageNum), categorySearch,
+					searchInput, searchType,sortType);
 			reviewDAO = new ReviewDAO();
 			int totalCount = reviewDAO.selectAllCount();
 			int startBlock = Integer.parseInt(pageNum) / 10 * 10;

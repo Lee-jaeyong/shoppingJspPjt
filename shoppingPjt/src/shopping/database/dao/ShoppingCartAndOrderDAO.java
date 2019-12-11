@@ -14,6 +14,45 @@ public class ShoppingCartAndOrderDAO extends Database {
 	public ShoppingCartAndOrderDAO() throws SQLException, NamingException {
 		dbConnect();
 	}
+	
+	public String selectBuyCheckOption(String userIdx) {
+		String result = "";
+		try {
+			String sql = "SELECT opSize,opColor\r\n" + "FROM itemOptions,orders\r\n"
+					+ "WHERE itemOptions.opIdx = orders.orderItemOption AND orderUserIdx = ? limit 0,1";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userIdx);
+			rs = pstmt.executeQuery();
+			rs.next();
+			result = "[ " + rs.getString(1) + " - " + rs.getString(2) + " ]";
+			rs.close();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public boolean selectCheckBuyItem(String userIdx, String itemIdx) {
+		boolean chk = false;
+		try {
+			String sql = "SELECT COUNT(orderIdx) FROM orders,itemOptions WHERE orders.orderItemOption = itemOptions.opIdx AND orderStatus = 2 AND orderUserIdx = ? AND op_i_idx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userIdx);
+			pstmt.setString(2, itemIdx);
+			rs = pstmt.executeQuery();
+			rs.next();
+			if (rs.getInt(1) > 0)
+				chk = true;
+			rs.close();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return chk;
+	}
 
 	public int selectLackStockInfo() {
 		int count = 0;

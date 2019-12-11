@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import shopping.front.ajax.model.DeleteShoppingCart;
 import shopping.front.ajax.model.FrontSelectItemImplShoppingService;
+import shopping.front.ajax.model.InsertReview;
 import shopping.front.ajax.model.InsertShoppingCart;
+import shopping.front.ajax.model.SelectReview;
 import shopping.front.ajax.model.SelectSearchItem;
 import shopping.front.ajax.model.SelectShoppingCart;
 import shopping.front.ajax.model.SelectSmallCategoryEqulsNow;
@@ -60,7 +62,10 @@ public class AjaxShoppingfrontController extends HttpServlet {
 			new SelectUserInfo().execute(request, response);
 		}else if (command.equals("SelectSearchItem.aj")) {
 			new SelectSearchItem().execute(request, response);
+		}else if (command.equals("InsertReview.aj")) {
+			new InsertReview().execute(request, response);
+		}else if (command.equals("SelectReview.aj")) {
+			new SelectReview().execute(request, response);
 		}
-
 	}
 }

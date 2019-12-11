@@ -1,9 +1,7 @@
 package shopping.front.ajax.model;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 

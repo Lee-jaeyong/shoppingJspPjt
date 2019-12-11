@@ -46,6 +46,7 @@ public class CategoryDAO extends Database {
 			while (rs.next()) {
 				list.add(new CategoryDTO(rs.getString(1), rs.getInt(2), rs.getInt(3), rs.getInt(4)));
 			}
+			rs.close();
 		} catch (Exception e) {
 			return null;
 		} finally {
@@ -66,6 +67,7 @@ public class CategoryDAO extends Database {
 			while (rs.next()) {
 				list.add(new CategoryDTO(rs.getString(1), rs.getInt(2), rs.getInt(3)));
 			}
+			rs.close();
 		} catch (Exception e) {
 			return null;
 		} finally {

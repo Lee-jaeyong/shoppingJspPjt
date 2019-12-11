@@ -5,8 +5,6 @@ import java.util.ArrayList;
 
 import javax.naming.NamingException;
 
-import com.sun.xml.internal.messaging.saaj.packaging.mime.util.QEncoderStream;
-
 import shopping.database.dto.ItemDTO;
 import shopping.database.dto.ItemOptionDTO;
 import shopping.filter.SecureString;
@@ -285,6 +283,7 @@ public class ItemDAO extends Database {
 			conn.rollback();
 			return false;
 		} finally {
+			rs.close();
 			conn.close();
 			pstmt.close();
 		}

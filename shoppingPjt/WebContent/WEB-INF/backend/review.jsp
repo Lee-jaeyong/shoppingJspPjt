@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@include file="./include/head.html" %>
+<%@include file="./include/head.html"%>
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+	integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
+	crossorigin="anonymous">
 <body id="page-top">
 	<%@include file="./include/mainLogo.html"%>
 	<div id="wrapper">
@@ -10,34 +14,37 @@
 
 		<div id="content-wrapper">
 			<div class="container-fluid">
-				<h5>상품 후기 관리</h5>
+				<hr>
+				<strong>상품 후기 관리</strong>
 				<hr>
 				<div class="row">
 					<div class="col-sm-1">
 						<label for="sel1" style="margin-top: 5px; margin-left: 10px;">상품
 							검색 :</label>
 					</div>
-					<div class="col-sm-2">
+					<div class="col-sm-2" id="categoryArea">
 						<select class="form-control" id="sel1" name="sellist1">
-							<option>대분류</option>
+							<option >대분류</option>
 						</select>
 					</div>
-					<div class="col-sm-2">
+					<div class="col-sm-2" id="smallCategoryArea">
 						<select class="form-control" id="sel1" name="sellist1">
 							<option>소분류</option>
 						</select>
 					</div>
 					<div class="col-sm-2"></div>
-					<div class="col-sm-2">
+					<div class="col-sm-1">
 						<select class="form-control" id="sel1" name="sellist1">
 							<option>상품명</option>
+							<option>작성자 명</option>
+							<option>아이디 명</option>
 						</select>
 					</div>
 					<div class="col-sm-3">
 						<div class="input-group mb-3">
 							<input type="text" class="form-control">
 							<div class="input-group-append">
-								<span class="input-group-text">@</span>
+								<button type="button" class="btn btn-success">검 색</button>
 							</div>
 						</div>
 					</div>
@@ -51,6 +58,7 @@
 					<div class="col-sm-2">
 						<select class="form-control" id="sel1" name="sellist1">
 							<option>등록일 순</option>
+							<option>별점 높은 순</option>
 						</select>
 					</div>
 				</div>
@@ -58,49 +66,23 @@
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th>선택</th>
+								<th>선 택</th>
 								<th>상품명</th>
 								<th>후 기</th>
 								<th>작성자</th>
+								<th>아이디</th>
 								<th>등록일</th>
+								<th>별 점</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="checkbox" class="form-check-input"
-									value=""></td>
-								<td>Doe</td>
-								<td>Doe</td>
-								<td>Doe</td>
-								<td>john@example.com</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox" class="form-check-input"
-									value=""></td>
-								<td>Moe</td>
-								<td>Moe</td>
-								<td>Moe</td>
-								<td>john@example.com</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox" class="form-check-input"
-									value=""></td>
-								<td>Dooley</td>
-								<td>july@example.com</td>
-								<td>Dooley</td>
-								<td>john@example.com</td>
-							</tr>
+						<tbody id="reviewSection">
 						</tbody>
 					</table>
 				</div>
 				<div class="row">
 					<div class="col-sm-5"></div>
 					<div class="col-sm-3">
-						<div class="btn-group">
-							<button type="button" class="btn btn-info"><</button>
-							<button type="button" class="btn btn-info">1</button>
-							<button type="button" class="btn btn-info">></button>
-						</div>
+						<div class="btn-group" id="pageMoveBtn"></div>
 					</div>
 				</div>
 				<div class="row" style="margin-top: 30px;">
@@ -113,14 +95,119 @@
 				</div>
 			</div>
 		</div>
+		<input type="hidden" value="0" id="categorySearch"/>
 		<%@include file="./include/footer.jsp"%>
 	</div>
-	<!-- /.content-wrapper -->
-
-	</div>
-	<!-- /#wrapper -->
 	<%@include file="./include/scrollTop.html"%>
 	<%@include file="./include/scriptArea.html"%>
+	<script>
+		$(document).ready(function() {
+
+		});
+
+		function loadReview(page) {
+			$.ajax({
+						url : "./SelectReviewAll.ajax",
+						data : {
+							pageNum : page,
+							searchCategory : $("#categorySearch").val()
+						},
+						dataType : "json",
+						success : function(data) {
+							var reviewList = data.result;
+							var startBlock = parseInt(data.startBlock);
+							var endBlock = parseInt(data.endBlock);
+							var totalBlock = parseInt(data.totalBlock);
+							var reviewSection = '';
+							for (var i = 0; i < reviewList.length; i++) {
+								reviewSection += '<tr>';
+								reviewSection += '<td><input type="checkbox" style="width:25px; height:25px;" value="'+reviewList[i].reviewIdx+'"/></td>';
+								reviewSection += '<td><label class="btn btn-success btn-sm">'
+										+ reviewList[i].itemName
+										+ reviewList[i].reviewTitle
+										+ '</label></td>';
+								reviewSection += '<td><label class="btn btn-primary btn-sm">'
+										+ reviewList[i].reviewContent
+										+ '</label></td>';
+								reviewSection += '<td>'
+										+ reviewList[i].userName + '</td>';
+								reviewSection += '<td>'
+										+ reviewList[i].userIdenty + '</td>';
+								reviewSection += '<td>'
+										+ reviewList[i].reviewDate + '</td>';
+								reviewSection += '<td>';
+								for (var j = 0; j < parseInt(reviewList[i].reviewStar); j++)
+									reviewSection += '<i class="mr-1 fas fa-heart"></i>';
+								reviewSection += '</td>';
+								reviewSection += '</tr>';
+							}
+							$("#reviewSection").html(reviewSection);
+							var pageMoveBtn = '';
+							if (startBlock == 0)
+								pageMoveBtn += '<button type="button" class="btn btn-info" disabled><</button>';
+							else
+								pageMoveBtn += '<button type="button" class="btn btn-info"><</button>';
+							for (var i = startBlock; i < endBlock; i++) {
+								if (page == i)
+									pageMoveBtn += '<button type="button" class="btn btn-info" disabled>'
+											+ (i + 1) + '</button>';
+								else
+									pageMoveBtn += '<button type="button" class="btn btn-info">'
+											+ (i + 1) + '</button>';
+							}
+							if (totalBlock == endBlock)
+								pageMoveBtn += '<button type="button" class="btn btn-info" disabled>></button>';
+							else
+								pageMoveBtn += '<button type="button" class="btn btn-info">></button>';
+							$("#pageMoveBtn").html(pageMoveBtn);
+						}
+					});
+		}
+		function categoryLoad() {
+			$
+					.ajax({
+						url : "./SelectCategory.ajax",
+						dataType : "json",
+						success : function(data) {
+							smallCategory = data.smallCategory;
+							var categoryArea = '<select class="form-control" id="category" name="category" onchange="categoryUpdate(this)">';
+							categoryArea += '<option selected="" value="">대분류</option>';
+							for (var i = 0; i < data.category.length; i++) {
+								categoryArea += '<option value='+data.category[i].categoryChkIdx+'>'
+										+ data.category[i].categoryName
+										+ '</option>';
+							}
+							categoryArea += "</select>";
+							$("#categoryArea").html(categoryArea);
+						}
+					});
+		}
+		
+		function categoryUpdate(select) {
+			if (isNaN(select.value))
+				return;
+			var smallCategorySelect = '<select class="form-control" onchange="searchCategory(this);" id="smallCategory">';
+			smallCategorySelect += '<option selected="" value="">소분류</option>';
+
+			for (var i = 0; i < smallCategory.length; i++) {
+				if (smallCategory[i].categoryHighIdx === select.value)
+					smallCategorySelect += '<option value='+smallCategory[i].categoryChkIdx+'>'
+							+ smallCategory[i].categoryName + '</option>';
+			}
+			smallCategorySelect += '</select>';
+			$("#smallCategoryArea").html(smallCategorySelect);
+		}
+
+		function searchCategory(select){
+			$("#categorySearch").val($(select).val());
+			loadReview(0);
+		}		
+		
+		window.onload = function(){
+			categoryLoad();
+			loadReview(0);
+		}
+	</script>
 </body>
 
 </html>

@@ -219,8 +219,8 @@
 										+ ',this)" class="btn btn-primary btn-sm">X</button></td></tr>';
 							}
 							$("#shoppingCartList").html(html);
-							$("#total").text(resultTotal + "원");
-							$("#subTotal").text(resultSubTotal + "원");
+							$("#total").text(numberWithCommas(resultTotal) + "원");
+							$("#subTotal").text(numberWithCommas(resultSubTotal) + "원");
 						}
 					});
 		}
@@ -247,9 +247,9 @@
 			if (type == false) {
 				$(button).parents().next().val(
 						parseInt($(button).parents().next().val()) - 1);
-				$(button).parents("td").next().text(
+				$(button).parents("td").next().text(numberWithCommas(
 						($(button).parents("td").prev().prev().text() * $(
-								button).parents().next().val())
+								button).parents().next().val()))
 								+ "원");
 				if ($(button).parents("tr").children().children()
 						.is(":checked")) {
@@ -257,15 +257,15 @@
 							.text());
 					resultTotal -= parseInt($(button).parents("td").prev()
 							.prev().text());
-					$("#total").text(resultTotal + "원");
-					$("#subTotal").text(resultSubTotal + "원");
+					$("#total").text(numberWithCommas(resultTotal) + "원");
+					$("#subTotal").text(numberWithCommas(resultSubTotal) + "원");
 				}
 			} else {
 				$(button).parents().prev().val(
 						parseInt($(button).parents().prev().val()) + 1);
-				$(button).parents("td").next().text(
+				$(button).parents("td").next().text(numberWithCommas(
 						($(button).parents("td").prev().prev().text() * $(
-								button).parents().prev().val())
+								button).parents().prev().val()))
 								+ "원");
 				if ($(button).parents("tr").children().children()
 						.is(":checked")) {
@@ -273,18 +273,19 @@
 							.text());
 					resultTotal += parseInt($(button).parents("td").prev()
 							.prev().text());
-					$("#total").text(resultTotal + "원");
-					$("#subTotal").text(resultSubTotal + "원");
+					$("#total").text(numberWithCommas(resultTotal) + "원");
+					$("#subTotal").text(numberWithCommas(resultSubTotal) + "원");
 				}
 			}
 		}
 		function changeExecute(button, type) {
-			var price = $(button).parents("tr").children().last().prev().text();
+			var price = $(button).parents("tr").children().last().prev()
+					.prev().prev().prev().text() * $(button).parents("tr").children().last().prev().prev()
+					.children().children("input").val();
 			var originprice = $(button).parents("tr").children().last().prev()
 					.prev().prev().text()
 					* $(button).parents("tr").children().last().prev().prev()
 							.children().children("input").val();
-			price = price.substring(0, price.length - 1);
 			if (type == true) {
 				resultTotal += parseInt(price);
 				resultSubTotal += parseInt(originprice);

@@ -21,6 +21,7 @@ import shopping.backend.ajax.model.SelectLackStockInfo;
 import shopping.backend.ajax.model.SelectOrderInfo;
 import shopping.backend.ajax.model.SelectOrderList;
 import shopping.backend.ajax.model.SelectPieChart;
+import shopping.backend.ajax.model.SelectReviewAll;
 import shopping.backend.ajax.model.SelectShowLackOptions;
 import shopping.backend.ajax.model.SelectTotalOrderInfo;
 import shopping.backend.ajax.model.UpdateCategoryImplAction;
@@ -104,6 +105,8 @@ public class AjaxShoppingController extends HttpServlet {
 			new SelectShowLackOptions().execute(request, response);
 		}else if (command.equals("UpdateStockfromIndex.ajax")) {
 			new UpdateStockfromIndex().execute(request, response);
+		}else if (command.equals("SelectReviewAll.ajax")) {
+			new SelectReviewAll().execute(request, response);
 		}
 	}
 }

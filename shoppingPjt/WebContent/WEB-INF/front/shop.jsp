@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@include file="./include/head.jsp"%>
 <body>
-
 	<div class="site-wrap">
 		<%@include file="./include/header.jsp"%>
 

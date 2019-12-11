@@ -9,8 +9,8 @@ public class Database {
 	protected Context ctx;
 	protected DataSource ds;
 	protected Connection conn;
-	protected PreparedStatement pstmt;
 	protected ResultSet rs;
+	protected PreparedStatement pstmt;
 
 	protected void dbConnect() throws SQLException, NamingException {
 		init = new InitialContext();

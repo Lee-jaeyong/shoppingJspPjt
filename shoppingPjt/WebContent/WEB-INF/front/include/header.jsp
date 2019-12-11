@@ -29,6 +29,7 @@
 								searchSection += '<td><a href="./single.do?itemNumber='+itemList[i].itemIdx+'"><img src="'+pjt+'/uploadImage/'+itemList[i].itemMainImg+'" style="height:120px; width:120px;" class="img-fluid"></a></td>';
 								searchSection += '<td><a href="./single.do?itemNumber='+itemList[i].itemIdx+'">'+itemList[i].itemName+'</a></td>';
 								searchSection += '<td><a href="./single.do?itemNumber='+itemList[i].itemIdx+'">'+itemList[i].itemPrice+'원</a></td>';
+								searchSection += '<td><a href="./single.do?itemNumber='+itemList[i].itemIdx+'">'+itemList[i].itemPrice+'원</a></td>';
 								searchSection += '</tr>';
 							}
 							$("#searchArea").html(searchSection);
@@ -143,7 +144,7 @@
 							class="form-control border-0" placeholder="Search" id="headerInputSearch">
 					<div>
 						<table class="table">
-							<tbody id="searchArea" style="height:400px; overflow:auto;">
+							<tbody id="searchArea" style="height:300px; overflow:auto;">
 								
 							</tbody>
 						</table>

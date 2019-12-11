@@ -16,12 +16,12 @@ public class QuestionDAO extends Database{
 			pstmt.setString(1, userIdx);
 			pstmt.setString(2, title);
 			pstmt.setString(3, content);
-			
 			int re = pstmt.executeUpdate();
 			if(re >0) {
+				conn.close();
+				pstmt.close();
 				return true;
 			}
-			
 		}catch(Exception e) {
 			e.printStackTrace();
 		} finally {

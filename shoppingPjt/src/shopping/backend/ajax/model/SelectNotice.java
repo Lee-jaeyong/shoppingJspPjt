@@ -17,15 +17,23 @@ public class SelectNotice implements ShoppingService {
 		try {
 			response.setCharacterEncoding("utf-8");
 			int pageNum = Integer.parseInt(request.getParameter("pageNum"));
+			int showType = Integer.parseInt(request.getParameter("showType"));
+			int startBlock = pageNum / 5 * 5;
+			int endBlock = startBlock + 5;
 			NoticeDAO noticeDAO = new NoticeDAO();
-			ArrayList<NoticeDTO> list = noticeDAO.selectNoticeList(pageNum);
-			response.getWriter().write(getJson(list));
+			int totalCount = noticeDAO.selectTotalCount(showType);
+			int totalBlock = (int) Math.ceil(totalCount / (5 * 1.0));
+			if (endBlock > totalBlock)
+				endBlock = totalBlock;
+			noticeDAO = new NoticeDAO();
+			ArrayList<NoticeDTO> list = noticeDAO.selectNoticeList(pageNum,showType);
+			response.getWriter().write(getJson(list, startBlock, endBlock, totalBlock));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private String getJson(ArrayList<NoticeDTO> list) {
+	private String getJson(ArrayList<NoticeDTO> list, int startBlock, int endBlock, int totalBlock) {
 		StringBuilder json = new StringBuilder();
 		json.append("{\"result\":[");
 		for (int i = 0; i < list.size(); i++) {
@@ -37,7 +45,8 @@ public class SelectNotice implements ShoppingService {
 			if (i != list.size() - 1)
 				json.append(",");
 		}
-		json.append("]}");
+		json.append("],\"startBlock\":\"" + startBlock + "\",\"endBlock\":\"" + endBlock + "\",\"totalBlock\":\""
+				+ totalBlock + "\"}");
 		return json.toString();
 	}
 }

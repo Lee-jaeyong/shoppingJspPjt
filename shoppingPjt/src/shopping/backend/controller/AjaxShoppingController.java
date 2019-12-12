@@ -30,6 +30,8 @@ import shopping.backend.ajax.model.UpdateCategoryImplAction;
 import shopping.backend.ajax.model.UpdateCategoryStatusImplAction;
 import shopping.backend.ajax.model.UpdateDeleteItemCencelImplAction;
 import shopping.backend.ajax.model.UpdateItemStatusImplAction;
+import shopping.backend.ajax.model.UpdateNotice;
+import shopping.backend.ajax.model.UpdateNoticeStatus;
 import shopping.backend.ajax.model.UpdateOrderInfoSuccess;
 import shopping.backend.ajax.model.UpdateOrderStatus;
 import shopping.backend.ajax.model.UpdateStockImplAction;
@@ -113,6 +115,10 @@ public class AjaxShoppingController extends HttpServlet {
 			new DeleteReview().execute(request, response);
 		}else if (command.equals("SelectNotice.ajax")) {
 			new SelectNotice().execute(request, response);
+		}else if (command.equals("UpdateNoticeStatus.ajax")) {
+			new UpdateNoticeStatus().execute(request, response);
+		}else if (command.equals("UpdateNotice.ajax")) {
+			new UpdateNotice().execute(request, response);
 		}
 	}
 }

@@ -8,11 +8,6 @@
 			window.location.pathname.indexOf("/", 2));
 	$(document).ready(
 			function() {
-				$("#headerInputSearch").focusout(function(){
-					$("#searchArea").html("");
-					$(this).val("");
-				});
-				
 				 $("#headerInputSearch").keyup(function(){
 					if($("#headerInputSearch").val().trim() === '')
 					{
@@ -30,11 +25,11 @@
 							var searchSection = '';
 							for(var i= 0;i<itemList.length;i++)
 							{
-								searchSection += '<tr>';
-								searchSection += '<td><a href="./single.do?itemNumber='+itemList[i].itemIdx+'"><img src="'+pjt+'/uploadImage/'+itemList[i].itemMainImg+'" style="height:120px; width:120px;" class="img-fluid"></a></td>';
-								searchSection += '<td><a href="./single.do?itemNumber='+itemList[i].itemIdx+'">'+itemList[i].itemName+'</a></td>';
-								searchSection += '<td><a href="./single.do?itemNumber='+itemList[i].itemIdx+'">'+itemList[i].itemPrice+'원</a></td>';
-								searchSection += '<td><a href="./single.do?itemNumber='+itemList[i].itemIdx+'">'+itemList[i].itemPrice+'원</a></td>';
+								searchSection += '<tr style = "cursor:pointer;" onclick="javascript:pageMove('+itemList[i].itemIdx+')">';
+								searchSection += '<td><img src="'+pjt+'/uploadImage/'+itemList[i].itemMainImg+'" style="height:120px; width:120px;" class="img-fluid"></td>';
+								searchSection += '<td>'+itemList[i].itemName+'</td>';
+								searchSection += '<td>'+itemList[i].itemPrice+'원</td>';
+								searchSection += '<td>'+itemList[i].itemPrice+'원</td>';
 								searchSection += '</tr>';
 							}
 							$("#searchArea").html(searchSection);
@@ -113,6 +108,10 @@
 				});
 	}
 
+	function pageMove(itemIdx){
+		location.href="./single.do?itemNumber="+itemIdx;
+	}
+	
 	function checkLogin() {
 		if ($("#userloginChk").val() === '') {
 			alert("로그인이 필요한 기능입니다.");

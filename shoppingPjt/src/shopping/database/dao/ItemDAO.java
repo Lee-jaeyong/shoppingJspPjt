@@ -52,13 +52,23 @@ public class ItemDAO extends Database {
 		return item;
 	}
 
-	public int selectCountItem(String category) {
+	public int selectCountItem(String category, String searchType, String search, String itemStatus) {
 		int count = 0;
 		try {
 			String sql = "SELECT COUNT(itemIdx) FROM items";
+			if (!search.equals(""))
+				sql = "SELECT COUNT(itemIdx) FROM items WHERE " + searchType + " like ?";
 			if (!category.equals(""))
-				sql += ",category WHERE category.ca_itemIdx = items.itemIdx AND ca_smallidx = " + category;
+				sql = "SELECT COUNT(itemIdx) FROM items,category WHERE category.ca_itemIdx = items.itemIdx AND ca_smallidx = "
+						+ category;
+			if (!category.equals("") && !search.equals(""))
+				sql = "SELECT COUNT(itemIdx) FROM items,category WHERE category.ca_itemIdx = items.itemIdx AND ca_smallidx = "
+						+ category + " AND " + searchType + " like ?";
+			if (!itemStatus.equals("-1"))
+				sql += " AND itemStatus = " + itemStatus;
 			pstmt = conn.prepareStatement(sql);
+			if (!search.equals(""))
+				pstmt.setString(1, "%" + search + "%");
 			rs = pstmt.executeQuery();
 			rs.next();
 			count = rs.getInt(1);
@@ -96,6 +106,38 @@ public class ItemDAO extends Database {
 					+ "FROM items,category WHERE items.itemIdx = category.ca_itemIdx AND itemName like ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, "%" + searchItemTitle + "%");
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(new ItemDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
+						rs.getInt(6), rs.getInt(7), rs.getString(8)));
+			}
+			conn.close();
+			pstmt.close();
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return list;
+	}
+
+	public ArrayList<ItemDTO> selectEventItem(int pageNum, String search, String categoryNum) {
+		ArrayList<ItemDTO> list = new ArrayList<ItemDTO>();
+		try {
+			String categoryWhere = "";
+			if (!categoryNum.equals(""))
+				categoryWhere = "AND ca_smallidx = ? ";
+			String sql = "SELECT itemIdx,itemCode,itemMainImg,itemName,itemStatus,itemPrice,itemSalePrice,itemContent";
+			sql += " FROM items,category WHERE items.itemIdx = category.ca_itemIdx AND itemStatus = 1 AND itemName like ? "
+					+ categoryWhere;
+			sql += " LIMIT ?,5";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%" + search + "%");
+			if (!categoryNum.equals("")) {
+				pstmt.setInt(2, Integer.parseInt(categoryNum));
+				pstmt.setInt(3, pageNum * 5);
+			} else
+				pstmt.setInt(2, pageNum * 5);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				list.add(new ItemDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),

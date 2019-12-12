@@ -510,7 +510,7 @@
 					</div>
 					<div class="col-lg-2 mb-4">
 						<select class="form-control" id="showStatus">
-							<option selected="" value="-1">전체 보기</option>
+							<option selected value="-1">전체 보기</option>
 							<option value="1">판매 중 보기</option>
 							<option value="0">판매 중지 보기</option>
 						</select>

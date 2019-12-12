@@ -112,17 +112,4 @@ public class NoticeDAO extends Database {
 		}
 		return true;
 	}
-
-	private void closed() {
-		try {
-			if (pstmt != null)
-				pstmt.close();
-			if (rs != null)
-				rs.close();
-			if (conn != null)
-				conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }

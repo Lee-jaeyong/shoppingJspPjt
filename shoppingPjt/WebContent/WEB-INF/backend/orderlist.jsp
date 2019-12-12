@@ -71,7 +71,7 @@
 				<div class="row">
 					<div class="col-sm-3">
 						<select class="form-control" id="sortType">
-							<option selected="" value="oiIdx">정 렬</option>
+							<option selected="" value="orderdate desc">정 렬</option>
 							<option value="orderdate">주문일 순</option>
 							<option value="orderdate desc">주문일 역순</option>
 							<option value="orderTotalSalePrice">주문 가격순</option>

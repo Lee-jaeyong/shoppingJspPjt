@@ -182,7 +182,7 @@
 										+ '</a></h3><p class="mb-0">'
 										+ itemList[i].itemInfo
 										+ '</p><p class="text-primary font-weight-bold">'
-										+ itemList[i].itemPrice
+										+ numberWithCommas(itemList[i].itemPrice)
 										+ '원</p></div></div></div>';
 							}
 							$("#itemSection").html(html);
@@ -218,6 +218,10 @@
 					});
 		}
 
+		function numberWithCommas(x) {
+			return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		}
+		
 		window.onload = function() {
 			selectSmallCategoryList();
 			pageLoad(0);

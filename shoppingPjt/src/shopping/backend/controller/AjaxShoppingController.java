@@ -16,6 +16,7 @@ import shopping.backend.ajax.model.SelectAreaChart;
 import shopping.backend.ajax.model.SelectBarChart;
 import shopping.backend.ajax.model.SelectCategoryImplAction;
 import shopping.backend.ajax.model.SelectDeleteItemListImplAction;
+import shopping.backend.ajax.model.SelectEventItemList;
 import shopping.backend.ajax.model.SelectItemImplAction;
 import shopping.backend.ajax.model.SelectItemOptionImplAction;
 import shopping.backend.ajax.model.SelectLackStockInfo;
@@ -119,6 +120,8 @@ public class AjaxShoppingController extends HttpServlet {
 			new UpdateNoticeStatus().execute(request, response);
 		}else if (command.equals("UpdateNotice.ajax")) {
 			new UpdateNotice().execute(request, response);
+		}else if (command.equals("SelectEventItemList.ajax")) {
+			new SelectEventItemList().execute(request, response);
 		}
 	}
 }

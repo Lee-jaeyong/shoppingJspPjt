@@ -415,7 +415,7 @@ public class ShoppingCartAndOrderDAO extends Database {
 			rs = pstmt.executeQuery();
 			rs.next();
 			int status = rs.getInt(1);
-			if (status == 1) {
+			if (status == 2 || status == 1) {
 				conn.close();
 				pstmt.close();
 				rs.close();

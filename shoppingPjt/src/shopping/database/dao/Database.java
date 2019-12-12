@@ -18,4 +18,17 @@ public class Database {
 		ds = (DataSource) ctx.lookup("jdbc/mydb");
 		conn = ds.getConnection();
 	}
+	
+	protected void closed() {
+		try {
+			if (pstmt != null)
+				pstmt.close();
+			if (rs != null)
+				rs.close();
+			if (conn != null)
+				conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

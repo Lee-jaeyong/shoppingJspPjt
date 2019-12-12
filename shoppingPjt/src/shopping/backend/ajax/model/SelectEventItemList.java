@@ -1,6 +1,5 @@
 package shopping.backend.ajax.model;
 
-import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -11,44 +10,27 @@ import javax.servlet.http.HttpServletResponse;
 import shopping.action.ShoppingService;
 import shopping.database.dao.ItemDAO;
 import shopping.database.dto.ItemDTO;
-import shopping.filter.SecureString;
 
-public class SelectItemImplAction implements ShoppingService {
+public class SelectEventItemList implements ShoppingService {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			request.setCharacterEncoding("utf-8");
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-		}
-		response.setCharacterEncoding("utf-8");
-
-		String searchItemType = request.getParameter("searchItemType");
-		String searchItemTitle = request.getParameter("searchItemTitle");
-		String searchItemSmallCategory = new SecureString().cleanXSS(request.getParameter("searchItemSmallCategory"));
-		String searchItemBefore = request.getParameter("searchItemBefore");
-		String searchItemAfter = request.getParameter("searchItemAfter");
-		String searchItemStatus = request.getParameter("searchItemStatus");
-
-		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
-		String sortType = request.getParameter("sortType");
-		int showType = Integer.parseInt(request.getParameter("showType"));
-		int showBlock = 10;
-		int startBlock = pageNum / showType * showBlock;
-		int endBlock = startBlock + showBlock;
-		int totalBlock;
-		try {
+			response.setCharacterEncoding("utf-8");
+			int pageNum = Integer.parseInt(request.getParameter("pageNum"));
+			String categoryNum = request.getParameter("categoryNum");
+			String search = request.getParameter("search");
 			ItemDAO itemDAO = new ItemDAO();
-			totalBlock = (int) Math.ceil(itemDAO.selectCountItem(searchItemSmallCategory,searchItemType,searchItemTitle,searchItemStatus) / (showType * 1.0));
-			if (totalBlock < endBlock)
-				endBlock = totalBlock;
+			ArrayList<ItemDTO> list = itemDAO.selectEventItem(pageNum, search, categoryNum);
 			itemDAO = new ItemDAO();
-			ArrayList<ItemDTO> list = itemDAO.selectItem(pageNum, sortType, showType, searchItemType, searchItemTitle,
-					searchItemSmallCategory, searchItemBefore, searchItemAfter, searchItemStatus);
+			int totalCount = itemDAO.selectCountItem(categoryNum, "itemName", search,"1");
+			int startBlock = pageNum / 5 * 5;
+			int endBlock = startBlock + 5;
+			int totalBlock = (int) Math.ceil(totalCount / (5.0));
+			if (endBlock > totalBlock)
+				endBlock = totalBlock;
 			response.getWriter().write(getJson(list, startBlock, endBlock, totalBlock));
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -69,5 +51,4 @@ public class SelectItemImplAction implements ShoppingService {
 				+ totalBlock + "\"}");
 		return json.toString();
 	}
-
 }

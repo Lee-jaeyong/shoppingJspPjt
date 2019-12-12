@@ -15,6 +15,7 @@ import shopping.action.Action;
 import shopping.action.ActionForward;
 import shopping.backend.model.AddItem;
 import shopping.backend.model.ExcelFileUpload;
+import shopping.backend.model.InsertEventExecute;
 import shopping.backend.model.InsertNotice;
 import shopping.backend.model.SelectItemInfo;
 import shopping.backend.model.UpdateItem;
@@ -108,6 +109,15 @@ public class ShoppingAdminController extends HttpServlet {
 			forward.setRedirect(false);
 		} else if (command.equals("addNoticeExecute.admin")) {
 			action = new InsertNotice();
+			forward = action.execute(request, response);
+		} else if (command.equals("adminEvent.admin")) {
+			forward.setPath("WEB-INF/backend/event.jsp");
+			forward.setRedirect(false);
+		} else if (command.equals("adminAddEvent.admin")) {
+			forward.setPath("WEB-INF/backend/addEvent.jsp");
+			forward.setRedirect(false);
+		} else if (command.equals("addEventExecute.admin")) {
+			action = new InsertEventExecute();
 			forward = action.execute(request, response);
 		}
 

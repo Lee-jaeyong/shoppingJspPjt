@@ -32,7 +32,7 @@ public class FrontSelectItemImplShoppingService implements ShoppingService {
 			String category = "41";
 			if (request.getParameter("category") != null)
 				category = request.getParameter("category");
-			totalBlock = (int) Math.ceil(itemDAO.selectCountItem(category) / (showType * 1.0));
+			totalBlock = (int) Math.ceil(itemDAO.selectCountItem(category,"","","") / (showType * 1.0));
 			if (totalBlock < endBlock)
 				endBlock = totalBlock;
 			itemDAO = new ItemDAO();

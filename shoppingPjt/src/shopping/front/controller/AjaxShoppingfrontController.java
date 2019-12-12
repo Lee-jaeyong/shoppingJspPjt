@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import shopping.front.ajax.model.DeleteReview;
 import shopping.front.ajax.model.DeleteShoppingCart;
 import shopping.front.ajax.model.FrontSelectItemImplShoppingService;
 import shopping.front.ajax.model.InsertReview;
@@ -18,6 +19,7 @@ import shopping.front.ajax.model.SelectShoppingCart;
 import shopping.front.ajax.model.SelectSmallCategoryEqulsNow;
 import shopping.front.ajax.model.SelectUserInfo;
 import shopping.front.ajax.model.UpdateCartCount;
+import shopping.front.ajax.model.UpdateReview;
 import shopping.front.ajax.model.UserIdDupChkImplShoppingService;
 
 @WebServlet("/AjaxShoppingfrontController")
@@ -66,6 +68,10 @@ public class AjaxShoppingfrontController extends HttpServlet {
 			new InsertReview().execute(request, response);
 		}else if (command.equals("SelectReview.aj")) {
 			new SelectReview().execute(request, response);
+		}else if (command.equals("DeleteReview.aj")) {
+			new DeleteReview().execute(request, response);
+		}else if (command.equals("UpdateReview.aj")) {
+			new UpdateReview().execute(request, response);
 		}
 	}
 }

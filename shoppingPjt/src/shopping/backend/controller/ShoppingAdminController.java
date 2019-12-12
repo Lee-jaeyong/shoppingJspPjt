@@ -15,6 +15,7 @@ import shopping.action.Action;
 import shopping.action.ActionForward;
 import shopping.backend.model.AddItem;
 import shopping.backend.model.ExcelFileUpload;
+import shopping.backend.model.InsertNotice;
 import shopping.backend.model.SelectItemInfo;
 import shopping.backend.model.UpdateItem;
 import shopping.backend.model.UpdateItemMainImg;
@@ -44,7 +45,7 @@ public class ShoppingAdminController extends HttpServlet {
 		String requestURI = request.getRequestURI();
 		int cmdIdx = requestURI.lastIndexOf("/") + 1;
 		String command = requestURI.substring(cmdIdx);
-		
+
 		ActionForward forward = new ActionForward();
 		Action action = null;
 		if (command.equals("")) {
@@ -87,7 +88,7 @@ public class ShoppingAdminController extends HttpServlet {
 		} else if (command.equals("adminExcelUpload.admin")) {
 			action = new ExcelFileUpload();
 			forward = action.execute(request, response);
-		}else if (command.equals("adminOrderListExcelUpload.admin")) {
+		} else if (command.equals("adminOrderListExcelUpload.admin")) {
 			action = new adminOrderListExcelUpload();
 			forward = action.execute(request, response);
 		} else if (command.equals("adminUpdateItemExecute.admin")) {
@@ -99,8 +100,17 @@ public class ShoppingAdminController extends HttpServlet {
 		} else if (command.equals("adminDeleteItemList.admin")) {
 			forward.setPath("WEB-INF/backend/deleteItemlist.jsp");
 			forward.setRedirect(false);
+		} else if (command.equals("adminNotice.admin")) {
+			forward.setPath("WEB-INF/backend/notice.jsp");
+			forward.setRedirect(false);
+		} else if (command.equals("adminAddNotice.admin")) {
+			forward.setPath("WEB-INF/backend/addNotice.jsp");
+			forward.setRedirect(false);
+		} else if (command.equals("addNoticeExecute.admin")) {
+			action = new InsertNotice();
+			forward = action.execute(request, response);
 		}
-		
+
 		if (forward.isRedirect()) {
 			response.sendRedirect(forward.getPath());
 		} else {

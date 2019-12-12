@@ -35,7 +35,8 @@ public class SelectReview implements ShoppingService {
 			json.append("{\"userName\":\"" + list.get(i).getUserName() + "\",\"reviewTitle\":\""
 					+ list.get(i).getReviewTitle() + "\",\"reviewContent\":\"" + list.get(i).getReviewContent()
 					+ "\",\"reviewDate\":\"" + list.get(i).getReviewDate() + "\",\"reviewStar\":\""
-					+ list.get(i).getReviewStar() + "\"}");
+					+ list.get(i).getReviewStar() + "\",\"userIdx\":\"" + list.get(i).getReviewUserIdx()
+					+ "\",\"reviewIdx\":\"" + list.get(i).getReviewIdx() + "\"}");
 			if (i != list.size() - 1)
 				json.append(",");
 		}

@@ -29,15 +29,15 @@
 							<option>소분류</option>
 						</select>
 					</div>
-					<div class="col-sm-2"></div>
-					<div class="col-sm-1">
+					<div class="col-sm-1"></div>
+					<div class="col-sm-2">
 						<select class="form-control" id="searchType">
 							<option value="itemName">상품명</option>
 							<option value="userName">작성자 명</option>
 							<option value="userIdenty">아이디 명</option>
 						</select>
 					</div>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div class="input-group mb-3">
 							<input type="text" id="searchAdminInput" class="form-control">
 							<div class="input-group-append">
@@ -45,11 +45,14 @@
 							</div>
 						</div>
 					</div>
+					<div>
+						<button id="refreshSearchReview" type="button" class="btn btn-primary">검색 초기화</button>
+					</div>
 				</div>
 				<hr>
 				<div class="row" style="margin-bottom: 10px;">
 					<div class="col-sm-10">
-						<button type="button" class="btn btn-outline-secondary">삭
+						<button id="deleteReivew" type="button" class="btn btn-outline-secondary">삭
 							제</button>
 					</div>
 					<div class="col-sm-2">
@@ -101,6 +104,40 @@
 	<%@include file="./include/scriptArea.html"%>
 	<script>
 		$(document).ready(function() {
+			$("#deleteReivew").click(function(){
+				if(confirm("정말 리뷰 목록을 삭제하시겠습니까?"))
+				{
+					var deleteReviewList = '';
+					$("input[name='reviewCheck']").each(function(){
+						if($(this).is(":checked") == true) {
+							deleteReviewList += $(this).val()+',';
+						}
+					});
+					$.ajax({
+						url : "./DeleteReview.ajax",
+						data : {
+							reviewIdx : deleteReviewList
+						},
+						success : function(data){
+							alert(data);
+							$("#refreshSearchReview").click();
+						}
+					});
+				}
+			});
+			
+			$("#refreshSearchReview").click(function(){
+				$("#categorySearch").val('0');
+				$("#searchInputSend").val('');
+				$("#searchTypeSend").val('reviewIdx');
+				$("#sortType").find("option:eq(0)").prop("selected", true);
+				$("#searchType").find("option:eq(0)").prop("selected", true);
+				$("#category").find("option:eq(0)").prop("selected", true);
+				$("#smallCategory").find("option:eq(0)").prop("selected", true);
+				$("#searchAdminInput").val('');
+				loadReview(0);
+			});
+			
 			$("#btnSearchReview").click(function(){
 				$("#searchInputSend").val($("#searchAdminInput").val());
 				$("#searchTypeSend").val($("#searchType").val());
@@ -131,7 +168,7 @@
 							var reviewSection = '';
 							for (var i = 0; i < reviewList.length; i++) {
 								reviewSection += '<tr>';
-								reviewSection += '<td><input type="checkbox" style="width:25px; height:25px;" value="'+reviewList[i].reviewIdx+'"/></td>';
+								reviewSection += '<td><input name="reviewCheck" type="checkbox" style="width:25px; height:25px;" value="'+reviewList[i].reviewIdx+'"/></td>';
 								reviewSection += '<td><label class="btn btn-success btn-sm">'
 										+ reviewList[i].itemName
 										+ reviewList[i].reviewTitle

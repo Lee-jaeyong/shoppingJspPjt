@@ -25,7 +25,7 @@ public class LoginUser implements Action {
 				session.setAttribute("userIdx", user.getUserIdx());
 				session.setAttribute("userName", user.getUserName());
 				forward.setRedirect(true);
-				forward.setPath("./"+request.getParameter("getNowPage") + ".do");
+				forward.setPath("./index.do");
 			}else
 			{
 				forward.setRedirect(true);

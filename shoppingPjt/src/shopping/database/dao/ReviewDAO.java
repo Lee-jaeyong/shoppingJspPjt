@@ -103,7 +103,7 @@ public class ReviewDAO extends Database {
 	public ArrayList<ReviewDTO> selectReview(int pageNum, int itemNum) {
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
 		try {
-			String sql = "SELECT userName,reviewTitle,reviewContent,reviewDate,reviewStar\r\n"
+			String sql = "SELECT userName,reviewTitle,reviewContent,reviewDate,reviewStar,reviewUserIdx,reviewIdx\r\n"
 					+ "FROM USER,itemReview\r\n"
 					+ "WHERE user.userIdx = itemReview.reviewUserIdx AND reviewItemIdx = ? order by reviewIdx limit ?,5";
 			pstmt = conn.prepareStatement(sql);
@@ -111,8 +111,8 @@ public class ReviewDAO extends Database {
 			pstmt.setInt(2, pageNum * 5);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				list.add(new ReviewDTO(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
-						rs.getInt(5)));
+				list.add(new ReviewDTO(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
+						rs.getInt(6), rs.getInt(7)));
 			}
 			rs.close();
 			pstmt.close();
@@ -121,6 +121,20 @@ public class ReviewDAO extends Database {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	public boolean updateReivew(ReviewDTO review) {
+		try {
+			String sql = "UPDATE itemReview SET reviewContent = ? WHERE reviewIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(2, review.getReviewIdx());
+			pstmt.setString(1, review.getReviewContent());
+			pstmt.executeUpdate();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public boolean insertReview(ReviewDTO review) {
@@ -140,5 +154,20 @@ public class ReviewDAO extends Database {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	public boolean deleteReview(String reviewIdx) {
+		try {
+			String sql = "DELETE FROM itemreview WHERE reviewIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(reviewIdx));
+			pstmt.executeUpdate();
+			conn.close();
+			pstmt.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

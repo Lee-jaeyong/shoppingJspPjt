@@ -8,6 +8,11 @@
 			window.location.pathname.indexOf("/", 2));
 	$(document).ready(
 			function() {
+				$("#headerInputSearch").focusout(function(){
+					$("#searchArea").html("");
+					$(this).val("");
+				});
+				
 				 $("#headerInputSearch").keyup(function(){
 					if($("#headerInputSearch").val().trim() === '')
 					{
@@ -235,10 +240,10 @@
 						<li><a href="#">Menu Two</a></li>
 						<li><a href="#">Menu Three</a></li>
 					</ul></li>
-				<li class="has-children"><a href="index.html">Shop</a>
+				<li class="has-children"><a href="#">Shop</a>
 					<ul class="dropdown" id="categoryArea">
 					</ul></li>
-				<li><a href="#">Review</a></li>
+				<li><a href="#">공지사항</a></li>
 				<li><a href="qna.do">Q & A</a></li>
 			</ul>
 		</div>

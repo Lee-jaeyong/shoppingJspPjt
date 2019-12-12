@@ -12,6 +12,10 @@ public class ReviewDTO {
 	private String userIdenty;
 	private int reviewIdx;
 
+	public ReviewDTO() {
+
+	}
+
 	// 관리자 리뷰 리스트
 	public ReviewDTO(String itemName, String reviewTitle, String reviewContent, String userName, String userIdenty,
 			String reviewDate, int reviewStar, int reviewIdx) {
@@ -26,12 +30,15 @@ public class ReviewDTO {
 	}
 
 	// 리뷰 리스트
-	public ReviewDTO(String userName, String reviewTitle, String reviewContent, String reviewDate, int reviewStar) {
+	public ReviewDTO(String userName, String reviewTitle, String reviewContent, String reviewDate, int reviewStar,
+			int reviewUserIdx, int reviewIdx) {
+		this.reviewIdx = reviewIdx;
 		this.userName = userName;
 		this.reviewTitle = reviewTitle;
 		this.reviewContent = reviewContent;
 		this.reviewDate = reviewDate;
 		this.reviewStar = reviewStar;
+		this.reviewUserIdx = reviewUserIdx;
 	}
 
 	// 리뷰 등록시 사용되는 생성자

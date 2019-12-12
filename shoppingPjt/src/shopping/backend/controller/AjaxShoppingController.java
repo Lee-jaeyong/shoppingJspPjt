@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import shopping.backend.ajax.model.AddCategoryImplAction;
 import shopping.backend.ajax.model.DeleteItemImplAction;
 import shopping.backend.ajax.model.DeleteOrderInfo;
+import shopping.backend.ajax.model.DeleteReview;
 import shopping.backend.ajax.model.SelectAreaChart;
 import shopping.backend.ajax.model.SelectBarChart;
 import shopping.backend.ajax.model.SelectCategoryImplAction;
@@ -18,6 +19,7 @@ import shopping.backend.ajax.model.SelectDeleteItemListImplAction;
 import shopping.backend.ajax.model.SelectItemImplAction;
 import shopping.backend.ajax.model.SelectItemOptionImplAction;
 import shopping.backend.ajax.model.SelectLackStockInfo;
+import shopping.backend.ajax.model.SelectNotice;
 import shopping.backend.ajax.model.SelectOrderInfo;
 import shopping.backend.ajax.model.SelectOrderList;
 import shopping.backend.ajax.model.SelectPieChart;
@@ -107,6 +109,10 @@ public class AjaxShoppingController extends HttpServlet {
 			new UpdateStockfromIndex().execute(request, response);
 		}else if (command.equals("SelectReviewAll.ajax")) {
 			new SelectReviewAll().execute(request, response);
+		}else if (command.equals("DeleteReview.ajax")) {
+			new DeleteReview().execute(request, response);
+		}else if (command.equals("SelectNotice.ajax")) {
+			new SelectNotice().execute(request, response);
 		}
 	}
 }

@@ -209,7 +209,7 @@ table td {
 					<br>
 					<div class="site-section border-bottom" data-aos="fade">
 						<div class="container">
-							<div class="row">
+							<div class="row" id="addReviewStatus">
 								<%
 									if (Boolean.parseBoolean(request.getAttribute("checkReviewWrite").toString())
 											&& Boolean.parseBoolean(request.getAttribute("buyChk").toString())) {
@@ -304,113 +304,160 @@ table td {
 	<input type="hidden" id="nowItemIdx"
 		value="<%=request.getParameter("itemNumber")%>" />
 	<input type="hidden" id="nowPageNum" value="0" />
+	<!-- The Modal -->
+	<div class="modal" id="updateModal">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	
+	      <!-- Modal Header -->
+	      <div class="modal-header">
+	        <h4 class="modal-title">리뷰 수정</h4>
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	      </div>
+	
+	      <!-- Modal body -->
+	      <div class="modal-body">
+	        <textarea class="form-control" rows="5" id="comment"></textarea>
+	      </div>
+	
+	      <!-- Modal footer -->
+	      <div class="modal-footer">
+	        <button type="button" id="updateExecuteReview" onclick="updateReviewExecute()" class="btn btn-danger" data-dismiss="modal">수 정</button>
+	        <button type="button" class="btn btn-danger" data-dismiss="modal">닫 기</button>
+	      </div>
+	      <input type="hidden" value="" id="updateReviewIdx">
+	    </div>
+	  </div>
+	</div>
 	<script>
-		$(document).ready(
-				function() {
-					$("#prevBtn").click(
-							function() {
-								$("#nowPageNum").val(
-										parseInt($("#nowPageNum").val()) - 1);
-								loadReview();
-							});
-
-					$("#nextBtn").click(
-							function() {
-								$("#nowPageNum").val(
-										parseInt($("#nowPageNum").val()) + 1);
-								loadReview();
-							});
-
-					$("#addReview").click(
-							function() {
-								if ($("#reviewContent").val().trim() === ''
-										|| $("#checkStar").val() === '0') {
-									alert("리뷰 내용 혹은 별점을 선택해주세요.");
-									return;
-								}
-								$
-										.ajax({
-											url : "./InsertReview.aj",
-											data : {
-												itemIdx : $("#nowItemIdx")
-														.val(),
-												reviewOption : $(
-														"#reviewOption").val(),
-												checkStar : $("#checkStar")
-														.val(),
-												reviewContent : $(
-														"#reviewContent").val()
-											},
-											success : function(data) {
-												alert(data);
-												loadReview(0);
-											}
-										});
-							});
-
-					$("#chkStar1 ,#chkStar2, #chkStar3, #chkStar4, #chkStar5")
-							.change(
-									function() {
-										if ($(this).is(":checked")) {
-											for (var i = 1; i <= parseInt($(
-													this).val()); i++)
-												$("#chkStar" + i).prop(
-														"checked", true);
-											$("#checkStar").val($(this).val());
-										} else {
-											for (var i = 1; i <= 5; i++)
-												$("#chkStar" + i).prop(
-														"checked", false);
-											$("#checkStar").val('0');
-										}
-									});
-				});
-
-		function loadReview() {
-			$
-					.ajax({
-						url : "SelectReview.aj",
-						data : {
-							pageNum : $("#nowPageNum").val(),
-							itemNum : $("#nowItemIdx").val()
-						},
-						dataType : "json",
-						success : function(data) {
-							var reviewList = data.result;
-							var reviewSection = '';
-							for (var i = 0; i < reviewList.length; i++) {
-								reviewSection += "<tr>";
-								reviewSection += '<td>'
-										+ reviewList[i].userName + '</td>';
-								reviewSection += '<td><label class="btn-success btn-sm">'
-										+ reviewList[i].reviewTitle
-										+ '</label></td>';
-								reviewSection += '<td><strong>'
-										+ reviewList[i].reviewDate
-										+ '</strong></td>';
-								reviewSection += '<td><label class="btn-warning btn-sm">'
-										+ reviewList[i].reviewContent
-										+ '</label></td>';
-								reviewSection += '<td>';
-								for (var j = 0; j < reviewList[i].reviewStar; j++)
-									reviewSection += '<i class="fas fa-heart"></i>';
-								reviewSection += '</td>';
-								reviewSection += "</tr>";
-							}
-							$("#reviewSection").html(reviewSection);
-							if (parseInt(data.totalPage) - 1 == $("#nowPageNum")
-									.val())
-								$("#nextBtn").attr("disabled", true);
-							else
-								$("#nextBtn").attr("disabled", false);
-							if ($("#nowPageNum").val() == 0)
-								$("#prevBtn").attr("disabled", true);
-							else
-								$("#prevBtn").attr("disabled", false);
-						}
-					});
+	$(document).ready(function () {
+	    $("#prevBtn").click(function () {
+	        $("#nowPageNum").val(parseInt($("#nowPageNum").val()) - 1);
+	        loadReview();
+	    });
+	    $("#nextBtn").click(function () {
+	        $("#nowPageNum").val(parseInt($("#nowPageNum").val()) + 1);
+	        loadReview();
+	    });
+	    $("#addReview").click(function () {
+	        if ($("#reviewContent").val().trim() === '' || $("#checkStar").val() === '0') {
+	            alert("리뷰 내용 혹은 별점을 선택해주세요.");
+	            return;
+	        }
+	        $.ajax({
+	            url: "./InsertReview.aj",
+	            data: {
+	                itemIdx: $("#nowItemIdx").val(),
+	                reviewOption: $("#reviewOption").val(),
+	                checkStar: $("#checkStar").val(),
+	                reviewContent: $("#reviewContent").val()
+	            },
+	            success: function (data) {
+	                alert(data);
+	                loadReview(0);
+	                $("#addReviewStatus").html('<div class="col-md-4"><label>*이미 리뷰를 작성하셨습니다.</label></div>');
+	            }
+	        });
+	    });
+	    $("#chkStar1 ,#chkStar2, #chkStar3, #chkStar4, #chkStar5").change(function () {
+	        if ($(this).is(":checked")) {
+	            for (var i = 1; i <= parseInt($(this).val()); i++) 
+	                $("#chkStar" + i).prop("checked", true);
+	            
+	            $("#checkStar").val($(this).val());
+	        } else {
+	            for (var i = 1; i <= 5; i++) 
+	                $("#chkStar" + i).prop("checked", false);
+	            
+	            $("#checkStar").val('0');
+	        }
+	    });
+	});
+	function loadReview() {
+	    $.ajax({
+	        url: "SelectReview.aj",
+	        data: {
+	            pageNum: $("#nowPageNum").val(),
+	            itemNum: $("#nowItemIdx").val()
+	        },
+	        dataType: "json",
+	        success: function (data) {
+	            var reviewList = data.result;
+	            var reviewSection = '';
+	            for (var i = 0; i < reviewList.length; i++) {
+	                reviewSection += "<tr>";
+	                if(reviewList[i].userIdx == $("input[name=userIdx]").val())
+	                reviewSection += '<td><button type="button" onclick="updateReview('+reviewList[i].reviewIdx+')" data-toggle="modal" data-target="#updateModal" class="btn btn-primary btn-sm">수정</button><button type="button" onclick="deleteReview('+reviewList[i].reviewIdx+',\''+reviewList[i].reviewTitle+'\')" class="ml-2 btn btn-primary btn-sm">삭제</button></td>';
+	                else
+	                reviewSection += '<td>' + reviewList[i].userName + '</td>';
+	                reviewSection += '<td><label class="btn-success btn-sm">' + reviewList[i].reviewTitle + '</label></td>';
+	                reviewSection += '<td><strong>' + reviewList[i].reviewDate + '</strong></td>';
+	                reviewSection += '<td><label class="btn-warning btn-sm">' + reviewList[i].reviewContent + '</label></td>';
+	                reviewSection += '<td>';
+	                for (var j = 0; j < reviewList[i].reviewStar; j++) 
+	                    reviewSection += '<i class="fas fa-heart"></i>';
+	                
+	                reviewSection += '</td>';
+	                reviewSection += "</tr>";
+	            }
+	            $("#reviewSection").html(reviewSection);
+	            if (parseInt(data.totalPage) == 0 || parseInt(data.totalPage) - 1 == $("#nowPageNum").val()) 
+	                $("#nextBtn").attr("disabled", true);
+	             else 
+	                $("#nextBtn").attr("disabled", false);
+	            if ($("#nowPageNum").val() == 0) 
+	                $("#prevBtn").attr("disabled", true);
+	             else 
+	                $("#prevBtn").attr("disabled", false);
+	        }
+	    });
+	}
+	
+	function updateReviewExecute(){
+		if($("#comment").val().trim() === '')
+		{
+			alert("수정할 리뷰 내용을 입력해주세요.");
+			return;
 		}
-		window.onload = loadReview();
+		if(confirm("정말 리뷰를 수정하시겠습니까?"))
+			{
+				$.ajax({
+					url : "./UpdateReview.aj",
+					data : {
+						reviewIdx : $("#updateReviewIdx").val(),
+						reviewContent : $("#comment").val()
+					},
+					success : function(data){
+						alert(data);
+		                loadReview(0);
+					}
+				});
+			}
+	}
+	
+	function updateReview(review){
+		$("#comment").html('');
+		$("#updateReviewIdx").val(review);
+	}
+	
+	function deleteReview(reviewIdx,reviewTitle){
+		if(confirm("정말 리뷰를 삭제하시겠습니까?"))
+		{
+			$.ajax({
+				url : "./DeleteReview.aj",
+				data : {
+					reviewIdx : reviewIdx
+				},
+				success : function(data){
+					alert(data);
+	                loadReview(0);
+					location.href = "./single.do?itemNumber="+$("#nowItemIdx").val();
+				}
+			});	
+		}
+	}
+	
+	window.onload = loadReview();
 	</script>
 </body>
 </html>

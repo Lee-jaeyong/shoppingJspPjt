@@ -29,5 +29,8 @@
 	<li class="nav-item"><a class="nav-link" href="./adminAnswer.admin">
 			<i class="fas fa-fw fa-chart-area"></i> <span>Q/A 관리</span>
 	</a></li>
+	<li class="nav-item"><a class="nav-link" href="./adminNotice.admin">
+			<i class="fas fa-fw fa-chart-area"></i> <span>공지사항 관리</span>
+	</a></li>
 </ul>
 <!-- 사이트 바 끝 -->

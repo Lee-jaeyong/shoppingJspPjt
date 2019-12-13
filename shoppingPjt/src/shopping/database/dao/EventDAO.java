@@ -22,8 +22,7 @@ public class EventDAO extends Database {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			rs.next();
-			if (rs.getInt(1) >= 3)
-			{
+			if (rs.getInt(1) >= 3) {
 				closed();
 				return false;
 			}
@@ -48,11 +47,15 @@ public class EventDAO extends Database {
 		return count;
 	}
 
-	public ArrayList<EventDTO> selectEventList(int pageNum) {
+	public ArrayList<EventDTO> selectEventList(int pageNum, int status) {
 		ArrayList<EventDTO> list = new ArrayList<EventDTO>();
 		try {
+			String where = "";
+			if (status == 1)
+				where = " AND eventStatus = 1 ";
 			String sql = "SELECT eventIdx,eventTitle,eventItemIdx,itemName,eventImg,eventStart,eventEnd,eventStatus\r\n"
-					+ "FROM eventinfo,items\r\n" + "WHERE eventinfo.eventItemIdx = items.itemIdx " + "LIMIT ?,5";
+					+ "FROM eventinfo,items\r\n" + "WHERE eventinfo.eventItemIdx = items.itemIdx " + where
+					+ " LIMIT ?,5";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, pageNum * 5);
 			rs = pstmt.executeQuery();

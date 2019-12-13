@@ -7,11 +7,16 @@
 		href="./adminIndex.admin"> <i class="fas fa-fw fa-tachometer-alt"></i>
 			<span>쇼핑몰 관리</span>
 	</a></li>
-	<li class="nav-item"><a class="nav-link" href="./adminItemList.admin">
-			<i class="fas fa-file"></i> <span>상품 목록</span>
+	<li class="nav-item"><a class="nav-link" href="./index.do"
+		target="_blank"> <i class="fas fa-file"></i> <span>쇼핑몰 보기</span>
 	</a></li>
-	<li class="nav-item"><a class="nav-link" href="./adminAddItem.admin">
-			<i class="fas fa-fw fa-chart-area"></i> <span>상품 등록</span>
+	<li class="nav-item"><a class="nav-link"
+		href="./adminItemList.admin"> <i class="fas fa-file"></i> <span>상품
+				목록</span>
+	</a></li>
+	<li class="nav-item"><a class="nav-link"
+		href="./adminAddItem.admin"> <i class="fas fa-fw fa-chart-area"></i>
+			<span>상품 등록</span>
 	</a></li>
 	<li class="nav-item"><a class="nav-link"
 		href="./adminCategoryManage.admin"> <i
@@ -23,17 +28,29 @@
 		href="./adminOrderList.admin"> <i class="fas fa-fw fa-chart-area"></i>
 			<span>주문 내역</span>
 	</a></li>
-	<li class="nav-item"><a class="nav-link" href="./adminReview.admin">
-			<i class="fas fa-fw fa-chart-area"></i> <span>후기 관리</span>
+	<li class="nav-item"><a class="nav-link"
+		href="./adminReview.admin"> <i class="fas fa-fw fa-chart-area"></i>
+			<span>후기 관리</span>
 	</a></li>
-	<li class="nav-item"><a class="nav-link" href="./adminAnswer.admin">
-			<i class="fas fa-fw fa-chart-area"></i> <span>Q/A 관리</span>
+	<li class="nav-item"><a class="nav-link" href="#"> <i
+			class="fas fa-fw fa-chart-area"></i> <span>회원 관리</span>
 	</a></li>
-	<li class="nav-item"><a class="nav-link" href="./adminNotice.admin">
-			<i class="fas fa-fw fa-chart-area"></i> <span>공지사항 관리</span>
+	<li class="nav-item"><a class="nav-link"
+		href="./adminAnswer.admin"> <i class="fas fa-fw fa-chart-area"></i>
+			<span>Q/A 관리</span>
+	</a></li>
+	<li class="nav-item"><a class="nav-link"
+		href="./adminNotice.admin"> <i class="fas fa-fw fa-chart-area"></i>
+			<span>공지사항 관리</span>
 	</a></li>
 	<li class="nav-item"><a class="nav-link" href="./adminEvent.admin">
 			<i class="fas fa-fw fa-chart-area"></i> <span>이벤트 관리</span>
+	</a></li>
+	<li class="nav-item"><a class="nav-link" href="#"> <i
+			class="fas fa-fw fa-chart-area"></i> <span>대표 카테고리 설정</span>
+	</a></li>
+	<li class="nav-item"><a class="nav-link" href="#"> <i
+			class="fas fa-fw fa-chart-area"></i> <span>로그 아웃</span>
 	</a></li>
 </ul>
 <!-- 사이트 바 끝 -->

@@ -14,6 +14,25 @@ public class ItemDAO extends Database {
 		dbConnect();
 	}
 
+	public ArrayList<ItemDTO> selectNewItemList() {
+		ArrayList<ItemDTO> list = new ArrayList<ItemDTO>();
+		try {
+			String sql = "SELECT itemIdx,itemName,itemSalePrice,itemMainImg,itemContent\r\n" + "FROM items\r\n"
+					+ "WHERE itemStatus = 1 ORDER BY itemIdx LIMIT 0,5";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(new ItemDTO(rs.getInt(1), rs.getString(2), rs.getLong(3), rs.getString(4), rs.getString(5)));
+			}
+			rs.close();
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 	public ArrayList<ItemOptionDTO> selectShowLackOptions() {
 		ArrayList<ItemOptionDTO> list = new ArrayList<ItemOptionDTO>();
 		try {

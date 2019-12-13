@@ -16,7 +16,7 @@ public class SelectEvent implements ShoppingService {
 		try {
 			response.setCharacterEncoding("utf-8");
 			int pageNum = Integer.parseInt(request.getParameter("pageNum"));
-			ArrayList<EventDTO> list = new EventDAO().selectEventList(pageNum);
+			ArrayList<EventDTO> list = new EventDAO().selectEventList(pageNum,0);
 			int totalCount = new EventDAO().selectCount();
 			int startBlock = pageNum / 5 * 5;
 			int endBlock = startBlock + 5;

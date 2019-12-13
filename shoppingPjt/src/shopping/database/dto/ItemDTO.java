@@ -23,6 +23,15 @@ public class ItemDTO {
 	private String removeDate;
 	private String removeExecuteDate;
 
+	// 최신 상품 리스트
+	public ItemDTO(int itemIdx, String itemName, long itemSalePrice, String itemMainImg,String itemContent) {
+		this.itemIdx = itemIdx;
+		this.itemName = itemName;
+		this.itemSalePrice = itemSalePrice;
+		this.itemMainImg = itemMainImg;
+		this.itemContent = itemContent;
+	}
+	
 	// 상품 옵션 가져올 때 필요한 생성자
 	public ItemDTO(int itemIdx, String size, String color, int itemStock) {
 		this.itemIdx = itemIdx;

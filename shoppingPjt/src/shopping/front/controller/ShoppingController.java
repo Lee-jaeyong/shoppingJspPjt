@@ -17,6 +17,7 @@ import shopping.front.model.EnterQuestion;
 import shopping.front.model.LoginUser;
 import shopping.front.model.LogoutUser;
 import shopping.front.model.OrderInsert;
+import shopping.front.model.SelectIndexPage;
 import shopping.front.model.ShoppingCartToOrder;
 import shopping.front.model.ShowItemInfo;
 
@@ -48,8 +49,8 @@ public class ShoppingController extends HttpServlet {
 		Action action = null;
 
 		if (command.equals("index.do")) {
-			forward.setPath("WEB-INF/front/index.jsp");
-			forward.setRedirect(false);
+			action = new SelectIndexPage();
+			forward = action.execute(request, response);
 		} else if (command.equals("shop.do")) {
 			forward.setPath("WEB-INF/front/shop.jsp");
 			forward.setRedirect(false);

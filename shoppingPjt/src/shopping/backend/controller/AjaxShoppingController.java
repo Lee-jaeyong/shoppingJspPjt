@@ -16,6 +16,7 @@ import shopping.backend.ajax.model.SelectAreaChart;
 import shopping.backend.ajax.model.SelectBarChart;
 import shopping.backend.ajax.model.SelectCategoryImplAction;
 import shopping.backend.ajax.model.SelectDeleteItemListImplAction;
+import shopping.backend.ajax.model.SelectEvent;
 import shopping.backend.ajax.model.SelectEventItemList;
 import shopping.backend.ajax.model.SelectItemImplAction;
 import shopping.backend.ajax.model.SelectItemOptionImplAction;
@@ -30,6 +31,7 @@ import shopping.backend.ajax.model.SelectTotalOrderInfo;
 import shopping.backend.ajax.model.UpdateCategoryImplAction;
 import shopping.backend.ajax.model.UpdateCategoryStatusImplAction;
 import shopping.backend.ajax.model.UpdateDeleteItemCencelImplAction;
+import shopping.backend.ajax.model.UpdateEventStatus;
 import shopping.backend.ajax.model.UpdateItemStatusImplAction;
 import shopping.backend.ajax.model.UpdateNotice;
 import shopping.backend.ajax.model.UpdateNoticeStatus;
@@ -122,6 +124,10 @@ public class AjaxShoppingController extends HttpServlet {
 			new UpdateNotice().execute(request, response);
 		}else if (command.equals("SelectEventItemList.ajax")) {
 			new SelectEventItemList().execute(request, response);
+		}else if (command.equals("SelectEvent.ajax")) {
+			new SelectEvent().execute(request, response);
+		}else if (command.equals("UpdateEventStatus.ajax")) {
+			new UpdateEventStatus().execute(request, response);
 		}
 	}
 }

@@ -7,6 +7,41 @@ public class EventDTO {
 	private String eventImg;
 	private String eventStart;
 	private String eventEnd;
+	private String itemName;
+	private int status;
+
+	public EventDTO() {
+
+	}
+
+	// 관리자 이벤트 목록
+	public EventDTO(int eventIdx, String eventTitle, int eventItemIdx, String itemName, String eventImg,
+			String eventStart, String eventEnd, int status) {
+		this.itemName = itemName;
+		this.eventIdx = eventIdx;
+		this.eventTitle = eventTitle;
+		this.eventItemIdx = eventItemIdx;
+		this.eventImg = eventImg;
+		this.eventStart = eventStart;
+		this.eventEnd = eventEnd;
+		this.status = status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	public String getItemName() {
+		return itemName;
+	}
 
 	public int getEventIdx() {
 		return eventIdx;

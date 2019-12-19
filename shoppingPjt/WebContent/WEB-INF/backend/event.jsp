@@ -66,9 +66,10 @@
 							<th>제 목</th>
 							<th>이벤트 품명</th>
 							<th>이미지</th>
+							<th>URL</th>
 							<th>시작일</th>
 							<th>종료일</th>
-							<th>URL</th>
+							<th></th>
 							<th></th>
 						</tr>
 					</thead>
@@ -85,119 +86,164 @@
 	<%@include file="./include/scrollTop.html"%>
 	<%@include file="./include/scriptArea.html"%>
 	<script>
-	const ctx = window
-    .location
-    .pathname
-    .substring(0, window
-        .location
-        .pathname
-        .indexOf("/", 2));
-function loadEvent(pageNum) {
-    $.ajax({
-        url: "./SelectEvent.ajax",
-        data: {
-            pageNum: pageNum
-        },
-        dataType: "json",
-        success: function (data) {
-            var eventList = data.result;
-            var startBlock = parseInt(data.startBlock);
-            var endBlock = parseInt(data.endBlock);
-            var totalBlock = parseInt(data.totalBlock);
-            var eventSection = '';
-            var pageArea = '';
-            var nowEvent = '';
-            for (var i = 0; i < eventList.length; i++) {
-            	if(eventList[i].status == 1)
-           		{
-            		nowEvent += '<tr>';
-            		nowEvent += '<td>' + eventList[i].eventIdx + '</td>';
-            		nowEvent += '<td><label class="btn btn-primary btn-sm">' + eventList[i].eventTitle + '</label></td>';
-            		nowEvent += '<td><label class="btn btn-success btn-sm">' + eventList[i].itemName + '</label></td>';
-            		nowEvent += '<td><img src="' + ctx + '/uploadBest/' + eventList[i].eventImg + '" style="width: 100px; height: 100px;"></td>';
-            		nowEvent += '<td><a href=./single.do?itemNumber=' + eventList[i].eventItemIdx + ' target=_blank>./single.do?itemNumber=' + eventList[i].eventItemIdx + '</a></td>';
-            		nowEvent += '<td><label class="btn btn-success btn-sm">' + eventList[i].eventStart + '</label></td>';
-	           		 var eventEnd = "설정 안함";
-	                    if(eventList[i].eventEnd != '')
-	                    	eventEnd = eventList[i].eventEnd;
-            		nowEvent += '<td><label class="btn btn-success btn-sm">' + eventEnd + '</label></td>';
-            		nowEvent += '<td><button onclick="updateEventStatus(' + eventList[i].eventIdx + ',0)" type="button" class="btn btn-danger">이벤트 중지</button></td>';
-            		nowEvent += '</tr>';
-           		}
-                eventSection += '<tr>';
-                eventSection += '<td>' + eventList[i].eventIdx + '</td>';
-                eventSection += '<td><label class="btn btn-primary btn-sm">' + eventList[i].eventTitle + '</label></td>';
-                eventSection += '<td><label class="btn btn-success btn-sm">' + eventList[i].itemName + '</label></td>';
-                eventSection += '<td><img src="' + ctx + '/uploadBest/' + eventList[i].eventImg + '" style="width: 100px; height: 100px;"></td>';
-                eventSection += '<td><a href=./single.do?itemNumber=' + eventList[i].eventItemIdx + ' target=_blank>./single.do?itemNumber=' + eventList[i].eventItemIdx + '</a></td>';
-                eventSection += '<td><label class="btn btn-success btn-sm">' + eventList[i].eventStart + '</label></td>';
-                var eventEnd = "설정 안함";
-                if(eventList[i].eventEnd != '')
-                	eventEnd = eventList[i].eventEnd;
-                eventSection += '<td><label class="btn btn-success btn-sm">' + eventEnd + '</label></td>';
-                if (eventList[i].status == 0) 
-                    eventSection += '<td><button onclick="updateEventStatus(' + eventList[i].eventIdx + ',1)" type="button" class="btn btn-info">이벤트 개시</button></td>';
-                 else 
-                    eventSection += '<td><button onclick="updateEventStatus(' + eventList[i].eventIdx + ',0)" type="button" class="btn btn-danger">이벤트 중지</button></td>';
-                 eventSection += '</tr>';
-            }
-            if (startBlock == 0) 
-                pageArea += '<button type="button" class="btn btn-primary" disabled><</button>';
-             else 
-                pageArea += '<button type="button" onclick="loadEvent(' + (
-                    startBlock - 1
-                ) + ')" class="btn btn-primary"><</button>';
-            
-            for (var i = startBlock; i < endBlock; i++) {
-                if (pageNum != i) 
-                    pageArea += '<button type="button" onclick="loadEvent(' + i + ')" class="btn btn-primary">' + (
-                        i + 1
-                    ) + '</button>';
-                 else 
-                    pageArea += '<button type="button" class="btn btn-primary" disabled>' + (
-                        i + 1
-                    ) + '</button>';
-                
-            }
-            if (totalBlock == endBlock) 
-                pageArea += '<button type="button" class="btn btn-primary" disabled>></button>';
-             else 
-                pageArea += '<button type="button" onclick="loadEvent(' + endBlock + ')" class="btn btn-primary">></button>';
-            
-            $("#eventSection").html(eventSection);
-            $("#pageArea").html(pageArea);
-            $("#nowEvent").html(nowEvent);
-        }
-    });
-}
-function updateEventStatus(idx, status) {
-    var chk = false;
-    if (status == 1) {
-        if (confirm("해당 이벤트를 개시하시겠습니까?")) 
-            chk = true;
-        
-    } else {
-        if (confirm("해당 이벤트를 중지하시겠습니까?")) 
-            chk = true;
-        
-    }
-    if (chk) 
-        $.ajax({
-            url: "./UpdateEventStatus.ajax",
-            data: {
-                eventIdx: idx,
-                status: status
-            },
-            success: function (data) {
-                alert(data);
-                loadEvent(0);
-            }
-        });
-    
-}
-window.onload = function () {
-    loadEvent(0);
-}
+		const ctx = window.location.pathname.substring(0,
+				window.location.pathname.indexOf("/", 2));
+		function loadEvent(pageNum) {
+			$
+					.ajax({
+						url : "./SelectEvent.ajax",
+						data : {
+							pageNum : pageNum
+						},
+						dataType : "json",
+						success : function(data) {
+							var eventList = data.result;
+							var startBlock = parseInt(data.startBlock);
+							var endBlock = parseInt(data.endBlock);
+							var totalBlock = parseInt(data.totalBlock);
+							var eventSection = '';
+							var pageArea = '';
+							var nowEvent = '';
+							for (var i = 0; i < eventList.length; i++) {
+								if (eventList[i].status == 1) {
+									nowEvent += '<tr>';
+									nowEvent += '<td>' + eventList[i].eventIdx
+											+ '</td>';
+									nowEvent += '<td><label class="btn btn-primary btn-sm">'
+											+ eventList[i].eventTitle
+											+ '</label></td>';
+									nowEvent += '<td><label class="btn btn-success btn-sm">'
+											+ eventList[i].itemName
+											+ '</label></td>';
+									nowEvent += '<td><img src="' + ctx + '/uploadBest/' + eventList[i].eventImg + '" style="width: 100px; height: 100px;"></td>';
+									nowEvent += '<td><a href=./single.do?itemNumber='
+											+ eventList[i].eventItemIdx
+											+ ' target=_blank>./single.do?itemNumber='
+											+ eventList[i].eventItemIdx
+											+ '</a></td>';
+									nowEvent += '<td><label class="btn btn-success btn-sm">'
+											+ eventList[i].eventStart
+											+ '</label></td>';
+									var eventEnd = "설정 안함";
+									if (eventList[i].eventEnd != '')
+										eventEnd = eventList[i].eventEnd;
+									nowEvent += '<td><label class="btn btn-success btn-sm">'
+											+ eventEnd + '</label></td>';
+									nowEvent += '<td><button onclick="updateEventStatus('
+											+ eventList[i].eventIdx
+											+ ',0)" type="button" class="btn btn-danger">이벤트 중지</button></td>';
+									nowEvent += '</tr>';
+								}
+								eventSection += '<tr>';
+								eventSection += '<td>' + eventList[i].eventIdx
+										+ '</td>';
+								eventSection += '<td><label class="btn btn-primary btn-sm">'
+										+ eventList[i].eventTitle
+										+ '</label></td>';
+								eventSection += '<td><label class="btn btn-success btn-sm">'
+										+ eventList[i].itemName
+										+ '</label></td>';
+								eventSection += '<td><img src="' + ctx + '/uploadBest/' + eventList[i].eventImg + '" style="width: 100px; height: 100px;"></td>';
+								eventSection += '<td><a href=./single.do?itemNumber='
+										+ eventList[i].eventItemIdx
+										+ ' target=_blank>./single.do?itemNumber='
+										+ eventList[i].eventItemIdx
+										+ '</a></td>';
+								eventSection += '<td><label class="btn btn-success btn-sm">'
+										+ eventList[i].eventStart
+										+ '</label></td>';
+								var eventEnd = "설정 안함";
+								if (eventList[i].eventEnd != '')
+									eventEnd = eventList[i].eventEnd;
+								eventSection += '<td><label class="btn btn-success btn-sm">'
+										+ eventEnd + '</label></td>';
+								if (eventList[i].status == 0)
+									eventSection += '<td><button onclick="updateEventStatus('
+											+ eventList[i].eventIdx
+											+ ',1)" type="button" class="btn btn-info">이벤트 개시</button></td>';
+								else
+									eventSection += '<td><button onclick="updateEventStatus('
+											+ eventList[i].eventIdx
+											+ ',0)" type="button" class="btn btn-danger">이벤트 중지</button></td>';
+								eventSection += '<td><button onclick="deleteEvent('+eventList[i].eventIdx+')" type="button" class="btn btn-warning">삭제</button></td>';
+								eventSection += '</tr>';
+							}
+							if (startBlock == 0)
+								pageArea += '<button type="button" class="btn btn-primary" disabled><</button>';
+							else
+								pageArea += '<button type="button" onclick="loadEvent('
+										+ (startBlock - 1)
+										+ ')" class="btn btn-primary"><</button>';
+
+							for (var i = startBlock; i < endBlock; i++) {
+								if (pageNum != i)
+									pageArea += '<button type="button" onclick="loadEvent('
+											+ i
+											+ ')" class="btn btn-primary">'
+											+ (i + 1) + '</button>';
+								else
+									pageArea += '<button type="button" class="btn btn-primary" disabled>'
+											+ (i + 1) + '</button>';
+
+							}
+							if (totalBlock == endBlock)
+								pageArea += '<button type="button" class="btn btn-primary" disabled>></button>';
+							else
+								pageArea += '<button type="button" onclick="loadEvent('
+										+ endBlock
+										+ ')" class="btn btn-primary">></button>';
+
+							$("#eventSection").html(eventSection);
+							$("#pageArea").html(pageArea);
+							$("#nowEvent").html(nowEvent);
+						}
+					});
+		}
+		function updateEventStatus(idx, status) {
+			var chk = false;
+			if (status == 1) {
+				if (confirm("해당 이벤트를 개시하시겠습니까?"))
+					chk = true;
+
+			} else {
+				if (confirm("해당 이벤트를 중지하시겠습니까?"))
+					chk = true;
+
+			}
+			if (chk)
+				$.ajax({
+					url : "./UpdateEventStatus.ajax",
+					data : {
+						eventIdx : idx,
+						status : status
+					},
+					success : function(data) {
+						alert(data);
+						loadEvent(0);
+					}
+				});
+
+		}
+		
+		function deleteEvent(idx){
+			if(confirm("이벤트를 정말 삭제하시겠습니까?\r삭제시 해당 이벤트는 복구가 불가능하며, 진행중인 이벤트를 삭제할 경우 자동 이벤트가 중지됩니다."))
+			{
+				$.ajax({
+					url : "./DeleteEvent.ajax",
+					data : {
+						idx : idx
+					},
+					success : function(data){
+						alert(data);
+						loadEvent(0);
+					}
+				});
+			}
+		}
+		
+		window.onload = function() {
+			loadEvent(0);
+		}
 	</script>
 </body>
 </html>

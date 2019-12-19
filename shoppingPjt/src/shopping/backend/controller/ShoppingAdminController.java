@@ -119,8 +119,11 @@ public class ShoppingAdminController extends HttpServlet {
 		} else if (command.equals("addEventExecute.admin")) {
 			action = new InsertEventExecute();
 			forward = action.execute(request, response);
+		}else if (command.equals("userList.admin")) {
+			forward.setPath("WEB-INF/backend/userlist.jsp");
+			forward.setRedirect(false);
 		}
-
+		
 		if (forward.isRedirect()) {
 			response.sendRedirect(forward.getPath());
 		} else {

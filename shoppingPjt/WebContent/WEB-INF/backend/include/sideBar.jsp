@@ -32,7 +32,7 @@
 		href="./adminReview.admin"> <i class="fas fa-fw fa-chart-area"></i>
 			<span>후기 관리</span>
 	</a></li>
-	<li class="nav-item"><a class="nav-link" href="#"> <i
+	<li class="nav-item"><a class="nav-link" href="./userList.admin"> <i
 			class="fas fa-fw fa-chart-area"></i> <span>회원 관리</span>
 	</a></li>
 	<li class="nav-item"><a class="nav-link"

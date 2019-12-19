@@ -11,7 +11,6 @@ public class UserDTO {
 	private String userAddress;
 	private int userRank;
 	
-	
 	// 로그인 시 반환되는 사용자 정보
 	public UserDTO(int userIdx, String userIdenty, String userName, String userEmail, String userPhone,
 			String userBirth, String userAddress, int userRank) {
@@ -27,7 +26,6 @@ public class UserDTO {
 	
 	public UserDTO(String userIdenty, String userName, String userPass, String userEmail, String userPhone,
 			String userBirth, String userAddress, int userRank) {
-		super();
 		this.userIdenty = userIdenty;
 		this.userName = userName;
 		this.userPass = userPass;

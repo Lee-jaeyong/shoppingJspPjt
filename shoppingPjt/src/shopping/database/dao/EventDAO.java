@@ -109,4 +109,19 @@ public class EventDAO extends Database {
 			return false;
 		}
 	}
+
+	public boolean deleteEvent(int eventIdx) {
+		try {
+			String sql = "DELETE FROM eventInfo WHERE eventIdx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, eventIdx);
+			pstmt.executeUpdate();
+			closed();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			closed();
+			return false;
+		}
+	}
 }

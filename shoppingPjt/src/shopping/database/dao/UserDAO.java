@@ -1,6 +1,7 @@
 package shopping.database.dao;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.naming.NamingException;
 
@@ -10,6 +11,53 @@ import shopping.filter.SecureString;
 public class UserDAO extends Database {
 	public UserDAO() throws SQLException, NamingException {
 		dbConnect();
+	}
+
+	public int selectUserCount(String searchType, String search) {
+		int count = 0;
+		try {
+			String sql = "SELECT COUNT(*) from user";
+			if (!searchType.equals(""))
+				sql = "SELECT COUNT(*) from user WHERE " + searchType + " like ?";
+			pstmt = conn.prepareStatement(sql);
+			if (!searchType.equals(""))
+				pstmt.setString(1, "%"+search+"%");
+			rs = pstmt.executeQuery();
+			rs.next();
+			count = rs.getInt(1);
+			closed();
+		} catch (Exception e) {
+			e.printStackTrace();
+			closed();
+		}
+		return count;
+	}
+
+	public ArrayList<UserDTO> selectUserList(int pageNum, String searchType, String search) {
+		ArrayList<UserDTO> list = new ArrayList<UserDTO>();
+		try {
+			String sql = "SELECT userIdx,userIdenty,userName,userEmail,userPhone,userBirth,userAddress,userRank FROM user LIMIT ?,10";
+			if (!searchType.equals(""))
+				sql = "SELECT userIdx,userIdenty,userName,userEmail,userPhone,userBirth,userAddress,userRank FROM user WHERE "
+						+ searchType + " like ? LIMIT ?,10";
+			pstmt = conn.prepareStatement(sql);
+			if (!searchType.equals(""))
+			{
+				pstmt.setString(1, "%"+search+"%");
+				pstmt.setInt(2, pageNum);
+			}
+			else
+				pstmt.setInt(1, pageNum);
+			rs = pstmt.executeQuery();
+			while (rs.next())
+				list.add(new UserDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getString(6), rs.getString(7), rs.getInt(8)));
+			closed();
+		} catch (Exception e) {
+			e.printStackTrace();
+			closed();
+		}
+		return list;
 	}
 
 	public UserDTO selectUserInfo(String idx) {
@@ -30,7 +78,7 @@ public class UserDAO extends Database {
 		}
 		return user;
 	}
-	
+
 	public UserDTO userLogin(String id, String pw) {
 		UserDTO user;
 		try {

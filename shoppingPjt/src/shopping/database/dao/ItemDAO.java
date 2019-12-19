@@ -24,11 +24,10 @@ public class ItemDAO extends Database {
 			while (rs.next()) {
 				list.add(new ItemDTO(rs.getInt(1), rs.getString(2), rs.getLong(3), rs.getString(4), rs.getString(5)));
 			}
-			rs.close();
-			conn.close();
-			pstmt.close();
+			closed();
 		} catch (Exception e) {
 			e.printStackTrace();
+			closed();
 		}
 		return list;
 	}
@@ -63,10 +62,9 @@ public class ItemDAO extends Database {
 			rs.next();
 			item = new ItemDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5),
 					rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9));
-			rs.close();
-			conn.close();
-			pstmt.close();
+			closed();
 		} catch (Exception e) {
+			closed();
 		}
 		return item;
 	}
@@ -291,10 +289,9 @@ public class ItemDAO extends Database {
 			while (rs.next()) {
 				list.add(new ItemDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
 			}
-			conn.close();
-			pstmt.close();
-			rs.close();
+			closed();
 		} catch (Exception e) {
+			closed();
 			return list;
 		}
 		return list;

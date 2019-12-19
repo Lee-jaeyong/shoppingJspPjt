@@ -20,7 +20,6 @@ public class SelectRepresentCategory implements Action {
 		try {
 			CategoryDAO categoryDAO = new CategoryDAO();
 			ArrayList<CategoryDTO> list = categoryDAO.selectRepresentCategory();
-			categoryDAO = new CategoryDAO();
 			request.setAttribute("representList", list);
 		}catch (Exception e) {
 		}

@@ -149,14 +149,11 @@ public class CategoryDAO extends Database {
 			list[0] = rs.getString(1);
 			list[1] = rs.getString(2);
 			list[2] = rs.getString(3);
-			rs.close();
 		} catch (Exception e) {
+			closed();
 			return list;
 		} finally {
-			if (conn != null)
-				conn.close();
-			if (pstmt != null)
-				pstmt.close();
+			closed();
 		}
 		return list;
 	}

@@ -20,7 +20,7 @@ public class ShoppingCartAndOrderDAO extends Database {
 		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 		try {
 			String sql = "SELECT LEFT(orderDate,10) orderDate FROM orders,items,itemoptions\r\n"
-					+ "WHERE orders.orderItemOption = itemoptions.opIdx AND items.itemIdx = itemOptions.op_i_idx AND orderUserIdx = ? GROUP BY LEFT(orderDate,10) LIMIT 0,10";
+					+ "WHERE orders.orderItemOption = itemoptions.opIdx AND items.itemIdx = itemOptions.op_i_idx AND orderUserIdx = ? GROUP BY LEFT(orderDate,10) ORDER BY orderDate desc LIMIT 0,10";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userIdx);
 			rs = pstmt.executeQuery();
@@ -62,7 +62,7 @@ public class ShoppingCartAndOrderDAO extends Database {
 			String sql = "SELECT orderCode,itemName,orderTotalSalePrice,orderCount,orderDate,orderStatus\r\n"
 					+ "FROM orders,items,itemoptions\r\n"
 					+ "WHERE orders.orderItemOption = itemoptions.opIdx AND items.itemIdx = itemOptions.op_i_idx AND orderUserIdx = "
-					+ userIdx + " GROUP BY orderIdx";
+					+ userIdx + " GROUP BY orderIdx ORDER BY orderDate desc";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -87,11 +87,10 @@ public class ShoppingCartAndOrderDAO extends Database {
 			rs = pstmt.executeQuery();
 			rs.next();
 			result = "[ " + rs.getString(1) + " - " + rs.getString(2) + " ]";
-			rs.close();
-			conn.close();
-			pstmt.close();
+			closed();
 		} catch (Exception e) {
 			e.printStackTrace();
+			closed();
 		}
 		return result;
 	}
@@ -107,11 +106,10 @@ public class ShoppingCartAndOrderDAO extends Database {
 			rs.next();
 			if (rs.getInt(1) > 0)
 				chk = true;
-			rs.close();
-			conn.close();
-			pstmt.close();
+			closed();
 		} catch (Exception e) {
 			e.printStackTrace();
+			closed();
 		}
 		return chk;
 	}

@@ -23,11 +23,10 @@ public class ReviewDAO extends Database {
 			boolean chk = true;
 			if (rs.getInt(1) > 0)
 				chk = false;
-			rs.close();
-			pstmt.close();
-			conn.close();
+			closed();
 			return chk;
 		} catch (Exception e) {
+			closed();
 			e.printStackTrace();
 		}
 		return false;

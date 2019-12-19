@@ -3,7 +3,6 @@ package shopping.backend.controller;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +25,7 @@ import shopping.backend.ajax.model.SelectNotice;
 import shopping.backend.ajax.model.SelectOrderInfo;
 import shopping.backend.ajax.model.SelectOrderList;
 import shopping.backend.ajax.model.SelectPieChart;
+import shopping.backend.ajax.model.SelectRepresentCategoryCheck;
 import shopping.backend.ajax.model.SelectReviewAll;
 import shopping.backend.ajax.model.SelectShowLackOptions;
 import shopping.backend.ajax.model.SelectTotalOrderInfo;
@@ -42,7 +42,6 @@ import shopping.backend.ajax.model.UpdateOrderStatus;
 import shopping.backend.ajax.model.UpdateStockImplAction;
 import shopping.backend.ajax.model.UpdateStockfromIndex;
 
-@WebServlet("/AjaxShoppingController")
 public class AjaxShoppingController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -134,6 +133,8 @@ public class AjaxShoppingController extends HttpServlet {
 			new DeleteEvent().execute(request, response);
 		}else if (command.equals("SelectUserList.ajax")) {
 			new SelectUserList().execute(request, response);
+		}else if (command.equals("SelectRepresentCategoryCheck.ajax")) {
+			new SelectRepresentCategoryCheck().execute(request, response);
 		}
 	}
 }

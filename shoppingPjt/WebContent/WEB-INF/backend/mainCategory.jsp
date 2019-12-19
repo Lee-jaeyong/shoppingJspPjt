@@ -140,16 +140,30 @@
 	    });
 	    
 	    $("#btnAddRepresentExecute").click(function () {
-	        if ($("#category").val() === '') 
+	    	if ($("#category").val() === '') 
 	            alert("대분류를 선택해주세요.");
 	         else if ($("#representImg").val().trim() === '') 
 	            alert("이미지를 선택해주세요.");
 	         else {
-	            $("#representForm")
-	                .attr("action", "./addRepresentCategory.admin")
-	                .attr("enctype", "multipart/form-data")
-	                .attr("method", "post")
-	                .submit();
+	        	$.ajax({
+	        		url : "./SelectRepresentCategoryCheck.ajax",
+	        		data : {
+	        			representCategory : $("#category").val()
+	        		},
+	        		success : function(data){
+						if(data === 'false')
+							alert("이미 등록된 동일한 카테고리가 존재합니다.");
+						else
+						{
+							if(confirm("정말 위 내용으로 대표 카테고리를 등록하시겠습니까?"))
+					            $("#representForm")
+					                .attr("action", "./addRepresentCategory.admin")
+					                .attr("enctype", "multipart/form-data")
+					                .attr("method", "post")
+					                .submit();
+						}
+	        		}
+	        	});
 	        }
 	    });
     });

@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +25,6 @@ import shopping.backend.model.UpdateItemMainImg;
 import shopping.backend.model.adminOrderListExcelUpload;
 import shopping.database.dao.ItemDAO;
 
-@WebServlet("/ShoppingAdminController")
 public class ShoppingAdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

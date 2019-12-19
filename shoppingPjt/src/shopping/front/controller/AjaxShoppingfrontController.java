@@ -3,7 +3,6 @@ package shopping.front.controller;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +21,6 @@ import shopping.front.ajax.model.UpdateCartCount;
 import shopping.front.ajax.model.UpdateReview;
 import shopping.front.ajax.model.UserIdDupChkImplShoppingService;
 
-@WebServlet("/AjaxShoppingfrontController")
 public class AjaxShoppingfrontController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

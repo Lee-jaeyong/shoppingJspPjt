@@ -13,6 +13,26 @@ public class CategoryDAO extends Database {
 		dbConnect();
 	}
 
+	public boolean selectRepresentCategory(int representIdx) {
+		boolean chk = true;
+		try {
+			String sql = "SELECT COUNT(representIdx) FROM representCategory WHERE representCategoryidx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, representIdx);
+			rs = pstmt.executeQuery();
+			rs.next();
+			if (rs.getInt(1) > 0)
+				chk = false;
+			else
+				chk = true;
+			closed();
+		} catch (Exception e) {
+			e.printStackTrace();
+			closed();
+		}
+		return chk;
+	}
+
 	public int selectRepresentCategoryCount() {
 		int count = 0;
 		try {
@@ -21,13 +41,13 @@ public class CategoryDAO extends Database {
 			rs = pstmt.executeQuery();
 			rs.next();
 			count = rs.getInt(1);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		closed();
 		return count;
 	}
-	
+
 	public ArrayList<CategoryDTO> selectRepresentCategory() {
 		ArrayList<CategoryDTO> list = new ArrayList<CategoryDTO>();
 		try {
@@ -228,16 +248,15 @@ public class CategoryDAO extends Database {
 		} catch (Exception e) {
 		}
 	}
-	
-	public void deleteRepresentCategory(String idx)
-	{
+
+	public void deleteRepresentCategory(String idx) {
 		try {
 			String sql = "DELETE FROM representCategory WHERE representIdx = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, idx);
 			pstmt.executeUpdate();
 			closed();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			closed();
 		}

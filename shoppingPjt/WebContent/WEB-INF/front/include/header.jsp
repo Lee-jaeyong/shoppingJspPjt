@@ -212,8 +212,6 @@
 								</div>
 							</div>
 
-							<li style="display: none;"><a href="#">로그아웃</a></li>
-
 							<li><a href="javascript:checkLogin()">마이페이지</a></li>
 							<li><a href="javascript:checkLogin()" class="site-cart">
 									<span class="icon icon-shopping_cart"></span>

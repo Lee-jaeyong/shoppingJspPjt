@@ -53,7 +53,7 @@
 								for (int i = 0; i < list.size(); i++) {
 							%>
 							<tr>
-								<td><%=list.get(i).getRepresentName()%></td>
+								<td><label class="btn btn-primary"><%=list.get(i).getRepresentName()%></label></td>
 								<td><img src="${pageContext.request.contextPath}/uploadRepresentCategory/<%=list.get(i).getRepresentPath()%>"
 									style="width: 150px; height: 150px;" /></td>
 								<td><a target="_blank"

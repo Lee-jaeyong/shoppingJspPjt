@@ -49,7 +49,7 @@
 	<li class="nav-item"><a class="nav-link" href="./adminMainCategory.admin"> <i
 			class="fas fa-fw fa-chart-area"></i> <span>대표 카테고리 설정</span>
 	</a></li>
-	<li class="nav-item"><a class="nav-link" href="#"> <i
+	<li class="nav-item"><a class="nav-link" href="./logoutAction.do"> <i
 			class="fas fa-fw fa-chart-area"></i> <span>로그 아웃</span>
 	</a></li>
 </ul>

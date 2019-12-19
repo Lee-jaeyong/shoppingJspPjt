@@ -46,7 +46,7 @@
 	<li class="nav-item"><a class="nav-link" href="./adminEvent.admin">
 			<i class="fas fa-fw fa-chart-area"></i> <span>이벤트 관리</span>
 	</a></li>
-	<li class="nav-item"><a class="nav-link" href="#"> <i
+	<li class="nav-item"><a class="nav-link" href="./adminMainCategory.admin"> <i
 			class="fas fa-fw fa-chart-area"></i> <span>대표 카테고리 설정</span>
 	</a></li>
 	<li class="nav-item"><a class="nav-link" href="#"> <i

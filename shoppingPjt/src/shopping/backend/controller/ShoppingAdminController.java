@@ -14,10 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 import shopping.action.Action;
 import shopping.action.ActionForward;
 import shopping.backend.model.AddItem;
+import shopping.backend.model.DeleteRepresentCategory;
 import shopping.backend.model.ExcelFileUpload;
 import shopping.backend.model.InsertEventExecute;
 import shopping.backend.model.InsertNotice;
+import shopping.backend.model.InsertRepresentCategory;
 import shopping.backend.model.SelectItemInfo;
+import shopping.backend.model.SelectRepresentCategory;
 import shopping.backend.model.UpdateItem;
 import shopping.backend.model.UpdateItemMainImg;
 import shopping.backend.model.adminOrderListExcelUpload;
@@ -119,11 +122,20 @@ public class ShoppingAdminController extends HttpServlet {
 		} else if (command.equals("addEventExecute.admin")) {
 			action = new InsertEventExecute();
 			forward = action.execute(request, response);
-		}else if (command.equals("userList.admin")) {
+		} else if (command.equals("userList.admin")) {
 			forward.setPath("WEB-INF/backend/userlist.jsp");
 			forward.setRedirect(false);
+		} else if (command.equals("adminMainCategory.admin")) {
+			action = new SelectRepresentCategory();
+			forward = action.execute(request, response);
+		} else if (command.equals("addRepresentCategory.admin")) {
+			action = new InsertRepresentCategory();
+			forward = action.execute(request, response);
+		} else if (command.equals("deleteRepresentCategory.admin")) {
+			action = new DeleteRepresentCategory();
+			forward = action.execute(request, response);
 		}
-		
+
 		if (forward.isRedirect()) {
 			response.sendRedirect(forward.getPath());
 		} else {

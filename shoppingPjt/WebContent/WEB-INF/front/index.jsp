@@ -38,8 +38,7 @@
 								<%
 									}
 								%>
-								<a href=./single.do?itemNumber=
-									<%=eventList.get(i).getEventItemIdx()%>> <img
+								<a href=./single.do?itemNumber=<%=eventList.get(i).getEventItemIdx()%>> <img
 									src="${pageContext.request.contextPath}/uploadBest/<%=eventList.get(i).getEventImg()%>">
 									<div class="carousel-caption">
 										<h3><%=eventList.get(i).getItemName()%></h3>

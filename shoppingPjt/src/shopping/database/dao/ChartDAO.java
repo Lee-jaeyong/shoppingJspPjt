@@ -24,7 +24,8 @@ public class ChartDAO extends Database {
 					sql += " AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '2'\r\n"
 							+ " AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '3'\r\n"
 							+ " AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '4'\r\n"
-							+ " AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '5'";
+							+ " AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '5'"
+							+ " AND NOT LEFT((YEAR(CURDATE())-YEAR(userBirth)),1) = '1'";
 				pstmt = conn.prepareStatement(sql);
 				rs = pstmt.executeQuery();
 				rs.next();

@@ -86,7 +86,7 @@
 		</div>
 		<%@include file="./include/footer.jsp"%>
 	</div>
-	<input type="text" id="userIdx"
+	<input type="hidden" id="userIdx"
 		value="<%=session.getAttribute("userIdx").toString()%>">
 	<form id="shoppingCartToOrderForm">
 		<input type="hidden" id="sendShoppingCartList"

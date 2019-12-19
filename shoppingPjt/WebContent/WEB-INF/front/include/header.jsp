@@ -112,12 +112,15 @@
 		location.href="./single.do?itemNumber="+itemIdx;
 	}
 	
-	function checkLogin() {
+	function checkLogin(type) {
 		if ($("#userloginChk").val() === '') {
 			alert("로그인이 필요한 기능입니다.");
 			$("#loginBtn").click();
 		} else
-			location.href = './cart.do';
+			if(type === 'mypage')
+				location.href = './myPage.do';
+			else if(type === 'cart')
+				location.href = './cart.do';
 	}
 
 	window.onload = categoryLoad();
@@ -136,7 +139,6 @@
 		int urlLength = url.lastIndexOf(".");
 		url = url.substring(lastIndexOf, urlLength);
 	%>
-
 	<div class="site-navbar-top">
 		<div class="container">
 			<div class="row align-items-center">
@@ -212,8 +214,8 @@
 								</div>
 							</div>
 
-							<li><a href="javascript:checkLogin()">마이페이지</a></li>
-							<li><a href="javascript:checkLogin()" class="site-cart">
+							<li><a href="javascript:checkLogin('mypage')">마이페이지</a></li>
+							<li><a href="javascript:checkLogin('cart')" class="site-cart">
 									<span class="icon icon-shopping_cart"></span>
 							</a></li>
 							<li class="d-inline-block d-md-none ml-md-0"><a href="#"

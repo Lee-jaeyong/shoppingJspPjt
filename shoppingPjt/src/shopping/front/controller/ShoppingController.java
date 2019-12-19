@@ -17,6 +17,7 @@ import shopping.front.model.LoginUser;
 import shopping.front.model.LogoutUser;
 import shopping.front.model.OrderInsert;
 import shopping.front.model.SelectIndexPage;
+import shopping.front.model.SelectRepresentCategory;
 import shopping.front.model.ShoppingCartToOrder;
 import shopping.front.model.ShowItemInfo;
 
@@ -50,8 +51,8 @@ public class ShoppingController extends HttpServlet {
 			action = new SelectIndexPage();
 			forward = action.execute(request, response);
 		} else if (command.equals("shop.do")) {
-			forward.setPath("WEB-INF/front/shop.jsp");
-			forward.setRedirect(false);
+			action = new SelectRepresentCategory();
+			forward = action.execute(request, response);
 		} else if (command.equals("loginAction.do")) {
 			action = new LoginUser();
 			forward = action.execute(request, response);
@@ -97,7 +98,11 @@ public class ShoppingController extends HttpServlet {
 		} else if (command.equals("userAddress.do")) {
 			forward.setPath("WEB-INF/front/address/jusoPopup.jsp");
 			forward.setRedirect(false);
+		} else if (command.equals("myPage.do")) {
+			forward.setPath("WEB-INF/front/mypage.jsp");
+			forward.setRedirect(false);
 		}
+		
 		if (forward.isRedirect()) {
 			response.sendRedirect(forward.getPath());
 		} else {

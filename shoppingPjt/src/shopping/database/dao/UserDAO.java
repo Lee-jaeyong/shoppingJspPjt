@@ -21,7 +21,7 @@ public class UserDAO extends Database {
 				sql = "SELECT COUNT(*) from user WHERE " + searchType + " like ?";
 			pstmt = conn.prepareStatement(sql);
 			if (!searchType.equals(""))
-				pstmt.setString(1, "%"+search+"%");
+				pstmt.setString(1, "%" + search + "%");
 			rs = pstmt.executeQuery();
 			rs.next();
 			count = rs.getInt(1);
@@ -33,21 +33,20 @@ public class UserDAO extends Database {
 		return count;
 	}
 
-	public ArrayList<UserDTO> selectUserList(int pageNum, String searchType, String search) {
+	public ArrayList<UserDTO> selectUserList(int pageNum, String searchType, String search, String sortType) {
 		ArrayList<UserDTO> list = new ArrayList<UserDTO>();
 		try {
-			String sql = "SELECT userIdx,userIdenty,userName,userEmail,userPhone,userBirth,userAddress,userRank FROM user LIMIT ?,10";
+			String sql = "SELECT userIdx,userIdenty,userName,userEmail,userPhone,userBirth,userAddress,userRank FROM user ORDER BY "
+					+ sortType + " LIMIT ?,10";
 			if (!searchType.equals(""))
 				sql = "SELECT userIdx,userIdenty,userName,userEmail,userPhone,userBirth,userAddress,userRank FROM user WHERE "
-						+ searchType + " like ? LIMIT ?,10";
+						+ searchType + " like ? ORDER BY " + sortType + " LIMIT ?,10";
 			pstmt = conn.prepareStatement(sql);
-			if (!searchType.equals(""))
-			{
-				pstmt.setString(1, "%"+search+"%");
-				pstmt.setInt(2, pageNum);
-			}
-			else
-				pstmt.setInt(1, pageNum);
+			if (!searchType.equals("")) {
+				pstmt.setString(1, "%" + search + "%");
+				pstmt.setInt(2, pageNum * 10);
+			} else
+				pstmt.setInt(1, pageNum * 10);
 			rs = pstmt.executeQuery();
 			while (rs.next())
 				list.add(new UserDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),

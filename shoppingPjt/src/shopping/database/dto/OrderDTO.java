@@ -21,6 +21,17 @@ public class OrderDTO {
 	private String itemColor;
 	private String itemSize;
 
+	// 사용자별 주문 확인시 필요한 생성자
+	public OrderDTO(String orderCode, String itemName, long orderTotalSalePrice, int totalOrderCount, String orderDate,
+			int orderStatus) {
+		this.orderCode = orderCode;
+		this.itemName = itemName;
+		this.orderTotalSalePrice = orderTotalSalePrice;
+		this.totalOrderCount = totalOrderCount;
+		this.orderDate = orderDate;
+		this.orderStatus = orderStatus;
+	}
+
 	// 주문 엑셀 출력시 사용되는 생성자
 	public OrderDTO(String name, String itemName, int relationOrderCount, int totalOrderCount, String address,
 			String orderDate) {

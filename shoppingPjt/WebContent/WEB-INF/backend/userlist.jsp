@@ -93,7 +93,17 @@
 				dateFormat : 'yy-mm-dd'
 			});
 			
+			$("#sortType").change(function(){
+				userload(0);
+			});
+			
 			$("#btnSearch").click(function(){
+				if($("#inputSearch").val().trim() === '')
+				{
+					alert("검색할 사용자를 입력해주세요.");
+					$("#inputSearch").val("");
+					return;
+				}
 				$("#searchType").val($("#selectSearchType").val());
 				$("#searchInput").val($("#inputSearch").val());
 				userload(0);

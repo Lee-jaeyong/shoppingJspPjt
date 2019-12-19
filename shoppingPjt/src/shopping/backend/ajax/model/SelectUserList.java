@@ -31,7 +31,7 @@ public class SelectUserList implements ShoppingService {
 			if (endBlock > totalBlock)
 				endBlock = totalBlock;
 			userDAO = new UserDAO();
-			ArrayList<UserDTO> list = userDAO.selectUserList(pageNum, searchType, search);
+			ArrayList<UserDTO> list = userDAO.selectUserList(pageNum, searchType, search,sortType);
 			response.getWriter().write(getJson(list, startBlock, endBlock, totalBlock));
 		} catch (Exception e) {
 		}

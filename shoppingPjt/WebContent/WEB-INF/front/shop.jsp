@@ -1,3 +1,5 @@
+<%@page import="shopping.database.dto.CategoryDTO"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="./include/head.jsp"%>
@@ -63,7 +65,6 @@
 					</div>
 				</div>
 			</div>
-
 			<div class="row">
 				<div class="col-md-12">
 					<div class="site-section site-blocks-2">
@@ -73,44 +74,32 @@
 							</div>
 						</div>
 						<div class="row">
+							<%
+								ArrayList<CategoryDTO> representCategory = (ArrayList) request.getAttribute("representList");
+								int size = 12;
+								size = size / representCategory.size();
+								int widthSize = 350 * size;
+								for (int i = 0; i < representCategory.size(); i++) {
+							%>
 							<div class="col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0"
 								data-aos="fade" data-aos-delay="">
-								<a class="block-2-item" href="#">
+								<a class="block-2-item" href="./shop.do?category=<%=representCategory.get(i).getSmallCategoryIdx()%>">
 									<figure class="image">
-										<img src="front/images/women.jpg" alt="" class="img-fluid">
+										<img
+											src="${pageContext.request.contextPath}/uploadRepresentCategory/<%=representCategory.get(i).getRepresentPath()%>"
+											class="img-fluid"
+											style="width: <%=widthSize %>px; height: 650px;">
 									</figure>
 									<div class="text">
 										<span class="text-uppercase">Collections</span>
-										<h3>Clothing</h3>
+										<h3><%=representCategory.get(i).getRepresentName()%></h3>
 									</div>
 								</a>
 							</div>
-							<div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0"
-								data-aos="fade" data-aos-delay="100">
-								<a class="block-2-item" href="#">
-									<figure class="image">
-										<img src="front/images/children.jpg" alt="" class="img-fluid">
-									</figure>
-									<div class="text">
-										<span class="text-uppercase">Collections</span>
-										<h3>Shoes</h3>
-									</div>
-								</a>
-							</div>
-							<div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0"
-								data-aos="fade" data-aos-delay="200">
-								<a class="block-2-item" href="#">
-									<figure class="image">
-										<img src="front/images/men.jpg" alt="" class="img-fluid">
-									</figure>
-									<div class="text">
-										<span class="text-uppercase">Collections</span>
-										<h3>Accessory</h3>
-									</div>
-								</a>
-							</div>
+							<%
+								}
+							%>
 						</div>
-
 					</div>
 				</div>
 			</div>
@@ -162,7 +151,8 @@
 		}
 
 		function pageLoad(pageNum) {
-			$.ajax({
+			$
+					.ajax({
 						url : "./SelectItemList.aj",
 						data : {
 							pageNum : pageNum,
@@ -176,8 +166,12 @@
 							for (var i = 0; i < itemList.length; i++) {
 								html += '<div class="col-sm-4 col-lg-3 mb-4" data-aos="fade-up">';
 								html += '<div class="block-4 text-center border"><figure class="block-4-image">';
-								html += '<a href="./single.do?itemNumber='+itemList[i].itemIdx+'"><img src="'+ctx+'/uploadImage/'+itemList[i].itemMainImg+'" style="height:300px; width:250px;" class="img-fluid"></a></figure>';
-								html += '<div class="block-4-text p-4"><h3><a href="./single.do?itemNumber='+itemList[i].itemIdx+'">'
+								html += '<a href="./single.do?itemNumber='
+										+ itemList[i].itemIdx
+										+ '"><img src="'+ctx+'/uploadImage/'+itemList[i].itemMainImg+'" style="height:300px; width:250px;" class="img-fluid"></a></figure>';
+								html += '<div class="block-4-text p-4"><h3><a href="./single.do?itemNumber='
+										+ itemList[i].itemIdx
+										+ '">'
 										+ itemList[i].itemName
 										+ '</a></h3><p class="mb-0">'
 										+ itemList[i].itemInfo
@@ -221,7 +215,7 @@
 		function numberWithCommas(x) {
 			return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		}
-		
+
 		window.onload = function() {
 			selectSmallCategoryList();
 			pageLoad(0);

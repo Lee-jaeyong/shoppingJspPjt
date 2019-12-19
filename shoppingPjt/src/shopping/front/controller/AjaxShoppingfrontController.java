@@ -7,11 +7,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import shopping.front.ajax.model.DeleteOrderByUser;
 import shopping.front.ajax.model.DeleteReview;
 import shopping.front.ajax.model.DeleteShoppingCart;
 import shopping.front.ajax.model.FrontSelectItemImplShoppingService;
 import shopping.front.ajax.model.InsertReview;
 import shopping.front.ajax.model.InsertShoppingCart;
+import shopping.front.ajax.model.SelectMyOrderList;
 import shopping.front.ajax.model.SelectReview;
 import shopping.front.ajax.model.SelectSearchItem;
 import shopping.front.ajax.model.SelectShoppingCart;
@@ -70,6 +72,10 @@ public class AjaxShoppingfrontController extends HttpServlet {
 			new DeleteReview().execute(request, response);
 		}else if (command.equals("UpdateReview.aj")) {
 			new UpdateReview().execute(request, response);
+		}else if (command.equals("SelectMyOrderList.aj")) {
+			new SelectMyOrderList().execute(request, response);
+		}else if (command.equals("DeleteOrderByUser.aj")) {
+			new DeleteOrderByUser().execute(request, response);
 		}
 	}
 }

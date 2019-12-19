@@ -2,6 +2,7 @@ package shopping.database.dao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.naming.NamingException;
 
@@ -14,7 +15,68 @@ public class ShoppingCartAndOrderDAO extends Database {
 	public ShoppingCartAndOrderDAO() throws SQLException, NamingException {
 		dbConnect();
 	}
-	
+
+	public ArrayList<HashMap<String, String>> selectOrderDateByUser(String userIdx) {
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+		try {
+			String sql = "SELECT LEFT(orderDate,10) orderDate FROM orders,items,itemoptions\r\n"
+					+ "WHERE orders.orderItemOption = itemoptions.opIdx AND items.itemIdx = itemOptions.op_i_idx AND orderUserIdx = ? GROUP BY LEFT(orderDate,10) LIMIT 0,10";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userIdx);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("orderDate", rs.getString(1));
+				list.add(map);
+			}
+			closed();
+		} catch (Exception e) {
+			e.printStackTrace();
+			closed();
+		}
+		return list;
+	}
+
+	public int selectOrderCountByUser(String userIdx) {
+		int count = 0;
+		try {
+			String sql = "SELECT COUNT(orderCode)\r\n" + "FROM orders,items,itemoptions\r\n"
+					+ "WHERE orders.orderItemOption = itemoptions.opIdx AND items.itemIdx = itemOptions.op_i_idx AND orderUserIdx = ?\r\n"
+					+ "GROUP BY orderIdx";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userIdx);
+			rs = pstmt.executeQuery();
+			rs.next();
+			count = rs.getInt(1);
+			closed();
+		} catch (Exception e) {
+			e.printStackTrace();
+			closed();
+		}
+		return count;
+	}
+
+	public ArrayList<OrderDTO> selectOrderListByUser(String userIdx) {
+		ArrayList<OrderDTO> list = new ArrayList<OrderDTO>();
+		try {
+			String sql = "SELECT orderCode,itemName,orderTotalSalePrice,orderCount,orderDate,orderStatus\r\n"
+					+ "FROM orders,items,itemoptions\r\n"
+					+ "WHERE orders.orderItemOption = itemoptions.opIdx AND items.itemIdx = itemOptions.op_i_idx AND orderUserIdx = "
+					+ userIdx + " GROUP BY orderIdx";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(new OrderDTO(rs.getString(1), rs.getString(2), rs.getLong(3), rs.getInt(4), rs.getString(5),
+						rs.getInt(6)));
+			}
+			closed();
+		} catch (Exception e) {
+			e.printStackTrace();
+			closed();
+		}
+		return list;
+	}
+
 	public String selectBuyCheckOption(String userIdx) {
 		String result = "";
 		try {
@@ -436,6 +498,43 @@ public class ShoppingCartAndOrderDAO extends Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return 0;
+		}
+	}
+
+	public boolean deleteOrderByUser(String orderCode, String comment, String userIdx) {
+		try {
+			conn.setAutoCommit(false);
+			String sql = "SELECT orderInfoIdx FROM orderinfo,orders\r\n"
+					+ "WHERE orderinfo.oiIdx = orders.orderInfoIdx AND orderCode = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, orderCode);
+			rs = pstmt.executeQuery();
+			rs.next();
+			int idx = rs.getInt(1);
+			sql = "DELETE FROM orders WHERE orderCode = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, orderCode);
+			pstmt.executeUpdate();
+			sql = "DELETE FROM orderinfo WHERE oiIdx = " + idx;
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+			sql = "INSERT INTO cencelorder VALUES (?,LEFT(NOW(),10),?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, comment);
+			pstmt.setInt(2, Integer.parseInt(userIdx));
+			pstmt.executeUpdate();
+			conn.commit();
+			closed();
+			return true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+			closed();
+			return false;
 		}
 	}
 }
